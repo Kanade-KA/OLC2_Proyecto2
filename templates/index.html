@@ -1,0 +1,78 @@
+
+<!DOCTYPE html>
+<html lang="en-US" class="no-js">
+<head>
+<title>JOLC</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/bootstrap.min.css' ) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/animate.min.css' ) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/font-awesome.min.css' ) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='assets/css/flexslider.css' ) }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='style/style.css' ) }}">
+
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='codemirror/lib/codemirror.css') }}">
+<link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='codemirror/theme/twilight.css') }}">
+</head>
+<body class="frontpage">
+	<script src="{{ url_for('static',filename='codemirror/lib/codemirror.js') }}"></script>
+<!-- Header================================================== -->
+<header id="header">
+<div id="mega-menu" class="header header2 header-sticky primary-menu icons-no default-skin zoomIn align-right">
+	<nav class="navbar navbar-default redq">
+	<div class="container">
+		<div class="collapse navbar-collapse" id="navbar">
+			<a class="mobile-menu-close"><i class="fa fa-close"></i></a>
+			
+			<div class="menu-top-menu-container">
+				<ul id="menu-top-menu" class="nav navbar-nav nav-list">
+					<li><a href="#home">Informacion</a></li>
+					<li><a href="#interprete">Interprete</a></li>
+					<li><a href="#graficas">AST</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	</nav>
+</div>
+</header>	
+<!-- ============================== ANALYZER ================================================== -->
+<section id="interprete" class="whitetext" style="padding-top: 3%; background-color:#bba58cda;" >
+	
+		<form action="#" method="POST">
+			<button type="submit" class="btn btn-outline-secondary btn-lg btn-block">Ejecutar</button>
+			<div style="float: left; padding-left: auto; padding-right: auto;">
+			<textarea class="codemirror-textarea form-control" name="entrada" id="entrada">{{entry}}</textarea>
+			</div>
+			<div style="float: right; padding-left: auto; padding-right: auto;">
+				<textarea class="codemirror-textarea form-control" name="salida" id="salida">{{resultado}}</textarea>
+			</div>
+		</form>
+</section>
+<!-- ================================== ABOUT =============================================== -->
+<section id="home" style="padding:300px;background-image:url(https://i.pinimg.com/originals/4d/79/48/4d79486a33b73172a52fe3ede36eed97.jpg); background-position: center; background-repeat: no-repeat;background-size: cover;background-attachment:fixed;">
+	<div class="container">
+			<h1>
+				ORGANIZACIÓN DE LENGUAJES Y COMPILADORES 2<br/>SECCIÓN N
+				<br/>KARLA JULISSA AJTÚN VELÁSQUEZ<br/>201700565<br/>
+			</h1>															
+		</div>
+</section>
+<!-- ============================ GRAFICAS ================================================= -->		
+<section id="graficas" class="whitetext" style="padding:100px;background-color:#C5B29D;" >
+	<form action="#" method="POST">
+		<textarea cols="30" rows="25" style="background-color: rgb(228, 228, 214);" readonly>{{graf}}</textarea>
+
+	</form>
+</section>
+
+
+<!-- SCRIPTS================================================== -->
+<script src="{{ url_for('static', filename='js/jquery.js' ) }}"></script>
+<script src="{{ url_for('static', filename='js/plugins.js' ) }}"></script>
+<script src="{{ url_for('static',filename='codemirror/lib/codemirror.js') }}"></script>
+<script src="{{ url_for('static',filename='codemirror/mode/julia/julia.js') }}"></script>
+<script src="{{ url_for('static',filename='codemirror/mode/go/go.js') }}"></script>
+<script src="{{ url_for('static',filename='js/editor_conf.js') }}"></script>
+</body>
+</html>
