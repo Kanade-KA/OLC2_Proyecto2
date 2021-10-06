@@ -1,6 +1,5 @@
 // referencia a codemirror: https://codemirror.net/doc/manual.html
-var ancho = 650;
-var alto = 605
+var alto = 700;
 var editor = CodeMirror.fromTextArea(document.getElementById("entrada"),{
     lineNumbers : true,
     theme : "twilight",
@@ -8,7 +7,7 @@ var editor = CodeMirror.fromTextArea(document.getElementById("entrada"),{
     autoRefresh:true
 });
 
-editor.setSize(ancho, alto);
+editor.setSize(null, alto);
 editor.refresh();
 
 var editors = CodeMirror.fromTextArea(document.getElementById("salida"),{
@@ -20,5 +19,17 @@ var editors = CodeMirror.fromTextArea(document.getElementById("salida"),{
     
 });
 
-editors.setSize(ancho, alto);
+editors.setSize(null, alto);
 editors.refresh();
+
+var editorg = CodeMirror.fromTextArea(document.getElementById("grafica"),{
+    lineNumbers : true,
+    theme : "twilight",
+    autoRefresh:true,
+    mode : "ebnf",
+    readOnly:true
+    
+});
+
+editorg.setSize(null, alto);
+editorg.refresh();
