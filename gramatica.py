@@ -1,10 +1,16 @@
 
+from Expresiones.Length import Length
+from Expresiones.Parse import Parse
+from Expresiones.Typeof import Typeof
+from Instrucciones.AsignacionFuncion import AsignacionFuncion
 from Instrucciones.AsignacionObjeto import AsignaObjeto
+from Instrucciones.AsignacionStruct import AsignacionStruct
 from Instrucciones.LlamaStruct import LlamaStruct
 from Expresiones.Struct import Struct
 from Instrucciones.AsignaMatriz3D import AsignaMatriz3D
 from Instrucciones.LlamaMatriz3D import LlamaMatriz3D
 from Expresiones.Arreglo3D import Arreglo3D
+from Instrucciones.Pop import Pop
 from Instrucciones.Push import Push
 from Instrucciones.AsignaMatriz2D import AsignaMatriz2D
 from Instrucciones.LlamaMatriz2D import LlamaMatriz2D
@@ -180,6 +186,7 @@ from Instrucciones.Break import Break
 from Expresiones.Arreglo2D import Arreglo2D
 from TablaSimbolo.Simbolo import Simbolo
 from TablaSimbolo.Tipo import TIPO
+from Instrucciones.AsignacionArreglos import AsignacionArreglo
 #--------------------------------------------Definición de la Gramatica----------------------------------------------
 def p_init(t) :
     'init            : INSTRUCCIONES'
@@ -222,11 +229,11 @@ def p_instruccion_error(t):
 def p_struct_mutable(t):
     '''STRUCTS : rmutable rstruct id VARIABLES rend pcoma'''
     struct = Struct(t[3], t[4], False, t.lineno(1), t.lexpos(1))
-    t[0] = Asignacion(t[3], struct, "clase", t.lineno(1), t.lexpos(1))
+    t[0] = AsignacionStruct(t[3], struct, "Struct Mutable", t.lineno(1), t.lexpos(1))
 def p_struct(t):
     '''STRUCTS : rstruct id VARIABLES rend pcoma'''
     struct = Struct(t[2], t[3], True, t.lineno(1), t.lexpos(1))
-    t[0] = Asignacion(t[2], struct, "clase", t.lineno(1), t.lexpos(1))
+    t[0] = AsignacionStruct(t[2], struct, "Struct Inmutable", t.lineno(1), t.lexpos(1))
 def p_struct_variables(t):
     '''VARIABLES : VARIABLES DEC'''
     t[1].append(t[2])
@@ -256,11 +263,11 @@ def p_datopush(t):
 def p_funciones(t):
     '''FUNCION : rfunction id apar cpar INSTRUCCIONES rend pcoma'''
     func = Funcion(t[2], None, t[5], t.lineno(1), t.lexpos(1))
-    t[0] = Asignacion(t[2], func, "funcion", t.lineno(1), t.lexpos(1))
+    t[0] = AsignacionFuncion(t[2], func, "Funcion", t.lineno(1), t.lexpos(1))
 def p_funciones_parametro(t):
     '''FUNCION : rfunction id apar PARAMETROS cpar INSTRUCCIONES rend pcoma'''
     func = Funcion(t[2], t[4], t[6], t.lineno(1), t.lexpos(1))
-    t[0] = Asignacion(t[2], func, "funcion", t.lineno(1), t.lexpos(1))
+    t[0] = AsignacionFuncion(t[2], func, "Funcion", t.lineno(1), t.lexpos(1))
 
 def p_llamadafn(t):
     '''LLAMAFN : id apar cpar pcoma'''
@@ -400,7 +407,7 @@ def p_asignacion_global_nulo(t):
 def p_asignacion_matriz(t):
     '''ASIGNACION : id igual MATRIZ pcoma'''
     arreglo = Arreglo(t[1], t[3])
-    t[0] = Asignacion(t[1], arreglo, "arreglo", t.lineno(1), t.lexpos(1))
+    t[0] = AsignacionArreglo(t[1], arreglo, "1D", t.lineno(1), t.lexpos(1))
 
 def p_reasignacion_matriz(t):
     '''ASIGNACION : id acor EXP ccor igual EXP pcoma'''
@@ -436,7 +443,7 @@ def p_tipo(t):
 def p_asignacion_matriz2(t):
     '''ASIGNACION : id igual acor LMATRIZMATRIZ ccor pcoma'''
     arreglo = Arreglo2D(t[1], t[4])
-    t[0] = Asignacion(t[1], arreglo, "2d", t.lineno(1), t.lexpos(1))
+    t[0] = AsignacionArreglo(t[1], arreglo, "2D", t.lineno(1), t.lexpos(1))
 
 def p_listamatrices(t):
     '''LMATRIZMATRIZ : LMATRIZMATRIZ coma MATRIZ'''
@@ -450,7 +457,7 @@ def p_matrices(t):
 def p_asignacion_matriz3(t):
     '''ASIGNACION : id igual  MULT pcoma'''
     arreglo = Arreglo3D(t[1], t[3])
-    t[0] = Asignacion(t[1], arreglo, "3d", t.lineno(1), t.lexpos(1))
+    t[0] = AsignacionArreglo(t[1], arreglo, "3D", t.lineno(1), t.lexpos(1))
     
 def p_multidimensional(t):
     '''MULT : acor LISTAM ccor'''
@@ -617,7 +624,8 @@ def p_exp_nativas(t):
             | cuadrado apar EXP cpar
     '''
     if t[1] == 'log10':
-        t[0] = Nativas(OperadorNativo.LOGARITMOD, t[3], 10, t.lineno(1), t.lexpos(1))
+        base = Constante(Primitivo(TipoObjeto.ENTERO, 10), t.lineno(1), t.lexpos(1))
+        t[0] = Nativas(OperadorNativo.LOGARITMO, t[3], base, t.lineno(1), t.lexpos(1))
     if t[1] == 'uppercase':
         t[0] = Nativas(OperadorNativo.UPPERCASE, t[3], 10, t.lineno(1), t.lexpos(1))
     if t[1] == 'lowercase':
@@ -633,7 +641,7 @@ def p_exp_nativas(t):
         
 def p_nativas2(t):
     '''ENATIVAS : rparse apar TIPO coma EXP cpar'''
-    t[0] = Nativas(OperadorNativo.PARSE, t[3], t[5], t.lineno(1), t.lexpos(1))
+    t[0] = Parse(t[3], t[5], t.lineno(1), t.lexpos(1))
 
 def p_nativas3(t):
     '''ENATIVAS : rtrunc apar EXP cpar'''
@@ -646,18 +654,18 @@ def p_nativas5(t):
     t[0] = Nativas(OperadorNativo.STRING, t[3], None, t.lineno(1), t.lexpos(1))
 def p_nativas6(t):
     '''ENATIVAS : rtypeof apar EXP cpar'''
-    t[0] = Nativas(OperadorNativo.TYPEOF, t[3], None, t.lineno(1), t.lexpos(1))
+    t[0] = Typeof(t[3], t.lineno(1), t.lexpos(1))
 def p_nativas7(t):
     '''ENATIVAS : rlength apar EXP cpar'''
-    t[0] = Nativas(OperadorNativo.LENGTH, t[3], None, t.lineno(1), t.lexpos(1))
+    t[0] = Length(t[3], t.lineno(1), t.lexpos(1))
 
 def p_nativas9(t):
     '''ENATIVAS : rpop not apar id cpar'''
-    t[0] = Nativas(OperadorNativo.POP, t[4], None, t.lineno(1), t.lexpos(1))
+    t[0] = Pop(t[4], t.lineno(1), t.lexpos(1))
 
 def p_exp_logb(t):
     '''EXP : logb apar EXP coma EXP cpar'''
-    t[0] = Nativas(OperadorNativo.LOGARITMOB, t[3], t[5], t.lineno(1), t.lexpos(1))
+    t[0] = Nativas(OperadorNativo.LOGARITMO, t[3], t[5], t.lineno(1), t.lexpos(1))
 #-----------------------------------------EXPRESIONES LOGICAS----------------------------------------------
 def p_logicas(t):
     '''EXP : EXP and EXP

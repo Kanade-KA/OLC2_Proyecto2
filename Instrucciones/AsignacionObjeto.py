@@ -22,5 +22,4 @@ class AsignaObjeto(NodoAST):
             x = struct.setSimbolo(self.atributo, self.expresion, arbol, table)
         else:
             arbol.addExcepcion(Error("Semantico", "No es de tipo struct", self.fila, self.columna))
-        
         return

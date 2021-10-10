@@ -26,22 +26,21 @@ class OperadorRelacional(Enum):
     DIFERENTE = 6
 
 class OperadorNativo(Enum):
-    LOGARITMOD = 1
-    LOGARITMOB = 2
-    UPPERCASE = 3
-    LOWERCASE = 4
-    SENO = 5
-    COSENO = 6
-    TANGENTE = 7
-    CUADRADA = 8
-    PARSE = 9
-    TRUNC = 10
-    FLOAT = 11
-    STRING = 12
-    TYPEOF = 13
-    LENGTH = 14
-    PUSH = 15
-    POP = 16
+    LOGARITMO = 1
+    UPPERCASE = 2
+    LOWERCASE = 3
+    SENO = 4
+    COSENO = 5
+    TANGENTE = 6
+    CUADRADA = 7
+    PARSE = 8
+    TRUNC = 9
+    FLOAT = 10
+    STRING = 11
+    TYPEOF = 12
+    LENGTH = 13
+    PUSH = 14
+    POP = 15
 
 class OperadorLogico(Enum):
     NOT = 1
