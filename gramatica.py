@@ -707,4 +707,4 @@ def parse(imput) :
         for err in arbol.getExcepciones():
             f += err.toString()
         return f
-    return arbol.getConsola()
+    return [arbol.getConsola(),arbol.generateTable()]

@@ -6,8 +6,7 @@ class Simbolo:
         self.tipo = tipo
         self.fila = fila
         self.columna = columna
-        self.posicion = posicion
-        
+        self.posicion = posicion 
 
     def getID(self):
         return self.id
@@ -35,3 +34,6 @@ class Simbolo:
 
     def getPosicion(self):
         return self.posicion
+    
+    def getEntorno(self):
+        return self.ent

@@ -34,5 +34,6 @@ class Asignacion(NodoAST):
             return
         valor = self.expresion.interpretar(arbol, entorno)
         simbolo = Simbolo(entorno.getNombre(), self.identificador, valor, "Variable", 0, self.fila, self.columna)
+        arbol.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
         return

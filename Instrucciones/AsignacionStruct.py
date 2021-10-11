@@ -11,5 +11,6 @@ class AsignacionStruct(NodoAST):
     def interpretar(self, arbol, entorno):
         valor = self.expresion
         simbolo = Simbolo(entorno.getNombre(), self.identificador, valor, self.tipo, 0, self.fila, self.columna)
+        arbol.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
         return

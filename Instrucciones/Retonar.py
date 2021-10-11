@@ -34,6 +34,7 @@ class Retornar(NodoAST):
                             identificador = listaparametros[i].getIdentificador()
                             valor = listavalores[i].interpretar(arbol, entorno)
                             simbolo = Simbolo(entorno.getNombre(), identificador, valor, "Variable", 0, self.fila, self.columna)
+                            arbol.addSimbolo(simbolo)
                             nuevoentorno.tabla[identificador.lower()] = simbolo
                         return funcion.interpretar(arbol,nuevoentorno)   
                     else: 
@@ -49,6 +50,7 @@ class Retornar(NodoAST):
             if len(datos) == len(self.parametros):
                 for cte in datos:
                     simbolo = Simbolo(entorno.getNombre(), cte, self.parametros[contador], "Variable", 0, self.fila, self.columna)
+                    arbol.addSimbolo(simbolo)
                     listatmp.append(simbolo)
                     contador = contador + 1
                 newstruct = Struct(self.nombre, listatmp, ism, self.fila, self.columna)

@@ -14,5 +14,6 @@ class AsignacionArreglo(NodoAST):
 
     def interpretar(self, arbol, entorno):
         simbolo = Simbolo(entorno.getNombre(), self.identificador, self.expresion, self.tipo, 0, self.fila, self.columna)
+        arbol.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
         return
