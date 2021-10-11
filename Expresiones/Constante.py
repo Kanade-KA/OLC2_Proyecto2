@@ -9,7 +9,7 @@ class Constante(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         if isinstance(self.valor, Primitivo):
             if self.valor.tipo == TipoObjeto.CADENA:
                 return self.valor.toString()

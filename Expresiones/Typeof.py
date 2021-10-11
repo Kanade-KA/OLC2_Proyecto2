@@ -14,9 +14,8 @@ class Typeof(NodoAST):
         self.fila = fila
         self.columna = columna
 
-
-    def interpretar(self, arbol, table):
-        op = self.operando.interpretar(arbol, table)
+    def interpretar(self, arbol, entorno):
+        op = self.operando.interpretar(arbol, entorno)
         if isinstance(op, int):
             return "Int64"
         if isinstance(op, float):

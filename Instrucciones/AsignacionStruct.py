@@ -8,8 +8,8 @@ class AsignacionStruct(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         valor = self.expresion
-        simbolo = Simbolo(self.identificador, valor, self.tipo, self.fila, self.columna)
-        table.addSimbolo(simbolo)
+        simbolo = Simbolo(entorno.getNombre(), self.identificador, valor, self.tipo, self.fila, self.columna)
+        entorno.addSimbolo(simbolo)
         return

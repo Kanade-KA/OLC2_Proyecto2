@@ -8,8 +8,8 @@ class Identificador(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
-        simbolo = table.retornarSimbolo(self.identificador.lower())
+    def interpretar(self, arbol, entorno):
+        simbolo = entorno.retornarSimbolo(self.identificador.lower())
         if simbolo == None:
             return "No existe la variable"
         else:

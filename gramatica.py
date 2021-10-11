@@ -177,7 +177,7 @@ from TablaSimbolo.Tipo import OperadorNativo
 from Expresiones.Nativas import Nativas
 from Expresiones.Relacional import Relacional
 from Expresiones.Logica import Logica
-from TablaSimbolo.TS import TablaSimbolos
+from TablaSimbolo.Entorno import Entorno
 from Instrucciones.Asignacion import Asignacion
 from Expresiones.Identificador import Identificador
 from Instrucciones.If import If
@@ -694,19 +694,17 @@ def parse(imput) :
     errores = []
     lexer = lex.lex(reflags= re.IGNORECASE)
     parser = yacc.yacc()
-    tablasimbolos = TablaSimbolos()
+    entorno = Entorno("global")
     arbol = Arbol()
     global input
     input = imput
 
     instrucciones=parser.parse(imput)
     for instruccion in instrucciones:
-        instruccion.interpretar(arbol, tablasimbolos)
+        instruccion.interpretar(arbol, entorno)
     if len(arbol.getExcepciones())> 0:
         f = ""
         for err in arbol.getExcepciones():
             f += err.toString()
-            #for errin in errores:
-                #f+=errin.toString()
         return f
     return arbol.getConsola()

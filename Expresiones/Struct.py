@@ -18,12 +18,12 @@ class Struct():
     def getMutable(self):
         return self.mutable
 
-    def setSimbolo(self, id, valor, arbol, table):
+    def setSimbolo(self, id, valor, arbol, entorno):
         for dato in self.datos:
             if dato.getID() == id.lower():
                 if self.mutable:
-                    datooriginal = dato.getValor().interpretar(arbol, table)
-                    datox = valor.interpretar(arbol, table)
+                    datooriginal = dato.getValor().interpretar(arbol, entorno)
+                    datox = valor.interpretar(arbol, entorno)
 
                     if type(datooriginal) == type(datox):
                         dato.setValor(valor)
@@ -40,12 +40,12 @@ class Struct():
             if sim.getID() == id.lower():
                 return sim
 
-    def imprimirStruct(self, arbol, table):
+    def imprimirStruct(self, arbol, entorno):
         x = self.id
         x += "("
         cont = 0;
         for sim in self.datos:
-            x += str(sim.getValor().interpretar(arbol, table))
+            x += str(sim.getValor().interpretar(arbol, entorno))
             if cont + 1 < len(self.datos):
                 x += ","
             cont = cont +1

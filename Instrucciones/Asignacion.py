@@ -12,10 +12,10 @@ class Asignacion(NodoAST):
         self.fila = fila
         self.columna = columna
         
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         value = None
         if not self.expresion == None:
-            value = self.expresion.interpretar(arbol, table)
+            value = self.expresion.interpretar(arbol, entorno)
         if self.tipo.lower() == "int64": #Es por que tiene un tipo (se declaró con tipo)
             if not isinstance(value, int):
                 arbol.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo int", self.fila, self.columna))
@@ -29,10 +29,10 @@ class Asignacion(NodoAST):
                 arbol.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
         if self.tipo.lower() == "global":
-            simbolo = Simbolo(self.identificador, value,  self.tipo, self.fila, self.columna)
-            table.AgregarGlobal(simbolo)
+            simbolo = Simbolo(entorno.getNombre(), self.identificador, value,  self.tipo, self.fila, self.columna)
+            entorno.AgregarGlobal(simbolo)
             return
-        valor = self.expresion.interpretar(arbol, table)
-        simbolo = Simbolo(self.identificador, valor, "Variable", self.fila, self.columna)
-        table.addSimbolo(simbolo)
+        valor = self.expresion.interpretar(arbol, entorno)
+        simbolo = Simbolo(entorno.getNombre(), self.identificador, valor, "Variable", self.fila, self.columna)
+        entorno.addSimbolo(simbolo)
         return

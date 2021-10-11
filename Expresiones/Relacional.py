@@ -13,10 +13,9 @@ class Relacional(NodoAST):
         self.fila = fila
         self.columna = columna
 
-
-    def interpretar(self, arbol, table):
-        opi = self.OperacionIzq.interpretar(arbol, table)
-        opd = self.OperacionDer.interpretar(arbol, table)
+    def interpretar(self, arbol, entorno):
+        opi = self.OperacionIzq.interpretar(arbol, entorno)
+        opd = self.OperacionDer.interpretar(arbol, entorno)
         if self.operador == OperadorRelacional.MAYORQUE:
             if opi > opd:
                 return True

@@ -5,5 +5,5 @@ class Continue(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         return self

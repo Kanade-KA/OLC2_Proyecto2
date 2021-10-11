@@ -1,7 +1,5 @@
-from Expresiones.Arreglo3D import Arreglo3D
 from TablaSimbolo.GraficarNodos import GraficarNodos
 from TablaSimbolo.NodoArbol import NodoArbol
-from TablaSimbolo.Error import Error
 import sys
 sys.setrecursionlimit(3000)
 
@@ -137,22 +135,7 @@ precedence = (
     ('right', 'not')
 )
 #IMPORTACIONES
-from Objeto.Primitivo import Primitivo
-from Expresiones.Constante import Constante
-from Abstract.Objeto import TipoObjeto
-from Instrucciones.Imprimir import Imprimir
-from Expresiones.Aritmetica import Aritmetica
-from TablaSimbolo.Tipo import OperadorAritmetico, OperadorLogico, OperadorRelacional
-from TablaSimbolo.Tipo import OperadorNativo
-from Expresiones.Nativas import Nativas
-from Expresiones.Relacional import Relacional
-from Expresiones.Logica import Logica
-from TablaSimbolo.TS import TablaSimbolos
-from Instrucciones.Asignacion import Asignacion
-from Expresiones.Identificador import Identificador
-from Instrucciones.If import If
-from Instrucciones.While import While
-from Instrucciones.Break import Break
+
 #--------------------------------------------Definición de la Gramatica----------------------------------------------
 def p_init(t) :
     'init            : INSTRUCCIONES'

@@ -12,15 +12,15 @@ class LlamaStruct(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         iden = self.identificador.getIdentificador()
         atr = self.atributo.getIdentificador()
-        simbolo = table.retornarSimbolo(iden)
+        simbolo = entorno.retornarSimbolo(iden)
         struct = simbolo.getValor()
         if isinstance(struct, Struct):
             dato = struct.getSimbolo(atr)
             atrib = dato.getValor()
-            return atrib.interpretar(arbol, table)
+            return atrib.interpretar(arbol, entorno)
         else:
             arbol.addExcepcion(Error("Semantico", "No es de tipo struct", self.fila, self.columna))
         return

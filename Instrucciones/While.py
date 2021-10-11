@@ -3,7 +3,7 @@ from Instrucciones.Continue import Continue
 from Instrucciones.Break import Break
 from Abstract.NodoAST import NodoAST
 from TablaSimbolo.Error import Error
-from TablaSimbolo.TS import TablaSimbolos
+from TablaSimbolo.Entorno import Entorno
 
 class While(NodoAST):
     def __init__(self, condicion, instrucciones, fila, columna):
@@ -12,12 +12,12 @@ class While(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         continuar = True
         while continuar:
-            condicion = self.condicion.interpretar(arbol, table)#este se va a ctualizar
+            condicion = self.condicion.interpretar(arbol, entorno)#este se va a ctualizar
             if condicion == True:
-                nuevaTabla = TablaSimbolos(table)
+                nuevaTabla = Entorno("WHILE", entorno)
                 for instruccion in self.instrucciones:
                     y = instruccion.interpretar(arbol, nuevaTabla)
                     if isinstance(instruccion, Return):

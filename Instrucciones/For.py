@@ -1,5 +1,5 @@
 from Abstract.Objeto import TipoObjeto
-from TablaSimbolo.TS import TablaSimbolos
+from TablaSimbolo.Entorno import Entorno
 from Expresiones.Identificador import Identificador
 from Abstract.NodoAST import NodoAST
 from TablaSimbolo.Simbolo import Simbolo
@@ -16,27 +16,27 @@ class For(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         #Hay que ver que el identificador sea identificador :v 
         if isinstance(self.indice, Identificador):
             ind = self.indice.getIdentificador()    
-            simbolo = Simbolo(ind, None, "id", self.fila, self.columna)
-            table.addSimbolo(simbolo)
+            simbolo = Simbolo(entorno.getNombre(), ind, None, "id", self.fila, self.columna)
+            entorno.addSimbolo(simbolo)
             if self.fin != None:#quiere decir que traía 2 puntos
-                inicio = self.inicio.interpretar(arbol, table)
-                fin = self.fin.interpretar(arbol, table)
+                inicio = self.inicio.interpretar(arbol, entorno)
+                fin = self.fin.interpretar(arbol, entorno)
 
                 if not isinstance(inicio, str) or not isinstance(fin, str):
                     if not fin < inicio:
                         #NUEVO ENTORNO
                         if isinstance(inicio, int) and isinstance(fin, int):
-                                entorno = TablaSimbolos(table)
+                                nuevoentorno = Entorno("For", entorno)
                                 for i in range(inicio, fin +1):
                                     #Hay que actualizar la variable
-                                    simbolo = Simbolo(ind, i, "id", self.fila, self.columna)
-                                    table.tabla[ind] = simbolo
+                                    simbolo = Simbolo(entorno.getNombre(), ind, i, "id", self.fila, self.columna)
+                                    entorno.tabla[ind] = simbolo
                                     for instrucciones in self.instrucciones:
-                                        y = instrucciones.interpretar(arbol, entorno)
+                                        y = instrucciones.interpretar(arbol, nuevoentorno)
                                         if y != None and y!="":
                                             return y
                                         if isinstance(y, Return):
@@ -47,7 +47,7 @@ class For(NodoAST):
                                             break
                             
                         else:
-                            entorno = TablaSimbolos(table)
+                            nuevoentorno = Entorno("For", entorno)
                             iniciofloat = 0
                             if isinstance(fin, float):
                                 #Parsear el inicio
@@ -56,10 +56,10 @@ class For(NodoAST):
                                 if(iniciofloat > fin):
                                     break
                                 #Hay que actualizar la variable
-                                simbolo = Simbolo(ind, iniciofloat, "id", self.fila, self.columna)
-                                table.tabla[ind] = simbolo
+                                simbolo = Simbolo(entorno.getNombre(), ind, iniciofloat, "id", self.fila, self.columna)
+                                entorno.tabla[ind] = simbolo
                                 for instrucciones in self.instrucciones:
-                                    y = instrucciones.interpretar(arbol, entorno)
+                                    y = instrucciones.interpretar(arbol, nuevoentorno)
                                     if y != None and y!="":
                                         return y
                                     if isinstance(y, Return):
@@ -75,15 +75,15 @@ class For(NodoAST):
                 else:
                         arbol.addExcepcion(Error("Semantico", "No se puede iterar Con cadenas en un intervalo", self.fila, self.columna))
             else:#Quiere decir que solo viene una cadena
-                iterador = self.inicio.interpretar(arbol, table)
+                iterador = self.inicio.interpretar(arbol, entorno)
                 if isinstance(iterador, str):
-                    entorno = TablaSimbolos(table)
+                    nuevoentorno = Entorno("For",entorno)
                     for i in iterador:
                         #Hay que actualizar la variable
-                        simbolo = Simbolo(ind, i, "id", self.fila, self.columna)
-                        table.tabla[ind] = simbolo
+                        simbolo = Simbolo(entorno.getNombre(), ind, i, "id", self.fila, self.columna)
+                        entorno.tabla[ind] = simbolo
                         for instrucciones in self.instrucciones:
-                            y = instrucciones.interpretar(arbol, entorno)
+                            y = instrucciones.interpretar(arbol, nuevoentorno)
                             if y != None and y!="":
                                 return y
                             if isinstance(y, Return):
@@ -93,11 +93,11 @@ class For(NodoAST):
                             if isinstance(y, Continue):
                                 break
                 else:#o un numero
-                    entorno = TablaSimbolos(table)
-                    simbolo = Simbolo(ind, iterador, "id", self.fila, self.columna)
+                    nuevoentorno = Entorno("For", entorno)
+                    simbolo = Simbolo(entorno.getNombre(), ind, iterador, "id", self.fila, self.columna)
                     entorno.tabla[ind] = simbolo#no estoy segura de si es entorno o tabla normal
                     for instrucciones in self.instrucciones:
-                            y = instrucciones.interpretar(arbol, entorno)
+                            y = instrucciones.interpretar(arbol, nuevoentorno)
                             if y != None and y!="":
                                 return y
                             if isinstance(y, Return):

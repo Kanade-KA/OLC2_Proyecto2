@@ -3,10 +3,7 @@ from Expresiones.Arreglo2D import Arreglo2D
 from TablaSimbolo.Error import Error
 from Expresiones.Arreglo import Arreglo
 from Abstract.NodoAST import NodoAST
-from TablaSimbolo.Tipo import OperadorNativo
-from Expresiones.Constante import Constante
 from Instrucciones.LlamaMatriz import LlamaMatriz
-import math
 
 class Length(NodoAST):
     def __init__(self, matriz, fila, columna):
@@ -14,14 +11,13 @@ class Length(NodoAST):
         self.fila = fila
         self.columna = columna
 
-
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         if isinstance(self.operando, LlamaMatriz):
             #Si entra aca es por que puede que sea una matriz que no sea de una dimension
             Matriz = self.operando
             iden = Matriz.identificador
-            pos = Matriz.expresion.interpretar(arbol, table)
-            simbolo = table.retornarSimbolo(iden)
+            pos = Matriz.expresion.interpretar(arbol, entorno)
+            simbolo = entorno.retornarSimbolo(iden)
             valorsimbolo = simbolo.getValor()
             if isinstance(valorsimbolo, Arreglo2D):
                 sublista = valorsimbolo.getDatos()
@@ -31,7 +27,7 @@ class Length(NodoAST):
             return
         else:
             iden = self.operando.getIdentificador()
-            simbolo = table.retornarSimbolo(iden)
+            simbolo = entorno.retornarSimbolo(iden)
             array = simbolo.getValor()
             if isinstance(array, Arreglo):
                 datos = array.getDatos()

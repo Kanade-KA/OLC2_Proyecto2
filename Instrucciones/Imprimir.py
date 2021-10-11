@@ -12,25 +12,25 @@ class Imprimir(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         if self.expresion != None:
             for exp in self.expresion:
-                x = exp.interpretar(arbol, table)
+                x = exp.interpretar(arbol, entorno)
                 if x != None:
                     if isinstance(x, Arreglo):
-                        y = x.retornarArray(arbol, table)
+                        y = x.retornarArray(arbol, entorno)
                         arbol.AgregaraConsola(y)
                         return
                     if isinstance(x, Arreglo2D):
-                        y = x.retornarArray(arbol,table)
+                        y = x.retornarArray(arbol, entorno)
                         arbol.AgregaraConsola(y)
                         return
                     if isinstance(x, Arreglo3D):
-                        y = x.retornarArray(arbol, table)
+                        y = x.retornarArray(arbol, entorno)
                         arbol.AgregaraConsola(y)
                         return
                     if isinstance(x, Struct):
-                        y = x.imprimirStruct(arbol, table)
+                        y = x.imprimirStruct(arbol, entorno)
                         arbol.AgregaraConsola(y)
                     else:
                         arbol.AgregaraConsola(str(x))

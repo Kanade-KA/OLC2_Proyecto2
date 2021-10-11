@@ -11,9 +11,9 @@ class LlamaMatriz(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
-        posicion = self.expresion.interpretar(arbol, table)
-        x = table.retornarSimbolo(self.identificador.lower())
+    def interpretar(self, arbol, entorno):
+        posicion = self.expresion.interpretar(arbol, entorno)
+        x = entorno.retornarSimbolo(self.identificador.lower())
         simbolo = x.getValor()
         if isinstance(simbolo, Arreglo):
             arreglo = simbolo.getDatos()
@@ -21,7 +21,7 @@ class LlamaMatriz(NodoAST):
                 arbol.addExcepcion(Error("Semantico", "Error el indice pasa los limites de la matriz", self.fila, self.columna))
             else:
                 elemento = arreglo[posicion-1]
-                resultado = elemento.interpretar(arbol, table)
+                resultado = elemento.interpretar(arbol, entorno)
                 return resultado
         else:
             arbol.addExcepcion(Error("Semantico", "La variable no es de tipo arreglo", self.fila, self.columna))

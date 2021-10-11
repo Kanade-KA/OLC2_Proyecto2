@@ -1,7 +1,8 @@
 
 class Simbolo:
-    def __init__(self, identificador, valor, tipo, fila, columna ):
+    def __init__(self, entorno, identificador, valor, tipo, fila, columna ):
         self.id = identificador
+        self.ent = entorno
         self.valor = valor  ## instancia de clase OBJETO
         self.tipo = tipo
         self.fila = fila

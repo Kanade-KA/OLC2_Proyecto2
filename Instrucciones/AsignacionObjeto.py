@@ -15,11 +15,11 @@ class AsignaObjeto(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
-        simbolo1 = table.retornarSimbolo(self.identificador)
+    def interpretar(self, arbol, entorno):
+        simbolo1 = entorno.retornarSimbolo(self.identificador)
         struct = simbolo1.getValor()
         if isinstance(struct, Struct):
-            x = struct.setSimbolo(self.atributo, self.expresion, arbol, table)
+            x = struct.setSimbolo(self.atributo, self.expresion, arbol, entorno)
         else:
             arbol.addExcepcion(Error("Semantico", "No es de tipo struct", self.fila, self.columna))
         return

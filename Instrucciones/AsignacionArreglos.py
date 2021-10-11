@@ -12,7 +12,7 @@ class AsignacionArreglo(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
-        simbolo = Simbolo(self.identificador, self.expresion, self.tipo, self.fila, self.columna)
-        table.addSimbolo(simbolo)
+    def interpretar(self, arbol, entorno):
+        simbolo = Simbolo(entorno.getNombre(), self.identificador, self.expresion, self.tipo, self.fila, self.columna)
+        entorno.addSimbolo(simbolo)
         return

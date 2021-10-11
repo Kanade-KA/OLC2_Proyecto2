@@ -16,30 +16,26 @@ class AsignaMatriz2D(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         #PRIMERO DEBO DE TRAER EL SIMBOLO DE ESE COSITO 
         #Buscar en la tabla
-        simbolo = table.retornarSimbolo(self.id)
+        simbolo = entorno.retornarSimbolo(self.id)
         #Traer el arreglo
         arreglo = simbolo.getValor()
         #Verificar si este simbolo si es un arreglo
         if isinstance(arreglo, Arreglo2D):
             #Traer el indice
-            ind = self.indice.interpretar(arbol, table)
-            sub = self.subindice.interpretar(arbol, table)
+            ind = self.indice.interpretar(arbol, entorno)
+            sub = self.subindice.interpretar(arbol, entorno)
             if isinstance(self.expresion, Identificador):
-                simbolo =  table.retornarSimbolo(self.expresion.getIdentificador())
+                simbolo =  entorno.retornarSimbolo(self.expresion.getIdentificador())
                 valor = simbolo.getValor()
                 exp = Constante(valor, self.fila, self.columna)
-                print("------------")
-                print(type(valor))
-                #print(type(exp.valor))
                 arreglo.setearDato(ind-1, sub-1, exp)
             else:
-                valor =  self.expresion.interpretar(arbol, table)
+                valor =  self.expresion.interpretar(arbol, entorno)
                 exp = Constante(valor, self.fila, self.columna)
                 arreglo.setearDato(ind-1, sub-1, exp)
         else:
             arbol.addExcepcion(Error("Semántico", "Error variable no es de tipo Matriz", self.fila, self.columna))
-        
         return

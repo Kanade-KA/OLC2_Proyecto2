@@ -12,8 +12,8 @@ class Push(NodoAST):
         self.fila = fila
         self.columna = columna
     
-    def interpretar(self, arbol, table):   
-        simbolo = table.retornarSimbolo(self.identificador)
+    def interpretar(self, arbol, entorno):   
+        simbolo = entorno.retornarSimbolo(self.identificador)
         arreglo = simbolo.getValor()
         if isinstance(arreglo, Arreglo):
             arreglo.PushDato(self.dato)

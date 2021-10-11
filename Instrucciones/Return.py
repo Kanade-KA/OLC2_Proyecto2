@@ -7,6 +7,6 @@ class Return(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
-        retorna = self.expresion.interpretar(arbol, table)
+    def interpretar(self, arbol, entorno):
+        retorna = self.expresion.interpretar(arbol, entorno)
         return retorna

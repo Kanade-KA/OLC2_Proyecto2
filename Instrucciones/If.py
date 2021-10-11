@@ -1,6 +1,6 @@
 from Instrucciones.Return import Return
 from Instrucciones.Continue import Continue
-from TablaSimbolo.TS import TablaSimbolos
+from TablaSimbolo.Entorno import Entorno
 from TablaSimbolo.Error import Error
 from Abstract.NodoAST import NodoAST
 from Instrucciones.Break import Break
@@ -13,12 +13,12 @@ class If(NodoAST):
         self.fila = fila
         self.columna = columna
 
-    def interpretar(self, arbol, table):
+    def interpretar(self, arbol, entorno):
         x = ""
-        condicional = self.condicion.interpretar(arbol, table)
+        condicional = self.condicion.interpretar(arbol, entorno)
         if condicional == True:
             if self.instruccionesIf != None:
-                nuevoentorno = TablaSimbolos(table)
+                nuevoentorno = Entorno("IF", entorno)
                 for instruccion in self.instruccionesIf:
                     if isinstance(instruccion, Break):
                         return instruccion
@@ -31,7 +31,7 @@ class If(NodoAST):
             return None
         else:
             if not self.instruccionesElse == None:
-                nuevoentorno2 = TablaSimbolos(table)
+                nuevoentorno2 = Entorno("ELSE", entorno)
                 for instruccion in self.instruccionesElse:
                     if isinstance(instruccion, Break):
                         return instruccion
@@ -42,6 +42,6 @@ class If(NodoAST):
                     else:
                         instruccion.interpretar(arbol, nuevoentorno2)
         if self.elseIf != None:
-                return self.elseIf.interpretar(arbol, table)
+                return self.elseIf.interpretar(arbol, entorno)
         
         return None
