@@ -29,7 +29,6 @@ class Entorno:
         entorno = self
         while entorno.anterior != None:#Así sabe que es el último
             entorno= entorno.anterior
-        #tablaActual.addSimbolo(Simbolo)
         entorno.tabla[simbolo.id.lower()] = simbolo
         return None
 

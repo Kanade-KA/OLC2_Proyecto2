@@ -706,5 +706,5 @@ def parse(imput) :
         f = ""
         for err in arbol.getExcepciones():
             f += err.toString()
-        return f
-    return [arbol.getConsola(),arbol.generateTable()]
+        return [f, "<h1>Existen Errores, no se puede mostrar la Tabla de Simbolos</h1>", arbol.generateErrors()]
+    return [arbol.getConsola(), arbol.generateTable(), "No hay Errores :D"]

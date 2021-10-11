@@ -5,6 +5,7 @@ class Arbol:
         self.consola = ""
         self.grafica = ""
         self.cadena = ""
+        self.error = ""
 
     def getExcepciones(self):
         return self.excepciones
@@ -31,7 +32,7 @@ class Arbol:
         self.grafica
 
     def generateTable(self):
-        self.cadena +="<table summary=\"Tabla de simbolos\">"
+        self.cadena +="<table class=\"table\">"
         self.cadena +="<tr>"
         self.cadena +="<th scope=\"col\">Entorno</th>"
         self.cadena +="<th scope=\"col\">Simbolo</th>"
@@ -70,3 +71,32 @@ class Arbol:
             self.cadena += str(sim.getColumna())
             self.cadena += "</td>"
             self.cadena += "</tr>"
+
+    def generateErrors(self):
+        self.error +="<table class=\"table\">"
+        self.error +="<tr>"
+        self.error +="<th scope=\"col\">Tipo Error</th>"
+        self.error +="<th scope=\"col\">Descripción</th>"
+        self.error +="<th scope=\"col\">Fila</th>"
+        self.error +="<th scope=\"col\">Columna</th>"
+        self.error +="</tr>"
+        self.RecorrerError()
+        self.error +="</table>"
+        return self.error
+    
+    def RecorrerError(self):
+        for err in self.excepciones:
+            self.error += "<tr>"
+            self.error += "<td>"
+            self.error += str(err.getTipo())
+            self.error += "</td>"
+            self.error += "<td>"
+            self.error += str(err.getDescripcion())
+            self.error += "</td>"
+            self.error += "<td>"
+            self.error += str(err.getFila())
+            self.error += "</td>"
+            self.error += "<td>"
+            self.error += str(err.getColumna())
+            self.error += "</td>"
+            self.error += "</tr>"

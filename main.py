@@ -13,7 +13,7 @@ def home():
             global tmp_val
             tmp_val=inpt
             result=gram(tmp_val)
-            return render_template('index.html', resultado=result[0], entry=tmp_val, graf = "", tabla=result[1])
+            return render_template('index.html', resultado=result[0], entry=tmp_val, graf = "", tabla=result[1], error=result[2])
         if request.form['submit_button'] == 'ast':
             inpt = request.form["entrada"]
             global tmp

@@ -30,6 +30,7 @@ class Asignacion(NodoAST):
                 return
         if self.tipo.lower() == "global":
             simbolo = Simbolo(entorno.getNombre(), self.identificador, value,  self.tipo, 0, self.fila, self.columna)
+            arbol.addSimbolo(simbolo)
             entorno.AgregarGlobal(simbolo)
             return
         valor = self.expresion.interpretar(arbol, entorno)

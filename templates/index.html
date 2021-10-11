@@ -37,6 +37,7 @@
 					<li><a href="#interprete">Ir a Interprete</a></li>
 					<li><a href="#home">Ir a Grafica</a></li>
 					<li><a href="#tablasimbolo">TS</a></li>
+					<li><a href="#tablaerrores">Errores</a></li>
 				</ul>
 				<div style="display: none;">
 					<button type="submit"  value="interprete" name="submit_button" id="interpretar">Interpretar</button>
@@ -70,8 +71,15 @@
 </section>
 <!-- ================================== ABOUT =============================================== -->
 <section id="tablasimbolo">
-	<div style="margin-left: auto; margin-right: auto;">
+	<div style="margin-left: auto; margin-right: auto; text-align: center;">
 		{{tabla|safe}}
+	</div>
+</section>
+</form>
+<!-- ================================== ABOUT =============================================== -->
+<section id="tablaerrores">
+	<div style="margin-left: auto; margin-right: auto; text-align: center;">
+		{{error|safe}}
 	</div>
 </section>
 </form>
