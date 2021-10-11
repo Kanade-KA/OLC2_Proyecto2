@@ -33,7 +33,7 @@ class Retornar(NodoAST):
                         for i in range(0,len(listaparametros)):
                             identificador = listaparametros[i].getIdentificador()
                             valor = listavalores[i].interpretar(arbol, entorno)
-                            simbolo = Simbolo(entorno.getNombre(), identificador, valor, "id", self.fila, self.columna)
+                            simbolo = Simbolo(entorno.getNombre(), identificador, valor, "Variable", 0, self.fila, self.columna)
                             nuevoentorno.tabla[identificador.lower()] = simbolo
                         return funcion.interpretar(arbol,nuevoentorno)   
                     else: 
@@ -48,7 +48,7 @@ class Retornar(NodoAST):
             #Se crea un nuevo struct
             if len(datos) == len(self.parametros):
                 for cte in datos:
-                    simbolo = Simbolo(entorno.getNombre(), cte, self.parametros[contador], "any", self.fila, self.columna)
+                    simbolo = Simbolo(entorno.getNombre(), cte, self.parametros[contador], "Variable", 0, self.fila, self.columna)
                     listatmp.append(simbolo)
                     contador = contador + 1
                 newstruct = Struct(self.nombre, listatmp, ism, self.fila, self.columna)

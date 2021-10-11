@@ -35,7 +35,7 @@ class LlamadaFuncion(NodoAST):
                                 #AQUÍ SOLO SE ASIGNAN Y SE CREAN VALORES, SE METEN EN EL NUEVO ENTORNO Y SE TRABAJA DE ESTO
                                 identificador = listaparametros[i].getIdentificador()
                                 valor = listavalores[i].interpretar(arbol, entorno)
-                                simbolo = Simbolo(entorno.getNombre(), identificador, valor, "id", self.fila, self.columna)
+                                simbolo = Simbolo(entorno.getNombre(), identificador, valor, "Variable", 0, self.fila, self.columna)
                                 nuevoentorno.tabla[identificador.lower()] = simbolo
                                 #nuevoentorno.Imprimir()
                             funcion.interpretar(arbol, nuevoentorno)
@@ -44,7 +44,7 @@ class LlamadaFuncion(NodoAST):
                                 simbolo = nuevoentorno.retornarSimbolo(i.getIdentificador())
                                 matriz = simbolo.getValor()
                                 if isinstance(matriz, Arreglo):
-                                    nuevosimbolo = Simbolo(entorno.getNombre(), i.getIdentificador(), matriz, "arreglo", self.fila, self.columna)
+                                    nuevosimbolo = Simbolo(entorno.getNombre(), i.getIdentificador(), matriz, "Arreglo", 0, self.fila, self.columna)
                                     entorno.addSimbolo(nuevosimbolo)
                             
                         else:

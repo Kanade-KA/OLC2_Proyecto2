@@ -20,7 +20,7 @@ class For(NodoAST):
         #Hay que ver que el identificador sea identificador :v 
         if isinstance(self.indice, Identificador):
             ind = self.indice.getIdentificador()    
-            simbolo = Simbolo(entorno.getNombre(), ind, None, "id", self.fila, self.columna)
+            simbolo = Simbolo(entorno.getNombre(), ind, None, "Variable", 0, self.fila, self.columna)
             entorno.addSimbolo(simbolo)
             if self.fin != None:#quiere decir que traía 2 puntos
                 inicio = self.inicio.interpretar(arbol, entorno)
@@ -33,7 +33,7 @@ class For(NodoAST):
                                 nuevoentorno = Entorno("For", entorno)
                                 for i in range(inicio, fin +1):
                                     #Hay que actualizar la variable
-                                    simbolo = Simbolo(entorno.getNombre(), ind, i, "id", self.fila, self.columna)
+                                    simbolo = Simbolo(entorno.getNombre(), ind, i, "Variable", 0, self.fila, self.columna)
                                     entorno.tabla[ind] = simbolo
                                     for instrucciones in self.instrucciones:
                                         y = instrucciones.interpretar(arbol, nuevoentorno)
@@ -56,7 +56,7 @@ class For(NodoAST):
                                 if(iniciofloat > fin):
                                     break
                                 #Hay que actualizar la variable
-                                simbolo = Simbolo(entorno.getNombre(), ind, iniciofloat, "id", self.fila, self.columna)
+                                simbolo = Simbolo(entorno.getNombre(), ind, iniciofloat, "Variable", 0, self.fila, self.columna)
                                 entorno.tabla[ind] = simbolo
                                 for instrucciones in self.instrucciones:
                                     y = instrucciones.interpretar(arbol, nuevoentorno)
@@ -80,7 +80,7 @@ class For(NodoAST):
                     nuevoentorno = Entorno("For",entorno)
                     for i in iterador:
                         #Hay que actualizar la variable
-                        simbolo = Simbolo(entorno.getNombre(), ind, i, "id", self.fila, self.columna)
+                        simbolo = Simbolo(entorno.getNombre(), ind, i, "Variable", 0, self.fila, self.columna)
                         entorno.tabla[ind] = simbolo
                         for instrucciones in self.instrucciones:
                             y = instrucciones.interpretar(arbol, nuevoentorno)
@@ -94,7 +94,7 @@ class For(NodoAST):
                                 break
                 else:#o un numero
                     nuevoentorno = Entorno("For", entorno)
-                    simbolo = Simbolo(entorno.getNombre(), ind, iterador, "id", self.fila, self.columna)
+                    simbolo = Simbolo(entorno.getNombre(), ind, iterador, "Variable", 0, self.fila, self.columna)
                     entorno.tabla[ind] = simbolo#no estoy segura de si es entorno o tabla normal
                     for instrucciones in self.instrucciones:
                             y = instrucciones.interpretar(arbol, nuevoentorno)

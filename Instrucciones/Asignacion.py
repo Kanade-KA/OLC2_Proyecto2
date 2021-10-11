@@ -29,10 +29,10 @@ class Asignacion(NodoAST):
                 arbol.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
         if self.tipo.lower() == "global":
-            simbolo = Simbolo(entorno.getNombre(), self.identificador, value,  self.tipo, self.fila, self.columna)
+            simbolo = Simbolo(entorno.getNombre(), self.identificador, value,  self.tipo, 0, self.fila, self.columna)
             entorno.AgregarGlobal(simbolo)
             return
         valor = self.expresion.interpretar(arbol, entorno)
-        simbolo = Simbolo(entorno.getNombre(), self.identificador, valor, "Variable", self.fila, self.columna)
+        simbolo = Simbolo(entorno.getNombre(), self.identificador, valor, "Variable", 0, self.fila, self.columna)
         entorno.addSimbolo(simbolo)
         return
