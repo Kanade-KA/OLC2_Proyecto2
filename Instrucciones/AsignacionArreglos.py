@@ -17,3 +17,6 @@ class AsignacionArreglo(NodoAST):
         arbol.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
         return
+
+    def traducir(self, traductor, entorno):
+        return "Asignacion Arreglos"

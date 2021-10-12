@@ -47,3 +47,7 @@ class Relacional(NodoAST):
             else:
                 return False
         return "Error de tipos"
+
+    def traducir(self, traductor, entorno):
+        return "relacional"
+        

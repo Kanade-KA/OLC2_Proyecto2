@@ -111,3 +111,6 @@ class For(NodoAST):
                                 break
 
         return None
+
+    def traducir(self, traductor, entorno):
+        return "For"

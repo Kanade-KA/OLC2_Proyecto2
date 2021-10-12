@@ -29,3 +29,6 @@ class LlamaMatriz3D(NodoAST):
         else:
             arbol.addExcepcion(Error("Semántico", "No es de tipo multidimensional"), t.lineno(1), t.lexpos(1))
             return
+
+    def traducir(self, traductor, entorno):
+        return "Llamada a matriz 3D"

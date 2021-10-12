@@ -27,3 +27,6 @@ class Funcion(NodoAST):
 
     def getParametros(self):
         return self.parametros
+
+    def traducir(self, traductor, entorno):
+        return "Funciones"

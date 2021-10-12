@@ -30,3 +30,6 @@ class While(NodoAST):
             else:
                 break
         return None
+
+    def traducir(self, traductor, entorno):
+        return "While"

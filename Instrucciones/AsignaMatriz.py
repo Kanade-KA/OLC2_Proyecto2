@@ -42,3 +42,6 @@ class AsignaMatriz(NodoAST):
             arbol.addExcepcion(Error("Semántico", "Error variable no es de tipo Matriz", self.fila, self.columna))
         
         return
+
+    def traducir(self, traductor, entorno):
+        return "Asignacion Matriz 1D"

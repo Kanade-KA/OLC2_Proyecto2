@@ -43,5 +43,7 @@ class If(NodoAST):
                         instruccion.interpretar(arbol, nuevoentorno2)
         if self.elseIf != None:
                 return self.elseIf.interpretar(arbol, entorno)
-        
         return None
+
+    def traducir(self, traductor, entorno):
+        return "If"

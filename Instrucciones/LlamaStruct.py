@@ -24,3 +24,6 @@ class LlamaStruct(NodoAST):
         else:
             arbol.addExcepcion(Error("Semantico", "No es de tipo struct", self.fila, self.columna))
         return
+
+    def traducir(self, traductor, entorno):
+        return "Llamada a Struct"

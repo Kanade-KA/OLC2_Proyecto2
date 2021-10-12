@@ -43,3 +43,6 @@ class AsignaMatriz3D(NodoAST):
             arbol.addExcepcion(Error("Semántico", "Error variable no es de tipo Matriz Multidimensional", self.fila, self.columna))
         
         return
+
+    def traducir(self, traductor, entorno):
+        return "Asignacion Matriz 3D"

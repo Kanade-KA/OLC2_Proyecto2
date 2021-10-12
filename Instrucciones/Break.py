@@ -7,3 +7,6 @@ class Break(NodoAST):
 
     def interpretar(self, arbol, entorno):
         return self
+
+    def traducir(self, traductor, entorno):
+        return "Break"

@@ -17,3 +17,6 @@ class Identificador(NodoAST):
 
     def getIdentificador(self):
         return self.identificador
+
+    def traducir(self, arbol, TS):
+        return "Identificador"

@@ -51,3 +51,6 @@ class LlamadaFuncion(NodoAST):
             else:
                 arbol.addExcepcion(Error("Semantico", "No es una función", self.fila, self.columna))
         return
+
+    def traducir(self, traductor, entorno):
+        return "Llamada a Funcion"

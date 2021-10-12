@@ -37,3 +37,8 @@ class Constante(NodoAST):
 
     def getTipo(self):
         return type(self.valor)
+
+    def traducir(self, traductor, entorno):
+        return "Constante"
+
+    

@@ -56,3 +56,6 @@ class Retornar(NodoAST):
             else:
                 arbol.addExcepcion(Error("Semantico", "Faltan propiedades en el struct", self.fila, self.columna))
             return
+
+    def traducir(self, traductor, entorno):
+        return "Retornar"

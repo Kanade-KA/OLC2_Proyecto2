@@ -37,3 +37,6 @@ class Imprimir(NodoAST):
         if(self.essalto!='F'):
             arbol.AgregaraConsola("\n")
         return
+
+    def traducir(self, traductor, entorno):
+        return "Imprimir"

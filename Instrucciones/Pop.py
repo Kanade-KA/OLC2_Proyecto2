@@ -18,3 +18,6 @@ class Pop(NodoAST):
         else:
             arbol.addExcepcion(Error("SEMANTICO", "Error, no es de tipo matriz", self.fila, self.columna)) 
         return
+
+    def traducir(self, traductor, entorno):
+        return "Pop"

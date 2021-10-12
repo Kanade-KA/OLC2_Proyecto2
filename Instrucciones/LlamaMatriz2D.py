@@ -33,3 +33,6 @@ class LlamaMatriz2D(NodoAST):
         else:
             arbol.addExcepcion(Error("Semantico", "La variable no es de tipo arreglo", self.fila, self.columna))
         return
+
+    def traducir(self, traductor, entorno):
+        return "Llamada a matriz 2D"

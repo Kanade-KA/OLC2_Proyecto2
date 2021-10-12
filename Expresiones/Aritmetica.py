@@ -53,3 +53,6 @@ class Aritmetica(NodoAST):
             return arbol.addExcepcion(Error("Semantico", "Los tipos no coinciden", self.fila, self.columna))
         arbol.addExcepcion(Error("Semantico", "Operador Nulo", self.fila, self.columna))
         return
+
+    def traducir(self, traductor, entorno):
+        return "aritmetica"

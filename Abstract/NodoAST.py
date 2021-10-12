@@ -9,3 +9,7 @@ class NodoAST(ABC):
     @abstractmethod
     def interpretar(self, arbol, TS):
         pass
+
+    @abstractmethod
+    def traducir(self, traductor, entorno):
+        pass

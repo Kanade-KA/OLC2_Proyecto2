@@ -10,3 +10,6 @@ class Return(NodoAST):
     def interpretar(self, arbol, entorno):
         retorna = self.expresion.interpretar(arbol, entorno)
         return retorna
+
+    def traducir(self, traductor, entorno):
+        return "Retornar"

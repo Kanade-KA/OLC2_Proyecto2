@@ -30,3 +30,6 @@ class Logica(NodoAST):
             else:
                 return False       
         return
+
+    def traducir(self, traductor, entorno):
+        return "logica"

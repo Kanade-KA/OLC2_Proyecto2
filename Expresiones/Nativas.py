@@ -42,3 +42,6 @@ class Nativas(NodoAST):
         if self.operador == OperadorNativo.STRING:
             return str(op)
         return
+
+    def traducir(self, traductor, entorno):
+        return "nativas"

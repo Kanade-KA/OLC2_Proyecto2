@@ -39,3 +39,6 @@ class Length(NodoAST):
                 arbol.addExcepcion(Error("SEMANTICO", "Error, no es de tipo matriz", self.fila, self.columna))
                 return "nothing"
 
+    def traducir(self, traductor, entorno):
+        return "length"
+        

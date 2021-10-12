@@ -25,3 +25,6 @@ class Parse(NodoAST):
             return "String"
         if isinstance(op, bool):
             return "Booleano"
+
+    def traducir(self, traductor, entorno):
+        return "parse"
