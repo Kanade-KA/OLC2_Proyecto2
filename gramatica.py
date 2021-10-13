@@ -29,6 +29,8 @@ from Instrucciones.Asignacion import Asignacion
 from TablaSimbolo.Error import Error
 import re
 import sys
+
+from TablaSimbolo.Traductor import Traductor
 sys.setrecursionlimit(3000)
 
 errores = []
@@ -708,3 +710,50 @@ def parse(imput) :
             f += err.toString()
         return [f, "<h1>Existen Errores, no se puede mostrar la Tabla de Simbolos</h1>", arbol.generateErrors()]
     return [arbol.getConsola(), arbol.generateTable(), "No hay Errores :D"]
+
+def parsetrad(imput):
+    global errores
+    global lexer
+    global parser
+    global salida
+    global raiz
+    errores = []
+    lexer = lex.lex(reflags= re.IGNORECASE)
+    parser = yacc.yacc()
+    entorno = Entorno("global")
+    arbol = Traductor()
+    global input
+    input = imput
+
+    instrucciones=parser.parse(imput)
+    for instruccion in instrucciones:
+        instruccion.interpretar(arbol, entorno)
+    if len(arbol.getExcepciones())> 0:
+        f = ""
+        for err in arbol.getExcepciones():
+            f += err.toString()
+        return [f, "<h1>Existen Errores, no se puede mostrar la Tabla de Simbolos</h1>", arbol.generateErrors()]
+    return [arbol.getConsola(), arbol.generateTable(), "No hay Errores :D"]
+
+def parsetrad(imput):
+    global errores2
+    global lexer2
+    global parser2
+    global salida2
+    global raiz2
+    errores2 = []
+    lexer2 = lex.lex(reflags= re.IGNORECASE)
+    parser2 = yacc.yacc()
+    entorno = Entorno("global")
+    arbol = Traductor()
+    global input
+    input = imput
+    
+    instrucciones=parser.parse(imput)
+    x = arbol.getEncabezado()
+    for instruccion in instrucciones:
+        instruccion.traducir(arbol, entorno)
+
+    x += arbol.temporales() + arbol.getMain() + arbol.getCodigo() + "}\n" + arbol.getFuncion() 
+    
+    return [x, "Interprete para ver Tabla de Simbolos", "No hay Errores :D"]

@@ -1,3 +1,4 @@
+from Abstract.Objeto import TipoObjeto
 from Instrucciones.LlamaMatriz import LlamaMatriz
 from Instrucciones.Return import Return
 from Abstract.NodoAST import NodoAST
@@ -29,15 +30,16 @@ class Asignacion(NodoAST):
                 arbol.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
         if self.tipo.lower() == "global":
-            simbolo = Simbolo(entorno.getNombre(), self.identificador, value,  self.tipo, 0, self.fila, self.columna)
+            simbolo = Simbolo(entorno.getNombre(), self.identificador, value, arbol.getTipo(value),  self.tipo, 0, self.fila, self.columna)
             arbol.addSimbolo(simbolo)
             entorno.AgregarGlobal(simbolo)
             return
         valor = self.expresion.interpretar(arbol, entorno)
-        simbolo = Simbolo(entorno.getNombre(), self.identificador, valor, "Variable", 0, self.fila, self.columna)
+        simbolo = Simbolo(entorno.getNombre(), self.identificador, valor, arbol.getTipo(valor), "Variable", 0, self.fila, self.columna)
         arbol.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
         return
+
 
     def traducir(self, traductor, entorno):
         return "Asignacion"

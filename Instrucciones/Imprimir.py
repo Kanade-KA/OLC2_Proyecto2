@@ -39,4 +39,25 @@ class Imprimir(NodoAST):
         return
 
     def traducir(self, traductor, entorno):
-        return "Imprimir"
+        for ins in self.expresion:
+            ins.traducir(traductor, entorno)
+        traductor.addCodigo("imprimir();\n")
+        if not traductor.hayPrint():
+            cadena = "func imprimir(){\n"
+            cadena += "t"+str(traductor.getContador()) +" = S + 1//Posicionamos en parametro\n"
+            traductor.IncrementarContador()
+            cadena += "t"+str(traductor.getContador()) + " = stack[int(t"+str(traductor.getContador()-1)+")]\n"
+            traductor.IncrementarContador()
+            cadena += "L1:\n"
+            cadena += "t"+str(traductor.getContador())+" = heap[int(t"+str(traductor.getContador()-1)+")]\n" 
+            cadena += "if t"+str(traductor.getContador())+" == -1 {goto L0}\n"
+            cadena += "{ asciiValue := int(t"+str(traductor.getContador())+")\n"
+            cadena += "character := rune(asciiValue)\n"
+            cadena += "fmt.Printf(\"%c\",character)\n"
+            cadena += "t"+str(traductor.getContador()-1)+" = t"+str(traductor.getContador()-1)+" + 1\n"
+            cadena += "goto L1}\n"
+            cadena += "L0:\nreturn\n}"
+            traductor.IncrementarContador()
+            traductor.addFuncion(cadena)
+            traductor.activarPrint()
+        return

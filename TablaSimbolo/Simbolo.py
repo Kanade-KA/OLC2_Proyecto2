@@ -1,5 +1,5 @@
 class Simbolo:
-    def __init__(self, entorno, identificador, valor, tipo, posicion, fila, columna ):
+    def __init__(self, entorno, identificador, valor, tipo, rol, posicion, fila, columna ):
         self.id = identificador
         self.ent = entorno
         self.valor = valor  ## instancia de clase OBJETO
@@ -7,6 +7,7 @@ class Simbolo:
         self.fila = fila
         self.columna = columna
         self.posicion = posicion 
+        self.rol = rol
 
     def getID(self):
         return self.id
@@ -37,3 +38,6 @@ class Simbolo:
     
     def getEntorno(self):
         return self.ent
+
+    def getRol(self):
+        return self.rol

@@ -9,7 +9,8 @@ class TipoObjeto(Enum):
     CADENA = 4
     CARACTER = 5
     NULO = 6
-    ERROR = 7
+    ANY = 7
+    ARREGLO = 8
 
 
 class Objeto(ABC):

@@ -2,6 +2,7 @@ import re
 from gramatica import parse as gram
 from flask import Flask, redirect, url_for, render_template, request
 from gramgraf import parse as grafica
+from gramatica import parsetrad as traductor
 app = Flask(__name__)
 tmp_val=''
 
@@ -20,6 +21,12 @@ def home():
             tmp=inpt
             dot = grafica(tmp)
             return render_template('index.html', resultado="", entry=tmp, graf = dot)
+        if request.form['submit_button']=='traductor':
+            inpt = request.form["entrada"]
+            global tmp_val3
+            tmp_val3=inpt
+            result=traductor(tmp_val3)
+            return render_template('index.html', resultado=result[0], entry=tmp_val3, graf = "", tabla=result[1], error=result[2])
         else:
             return render_template('index.html', entry ="", graf="")
     else:
