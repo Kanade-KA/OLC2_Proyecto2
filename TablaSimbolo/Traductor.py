@@ -28,34 +28,24 @@ class Traductor:
         self.print = True
 #Metar al Heap String
     def putStringHeap(self, valor):
-        temporalheap = self.getHeap()
+        temporal = self.getHeap()
         cadena=""
-        cadena += "//-----Agregando "+ str(valor).replace("\n", "") + " a Heap------\n"
-        cadena += "t"+str(self.getContador()) + "= H\n"
-        #traductor.IncrementarContador()
+        cadena += "\n//-----Agregando "+ str(valor).replace("\n", "") + " a Heap------\n"
+        cadena += "t"+str(self.getContador()) + "= H//Se extrae la posción libre del heap\n"
         for letra in valor:
-            cadena += "heap[int(H)] = "+ self.getAscii(letra) + ";\n"
-            cadena += "H = H + 1\n"
+            cadena += "heap[int(H)] = "+ self.getAscii(letra) + ";//Se mete la letra "+letra+"\n"
+            cadena += "H = H + 1//Se suma uno al heap\n"
             self.IncrementarHeap()
-        cadena += "heap[int(H)] = -1;\n"
-        cadena += "H = H + 1\n"
-        #Meter en el stack la posición del heap
-        cadena += "stack[int(S)] = t"+str(self.getContador()) + ";\n"
-        self.IncrementarContador()
-        cadena += "t"+str(self.getContador())+" = stack[int(S)];\n"
-        self.IncrementarContador()
-        cadena += "t"+str(self.getContador())+"= S + 1;\n"
-        cadena += "t"+str(self.getContador())+"= t"+str(self.getContador())+" + 1;\n"
-        cadena += "stack[int(t"+str(self.getContador())+")] = t"+str(self.getContador()-1)+";\n"
-        cadena += "S = S + 1;\n"
-        self.IncrementarContador()
+        cadena += "heap[int(H)] = -1;//Se ingresa al heap el fin de la cadena\n"
+        cadena += "H = H + 1//Se suma uno para que se pueda volver a usar el heap\n"
+        self.IncrementarHeap()
         self.addCodigo(cadena)
-        return temporalheap
+        return temporal
 
     def putIntStack(self, numero):
         cadena = "//AGREGANDO UN ENTERO "+str(numero)
         temporal = self.getStack()
-        cadena += "stack[int(t"+ str(temporal) + ")] = "+str(numero)+";\n"
+        cadena += "stack[int("+ str(temporal) + ")] = "+str(numero)+";\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
         return temporal

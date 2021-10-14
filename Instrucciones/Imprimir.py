@@ -44,24 +44,29 @@ class Imprimir(NodoAST):
         for ins in self.expresion:
             if isinstance(ins, Constante):
                 cad = str(ins.traducir(traductor, entorno))
-                traductor.putStringHeap(cad)
-                traductor.addCodigo("imprimir();\n")
-            if isinstance(ins, Identificador):
-                puntero = ins.traducir(traductor, entorno)
-                print("----------")
-                print(puntero)
-                contadortemp = traductor.getContador()
-                cadena = "t"+ str(traductor.getContador())+" = S//Para guardar el puntero Stack en donde va\n"
+                heap = traductor.putStringHeap(cad)
+                #TENGO QUE TENER UN TEMPORAL QUE ME LLEVE UNA POSICIÓN MAS DEL STACK
+                cadena = "t"+str(traductor.getContador())+" = S + 1;//Se envía en S + 1 donde se guardará el parametro\n"
+                #TENGO QUE EXTRAER EL PUNTERO DEL HEAP Y METERLO AL STACK
+                cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(heap)+";//Se extrae el puntero del Heap\n"
                 traductor.IncrementarContador()
-                cadena += "S = "+str(puntero)+"\n"
+                cadena += "imprimir();\n"
                 traductor.addCodigo(cadena)
+            if isinstance(ins, Identificador):
+                puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
+                contadortemp = traductor.getContador()#Contador que guarda la posición del stack para volver despues de ir a buscar la variable
+                cadena = "t"+ str(contadortemp)+" = S//Para guardar el puntero Stack en donde va\n"
+                traductor.IncrementarContador()
+                cadena += "S = "+str(puntero - 1 ) +"//Nos posicionamos en la posición donde está el identificador\n"
+                traductor.addCodigo(cadena)#Agregamos esto antes del imprimir
                 traductor.addCodigo("imprimir();\n")
-                regreso = "S = t"+str(contadortemp)+";\n"
+                regreso = "S = t"+str(contadortemp)+";//aquí devolvemos el puntero a su posición inicial\n"
                 traductor.addCodigo(regreso)
+                traductor.IncrementarContador()
                 
                 
-        #if self.essalto != 'F':
-            #x+="\n"
+        if self.essalto != 'F':
+            traductor.addCodigo("fmt.Println(\"\")\n")
         #-------------------METER EL X EN EL HEAP
         
         #traductor.addCodigo("imprimir();\n")

@@ -72,9 +72,11 @@ class Asignacion(NodoAST):
             #Tengo que guardar el apuntador del heap en el stack
             cadena = ""
             cadena += "t"+str(traductor.getContador())+" = "+str(apuntadorheap) + ";//Guardo en un temporal el integer del heap\n"
-            cadena += "stack[int(S)] = t"+str(traductor.getContador())+";\n"
+            cadena += "stack[int(S)] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
+            cadena += "S = S + 1 //Se aumenta el stack para poder meter otro numero\n\n"
+            traductor.addCodigo(cadena)
             apuntastack = traductor.getStack()
-            traductor.IncrementarStack()
+            traductor.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
             traductor.IncrementarContador()
             simbolo = Simbolo(entorno.getNombre(), id, valor, "string", "Variable", apuntastack, self.fila, self.columna)
             traductor.addSimbolo(simbolo)
