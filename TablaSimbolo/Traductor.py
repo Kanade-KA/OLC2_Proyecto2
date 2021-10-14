@@ -26,7 +26,42 @@ class Traductor:
 
     def activarPrint(self):
         self.print = True
+#Metar al Heap String
+    def putStringHeap(self, valor):
+        temporalheap = self.getHeap()
+        cadena=""
+        cadena += "//-----Agregando "+ str(valor).replace("\n", "") + " a Heap------\n"
+        cadena += "t"+str(self.getContador()) + "= H\n"
+        #traductor.IncrementarContador()
+        for letra in valor:
+            cadena += "heap[int(H)] = "+ self.getAscii(letra) + ";\n"
+            cadena += "H = H + 1\n"
+            self.IncrementarHeap()
+        cadena += "heap[int(H)] = -1;\n"
+        cadena += "H = H + 1\n"
+        #Meter en el stack la posición del heap
+        cadena += "stack[int(S)] = t"+str(self.getContador()) + ";\n"
+        self.IncrementarContador()
+        cadena += "t"+str(self.getContador())+" = stack[int(S)];\n"
+        self.IncrementarContador()
+        cadena += "t"+str(self.getContador())+"= S + 1;\n"
+        cadena += "t"+str(self.getContador())+"= t"+str(self.getContador())+" + 1;\n"
+        cadena += "stack[int(t"+str(self.getContador())+")] = t"+str(self.getContador()-1)+";\n"
+        cadena += "S = S + 1;\n"
+        self.IncrementarContador()
+        self.addCodigo(cadena)
+        return temporalheap
 
+    def putIntStack(self, numero):
+        cadena = "//AGREGANDO UN ENTERO "+str(numero)
+        temporal = self.getStack()
+        cadena += "stack[int(t"+ str(temporal) + ")] = "+str(numero)+";\n"
+        self.addCodigo(cadena)
+        self.IncrementarStack()
+        return temporal
+#CONVERTIR A ASCII
+    def getAscii(self, cadena):
+        return str(ord(cadena))
 #Inicializar Temporales
     def temporales(self):
         temp = "var "
@@ -179,7 +214,7 @@ class Traductor:
             self.cadena += str(sim.getID())
             self.cadena += "</td>"
             self.cadena += "<td>"
-            self.cadena += str(self.tipoToString(sim.getTipo()))
+            self.cadena += str(sim.getTipo())
             self.cadena += "</td>"
             self.cadena += "<td>"
             self.cadena += str(sim.getRol())

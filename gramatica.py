@@ -756,4 +756,4 @@ def parsetrad(imput):
 
     x += arbol.temporales() + arbol.getMain() + arbol.getCodigo() + "}\n" + arbol.getFuncion() 
     
-    return [x, "Interprete para ver Tabla de Simbolos", "No hay Errores :D"]
+    return [x, arbol.generateTable(), "No hay Errores :D"]

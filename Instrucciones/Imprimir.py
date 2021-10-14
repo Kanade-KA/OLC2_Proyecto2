@@ -1,3 +1,5 @@
+from Expresiones.Constante import Constante
+from Expresiones.Identificador import Identificador
 from Expresiones.Struct import Struct
 from Expresiones.Arreglo3D import Arreglo3D
 from Expresiones.Arreglo2D import Arreglo2D
@@ -40,8 +42,29 @@ class Imprimir(NodoAST):
 
     def traducir(self, traductor, entorno):
         for ins in self.expresion:
-            ins.traducir(traductor, entorno)
-        traductor.addCodigo("imprimir();\n")
+            if isinstance(ins, Constante):
+                cad = str(ins.traducir(traductor, entorno))
+                traductor.putStringHeap(cad)
+                traductor.addCodigo("imprimir();\n")
+            if isinstance(ins, Identificador):
+                puntero = ins.traducir(traductor, entorno)
+                print("----------")
+                print(puntero)
+                contadortemp = traductor.getContador()
+                cadena = "t"+ str(traductor.getContador())+" = S//Para guardar el puntero Stack en donde va\n"
+                traductor.IncrementarContador()
+                cadena += "S = "+str(puntero)+"\n"
+                traductor.addCodigo(cadena)
+                traductor.addCodigo("imprimir();\n")
+                regreso = "S = t"+str(contadortemp)+";\n"
+                traductor.addCodigo(regreso)
+                
+                
+        #if self.essalto != 'F':
+            #x+="\n"
+        #-------------------METER EL X EN EL HEAP
+        
+        #traductor.addCodigo("imprimir();\n")
         if not traductor.hayPrint():
             cadena = "func imprimir(){\n"
             cadena += "t"+str(traductor.getContador()) +" = S + 1//Posicionamos en parametro\n"
