@@ -6,6 +6,7 @@ from Expresiones.Arreglo2D import Arreglo2D
 from Expresiones.Arreglo import Arreglo
 from Abstract.Objeto import TipoObjeto
 from Abstract.NodoAST import NodoAST
+from Expresiones.Aritmetica import Aritmetica
 
 class Imprimir(NodoAST):
     def __init__(self, expresion, esln, fila, columna):
@@ -53,22 +54,35 @@ class Imprimir(NodoAST):
                 cadena += "imprimir();\n"
                 traductor.addCodigo(cadena)
             if isinstance(ins, Identificador):
-                puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
-                contadortemp = traductor.getContador()#Contador que guarda la posición del stack para volver despues de ir a buscar la variable
-                cadena = "t"+ str(contadortemp)+" = S//Para guardar el puntero Stack en donde va\n"
-                traductor.IncrementarContador()
-                cadena += "S = "+str(puntero - 1 ) +"//Nos posicionamos en la posición donde está el identificador\n"
-                traductor.addCodigo(cadena)#Agregamos esto antes del imprimir
-                traductor.addCodigo("imprimir();\n")
-                regreso = "S = t"+str(contadortemp)+";//aquí devolvemos el puntero a su posición inicial\n"
-                traductor.addCodigo(regreso)
-                traductor.IncrementarContador()
-                
-                
+                tipo = ins.getTipo(entorno)
+                if tipo == "int":
+                    puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
+                    cadena = "t"+str(traductor.getContador())+" = stack[int("+str(puntero)+")]//Extraigo el valor y ese lo imprimo\n"
+                    cadena += "fmt.Printf(\"%d\", int(t"+str(traductor.getContador())+"))\n"
+                    traductor.IncrementarContador()
+                    traductor.addCodigo(cadena)
+                elif tipo == "doble":
+                    puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
+                    cadena = "t"+str(traductor.getContador())+" = stack[int("+str(puntero)+")]//Extraigo el valor y ese lo imprimo\n"
+                    cadena += "fmt.Printf(\"%f\", t"+str(traductor.getContador())+")\n"
+                    traductor.IncrementarContador()
+                    traductor.addCodigo(cadena)
+                else:
+                    puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
+                    contadortemp = traductor.getContador()#Contador que guarda la posición del stack para volver despues de ir a buscar la variable
+                    cadena = "t"+ str(contadortemp)+" = S//Para guardar el puntero Stack en donde va\n"
+                    traductor.IncrementarContador()
+                    cadena += "S = "+str(puntero - 1 ) +"//Nos posicionamos en la posición donde está el identificador\n"
+                    traductor.addCodigo(cadena)#Agregamos esto antes del imprimir
+                    traductor.addCodigo("imprimir();\n")
+                    regreso = "S = t"+str(contadortemp)+";//aquí devolvemos el puntero a su posición inicial\n"
+                    traductor.addCodigo(regreso)
+                    traductor.IncrementarContador()
+            #Aquí si viene una operacion aritmetica
+            if isinstance(ins, Aritmetica):
+                traductor.addCodigo("hay aritmetica")
         if self.essalto != 'F':
-            traductor.addCodigo("fmt.Println(\"\")\n")
-        #-------------------METER EL X EN EL HEAP
-        
+            traductor.addCodigo("fmt.Printf(\"%c\", 10);\n")
         #traductor.addCodigo("imprimir();\n")
         if not traductor.hayPrint():
             cadena = "func imprimir(){\n"

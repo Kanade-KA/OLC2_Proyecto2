@@ -43,9 +43,19 @@ class Traductor:
         return temporal
 
     def putIntStack(self, numero):
-        cadena = "//AGREGANDO UN ENTERO "+str(numero)
+        cadena = "//AGREGANDO UN ENTERO "+str(numero) + "\n"
         temporal = self.getStack()
         cadena += "stack[int("+ str(temporal) + ")] = "+str(numero)+";\n"
+        cadena += "S = S + 1\n"
+        self.addCodigo(cadena)
+        self.IncrementarStack()
+        return temporal
+
+    def putDoubleStack(self, numero):
+        cadena = "//AGREGANDO UN DOBLE "+str(numero) + "\n"
+        temporal = self.getStack()
+        cadena += "stack["+ str(temporal) + "] = "+str(numero)+";\n"
+        cadena += "S = S + 1\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
         return temporal

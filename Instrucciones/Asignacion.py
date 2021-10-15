@@ -81,4 +81,9 @@ class Asignacion(NodoAST):
             simbolo = Simbolo(entorno.getNombre(), id, valor, "string", "Variable", apuntastack, self.fila, self.columna)
             traductor.addSimbolo(simbolo)
             entorno.addSimbolo(simbolo)
+        if tipo == TipoObjeto.DECIMAL:
+            apuntador = traductor.putDoubleStack(valor)
+            simbolo = Simbolo(entorno.getNombre(), id, valor, "doble", "Variable", apuntador, self.fila, self.columna)
+            entorno.addSimbolo(simbolo)
+            traductor.addSimbolo(simbolo)
         return

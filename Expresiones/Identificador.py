@@ -27,3 +27,7 @@ class Identificador(NodoAST):
             return 
         else:
             return simbolo.getPosicion()
+
+    def getTipo(self, entorno):
+        simbolo = entorno.retornarSimbolo(self.identificador.lower())
+        return simbolo.getTipo()
