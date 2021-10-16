@@ -74,7 +74,7 @@ class Aritmetica(NodoAST):
         #Operador Derecho
         if isinstance(self.OperacionDer, Identificador):
             traductor.setTmpDer(self.OperacionDer.getTipo(entorno))
-            if traductor.getTmpIzq() != "string":
+            if traductor.getTmpDer() != "string":
                 traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")]//Traemos la variable\n"
                 opd = "t"+str(traductor.getContador())
                 traductor.addCodigo(traer)
@@ -209,15 +209,17 @@ class Aritmetica(NodoAST):
         operadorder = False
         if isinstance(opi, int) or isinstance(opi, float):
             operadorizq = True
-        if traductor.getTmpIzq() == "int" or traductor.getTmpIzq() == "doble":
+        if traductor.getTmpIzq() == "int" or traductor.getTmpIzq() == "doble" or traductor.getTmpIzq() == "":
             operadorizq = True
-        if traductor.getTmpDer() == "int" or traductor.getTmpDer() == "doble":
+        if traductor.getTmpDer() == "int" or traductor.getTmpDer() == "doble" or traductor.getTmpDer() == "":
             operadorder = True
         if isinstance(opd, int) or isinstance(opd, float):
             operadorder = True
         if operadorizq and operadorder:
+            print("Todos son numeros")
             return True
         else:
+            print("Hay cadena")
             return False
 
     def HayDoble(self, traductor, opi, opd):

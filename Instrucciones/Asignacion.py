@@ -1,4 +1,5 @@
 from Abstract.Objeto import TipoObjeto
+from Expresiones.Aritmetica import Aritmetica
 from Instrucciones.LlamaMatriz import LlamaMatriz
 from Instrucciones.Return import Return
 from Abstract.NodoAST import NodoAST
@@ -57,17 +58,21 @@ class Asignacion(NodoAST):
             if not isinstance(value, str):
                 traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
-        valor = self.expresion.traducir(traductor, entorno)
-        self.Asignar(traductor.getTipo(valor), valor, self.identificador, entorno, traductor)
-        return "Asignacion"
+        if isinstance(self.expresion, Aritmetica):
+            valor = self.expresion.traducir(traductor, entorno)
+            print(valor)
+        else:
+            valor = self.expresion.traducir(traductor, entorno)
+            self.Asignar(traductor.getTipo(valor), valor, self.identificador, entorno, traductor)
+            return 
 
     def Asignar(self, tipo, valor, id, entorno, traductor):
-        if tipo == TipoObjeto.ENTERO:
+        if tipo == TipoObjeto.ENTERO or tipo == "int":
             apuntador = traductor.putIntStack(valor)
             simbolo = Simbolo(entorno.getNombre(), id, valor, "int", "Variable", apuntador, self.fila, self.columna)
             entorno.addSimbolo(simbolo)
             traductor.addSimbolo(simbolo)
-        if tipo == TipoObjeto.CADENA:
+        if tipo == TipoObjeto.CADENA or tipo == "string":
             apuntadorheap = traductor.putStringHeap(valor)
             #Tengo que guardar el apuntador del heap en el stack
             cadena = ""
@@ -81,7 +86,7 @@ class Asignacion(NodoAST):
             simbolo = Simbolo(entorno.getNombre(), id, valor, "string", "Variable", apuntastack, self.fila, self.columna)
             traductor.addSimbolo(simbolo)
             entorno.addSimbolo(simbolo)
-        if tipo == TipoObjeto.DECIMAL:
+        if tipo == TipoObjeto.DECIMAL or tipo == "doble":
             apuntador = traductor.putDoubleStack(valor)
             simbolo = Simbolo(entorno.getNombre(), id, valor, "doble", "Variable", apuntador, self.fila, self.columna)
             entorno.addSimbolo(simbolo)
