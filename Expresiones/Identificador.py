@@ -1,5 +1,3 @@
-from Expresiones.Arreglo import Arreglo
-from TablaSimbolo.Simbolo import Simbolo
 from Abstract.NodoAST import NodoAST
 from TablaSimbolo.Error import Error
 
@@ -31,3 +29,7 @@ class Identificador(NodoAST):
     def getTipo(self, entorno):
         simbolo = entorno.retornarSimbolo(self.identificador.lower())
         return simbolo.getTipo()
+
+    def getValor(self, entorno):
+        simbolo = entorno.retornarSimbolo(self.identificador.lower())
+        return simbolo.getValor()

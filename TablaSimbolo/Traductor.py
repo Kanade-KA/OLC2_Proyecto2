@@ -23,7 +23,9 @@ class Traductor:
         #Banderas para no repetir metodos
         self.print = False
         self.potencia = False
-        #....................
+        #....................TIPOS DE VARIABLES RETORNADAS......................
+        self.tmpizq = ""
+        self.tmpder = ""
         self.tipoactual = ""
 #TIPO BANDERA
     def cambiarTipo(self, tipo):
@@ -32,6 +34,21 @@ class Traductor:
     def getTipoActual(self):
         return self.tipoactual
 
+    def setearTemporales(self):
+        self.tmpizq = ""
+        self.tempder = ""
+
+    def setTmpIzq(self, dato):
+        self.tmpizq = dato
+
+    def setTmpDer(self, dato):
+        self.tmpder = dato
+    
+    def getTmpIzq(self):
+        return self.tmpizq
+
+    def getTmpDer(self):
+        return self.tmpder
 #Banderas
 
     def hayPrint(self):
