@@ -12,19 +12,39 @@ class Traductor:
         self.grafica = ""
         self.cadena = ""
         self.error = ""
-        self.encabezado = "//------------------------HEADER-----------------------------\npackage main\nimport \"fmt\" \nvar stack [19121997]float64\nvar heap [19121997]float64\nvar S, H float64\n"
+        self.libmath = ""
+        self.libfmt = "import \"fmt\"\n"
+        self.encabezado = "//------------------------HEADER-----------------------------\npackage main\n"+self.libmath+self.libfmt+"var stack [19121997]float64\nvar heap [19121997]float64\nvar S, H float64\n"
         self.heap = 0
         self.stack= 0
         self.contador = 0
         self.c3d = ""
         self.main = "func main (){\n//-------------Inicializando Punteros------------\nH = 0 \nS = 0\n"
+        #Banderas para no repetir metodos
         self.print = False
+        self.potencia = False
+        #....................
+        self.tipoactual = ""
+#TIPO BANDERA
+    def cambiarTipo(self, tipo):
+        self.tipoactual = tipo
+
+    def getTipoActual(self):
+        return self.tipoactual
+
 #Banderas
 
     def hayPrint(self):
         return self.print
 
     def activarPrint(self):
+        self.print = True
+    
+    def hayPotencia(self):
+        return self.potencia
+
+    def activarPotencia(self):
+        self.libfmt = "import \"math\"\n"
         self.print = True
 #Metar al Heap String
     def putStringHeap(self, valor):

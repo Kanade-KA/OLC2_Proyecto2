@@ -80,7 +80,21 @@ class Imprimir(NodoAST):
                     traductor.IncrementarContador()
             #Aquí si viene una operacion aritmetica
             if isinstance(ins, Aritmetica):
-                traductor.addCodigo("hay aritmetica")
+                resultado = ins.traducir(traductor, entorno)
+                if traductor.getTipoActual() == "int":
+                    traductor.addCodigo("fmt.Printf(\"%d\", int("+str(resultado)+"));\n")
+                elif traductor.getTipoActual() == "doble":
+                    traductor.addCodigo("fmt.Printf(\"%f\", "+str(resultado)+");\n")
+                else:
+                    cad = str(resultado)
+                    heap = traductor.putStringHeap(cad)
+                    #TENGO QUE TENER UN TEMPORAL QUE ME LLEVE UNA POSICIÓN MAS DEL STACK
+                    cadena = "t"+str(traductor.getContador())+" = S + 1;//Se envía en S + 1 donde se guardará el parametro\n"
+                    #TENGO QUE EXTRAER EL PUNTERO DEL HEAP Y METERLO AL STACK
+                    cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(heap)+";//Se extrae el puntero del Heap\n"
+                    traductor.IncrementarContador()
+                    cadena += "imprimir();\n"
+                    traductor.addCodigo(cadena)
         if self.essalto != 'F':
             traductor.addCodigo("fmt.Printf(\"%c\", 10);\n")
         #traductor.addCodigo("imprimir();\n")

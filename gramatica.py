@@ -164,7 +164,7 @@ precedence = (
     ('left', 'igualigual', 'diferente'),
     ('left', 'mayori', 'mayor', 'menori', 'menor'),
     ('left', 'mas','menos'),
-    ('left', 'por','div', 'mod'),
+    ('left', 'div', 'por', 'mod'),
     ('left',  'pow'),
     ('right', 'not')
 )
