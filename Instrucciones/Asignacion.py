@@ -58,9 +58,41 @@ class Asignacion(NodoAST):
             if not isinstance(value, str):
                 traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
+        if self.tipo.lower() == "bool":
+            if not isinstance(value, bool):
+                traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
+                return
         if isinstance(self.expresion, Aritmetica):
-            valor = self.expresion.traducir(traductor, entorno)
-            print(valor)
+            if value == None:
+                value = self.expresion.traducir(traductor, entorno)
+            #Tengo que ver que no sea un string
+            tipo = traductor.getTipoActual()
+            if tipo == "int" or tipo == "doble":
+                cadena = "stack[int(S)] = "+value+"//Agrego la variable\n"
+                cadena += "S = S + 1\n"
+                simbolo = Simbolo(entorno.getNombre(), self.identificador, value, tipo, "Variable", traductor.getStack(), self.fila, self.columna)
+                traductor.IncrementarStack()
+                traductor.addCodigo(cadena)
+                entorno.addSimbolo(simbolo)
+                traductor.addSimbolo(simbolo)
+                return
+            elif tipo == "string":#Es un string
+                ptero = traductor.putStringHeap(value)
+                cadena = ""
+                cadena += "t"+str(traductor.getContador())+" = "+str(ptero) + ";//Guardo en un temporal el integer del heap\n"
+                cadena += "stack[int(S)] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
+                cadena += "S = S + 1 //Se aumenta el stack para poder meter otro numero\n\n"
+                traductor.addCodigo(cadena)
+                apuntastack = traductor.getStack()
+                traductor.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
+                traductor.IncrementarContador()
+                simbolo = Simbolo(entorno.getNombre(), self.identificador, value, "string", "Variable", apuntastack, self.fila, self.columna)
+                traductor.addSimbolo(simbolo)
+                entorno.addSimbolo(simbolo)
+                return
+            else:
+                print("asignacion de una operacion aritmetica")
+                return
         else:
             valor = self.expresion.traducir(traductor, entorno)
             self.Asignar(traductor.getTipo(valor), valor, self.identificador, entorno, traductor)
@@ -91,4 +123,10 @@ class Asignacion(NodoAST):
             simbolo = Simbolo(entorno.getNombre(), id, valor, "doble", "Variable", apuntador, self.fila, self.columna)
             entorno.addSimbolo(simbolo)
             traductor.addSimbolo(simbolo)
+        if tipo == TipoObjeto.BOOLEANO or tipo == "bool":
+            apuntador = traductor.putBooleanStack(valor)
+            simbolo = Simbolo(entorno.getNombre(), id, valor, "bool", "Variable", apuntador, self.fila, self.columna)
+            entorno.addSimbolo(simbolo)
+            traductor.addSimbolo(simbolo)
+            return
         return

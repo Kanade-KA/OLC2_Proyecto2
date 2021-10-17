@@ -209,9 +209,9 @@ class Aritmetica(NodoAST):
         operadorder = False
         if isinstance(opi, int) or isinstance(opi, float):
             operadorizq = True
-        if traductor.getTmpIzq() == "int" or traductor.getTmpIzq() == "doble" or traductor.getTmpIzq() == "":
+        if traductor.getTmpIzq() == "int" or traductor.getTmpIzq() == "doble":
             operadorizq = True
-        if traductor.getTmpDer() == "int" or traductor.getTmpDer() == "doble" or traductor.getTmpDer() == "":
+        if traductor.getTmpDer() == "int" or traductor.getTmpDer() == "doble":
             operadorder = True
         if isinstance(opd, int) or isinstance(opd, float):
             operadorder = True

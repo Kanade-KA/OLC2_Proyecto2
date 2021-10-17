@@ -17,16 +17,19 @@ class Traductor:
         self.encabezado = "//------------------------HEADER-----------------------------\npackage main\n"+self.libmath+self.libfmt+"var stack [19121997]float64\nvar heap [19121997]float64\nvar S, H float64\n"
         self.heap = 0
         self.stack= 0
-        self.contador = 0
+        self.contador = 0#Este me sirve para el contador de temporales
         self.c3d = ""
+        self.inservible = ""
         self.main = "func main (){\n//-------------Inicializando Punteros------------\nH = 0 \nS = 0\n"
         #Banderas para no repetir metodos
         self.print = False
         self.potencia = False
+        self.haygotos = False
         #....................TIPOS DE VARIABLES RETORNADAS......................
         self.tmpizq = ""
         self.tmpder = ""
         self.tipoactual = ""
+        self.goto = 0#Este contador me va a servir para contar los Estados que se creen en el main.
 #TIPO BANDERA
     def cambiarTipo(self, tipo):
         self.tipoactual = tipo
@@ -49,6 +52,18 @@ class Traductor:
 
     def getTmpDer(self):
         return self.tmpder
+
+    def addInservible(self, cadena):
+        self.inservible += cadena
+
+    def getInservible(self):
+        if self.haygotos:
+            cadena = "goto L8000\n"
+            for i in range(0, self.goto):
+                cadena += "goto L"+ str(i)+"\n"
+            cadena += "L8000:\n"
+            return cadena
+        return self.inservible
 #Banderas
 
     def hayPrint(self):
@@ -63,6 +78,27 @@ class Traductor:
     def activarPotencia(self):
         self.libfmt = "import \"math\"\n"
         self.print = True
+#Meter un Booleano en el stack 
+    def putBooleanStack(self, valor):
+        self.haygotos = True
+        if valor == True:
+            estado = self.goto
+        else:
+            estado = self.goto + 1 
+        cadena = "goto L"+str(estado)+"\n"
+        cadena += "L"+str(self.goto)+":\n"
+        cadena += "stack[int(S)] = 1\n"
+        cadena += "goto L"+str(self.goto + 2)+"\n"
+        cadena += "L"+str(self.goto + 1)+":\n"
+        cadena += "stack[int(S)] = 0\n"
+        cadena += "L"+ str(self.goto + 2)+":\n"
+        cadena += "S = S + 1\n"
+        self.goto = self.goto + 3
+        self.IncrementarStack()
+        self.addCodigo(cadena)
+        return self.getStack()-1
+
+
 #Metar al Heap String
     def putStringHeap(self, valor):
         temporal = self.getHeap()
@@ -197,14 +233,15 @@ class Traductor:
         self.grafica
 #TIPO DE SIMBOLO
     def getTipo(self, tipo):
+        print(tipo)
+        if isinstance(tipo, bool):
+            return TipoObjeto.BOOLEANO
         if isinstance(tipo, int):
             return TipoObjeto.ENTERO
         if isinstance(tipo, float):
             return TipoObjeto.DECIMAL
         if isinstance(tipo, str):
             return TipoObjeto.CADENA
-        if isinstance(tipo, bool):
-            return TipoObjeto.BOOLEANO
         if isinstance(tipo, Arreglo):
             return TipoObjeto.ARREGLO
         if isinstance(tipo, Arreglo2D):

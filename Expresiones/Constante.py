@@ -39,7 +39,6 @@ class Constante(NodoAST):
         return type(self.valor)
 
     def traducir(self, traductor, entorno):
-        cadena = ""
         if isinstance(self.valor, Primitivo):
             if self.valor.tipo == TipoObjeto.CADENA:
                 return self.valor.toString()

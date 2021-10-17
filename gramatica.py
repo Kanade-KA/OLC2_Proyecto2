@@ -754,6 +754,6 @@ def parsetrad(imput):
     for instruccion in instrucciones:
         instruccion.traducir(arbol, entorno)
 
-    x += arbol.temporales() + arbol.getMain() + arbol.getCodigo() + "}\n" + arbol.getFuncion() 
+    x += arbol.temporales() + arbol.getMain() + arbol.getCodigo() + arbol.getInservible()+"}\n" + arbol.getFuncion() 
     
     return [x, arbol.generateTable(), "No hay Errores :D"]
