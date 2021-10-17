@@ -97,7 +97,11 @@ class Traductor:
         self.IncrementarStack()
         self.addCodigo(cadena)
         return self.getStack()-1
+    def getGotos(self):
+        return self.goto
 
+    def IncrementarGotos(self, numero):
+        self.goto = self.goto + numero
 
 #Metar al Heap String
     def putStringHeap(self, valor):
@@ -112,6 +116,7 @@ class Traductor:
         cadena += "heap[int(H)] = -1;//Se ingresa al heap el fin de la cadena\n"
         cadena += "H = H + 1//Se suma uno para que se pueda volver a usar el heap\n"
         self.IncrementarHeap()
+        self.IncrementarContador()
         self.addCodigo(cadena)
         return temporal
 
@@ -233,7 +238,6 @@ class Traductor:
         self.grafica
 #TIPO DE SIMBOLO
     def getTipo(self, tipo):
-        print(tipo)
         if isinstance(tipo, bool):
             return TipoObjeto.BOOLEANO
         if isinstance(tipo, int):
@@ -303,3 +307,33 @@ class Traductor:
             self.cadena += str(sim.getColumna())
             self.cadena += "</td>"
             self.cadena += "</tr>"
+
+#PARA GENERAR LA TABLA DE ERRORES
+    def generateErrors(self):
+        self.error +="<table class=\"table\">"
+        self.error +="<tr>"
+        self.error +="<th scope=\"col\">Tipo Error</th>"
+        self.error +="<th scope=\"col\">Descripción</th>"
+        self.error +="<th scope=\"col\">Fila</th>"
+        self.error +="<th scope=\"col\">Columna</th>"
+        self.error +="</tr>"
+        self.RecorrerError()
+        self.error +="</table>"
+        return self.error
+    
+    def RecorrerError(self):
+        for err in self.excepciones:
+            self.error += "<tr>"
+            self.error += "<td>"
+            self.error += str(err.getTipo())
+            self.error += "</td>"
+            self.error += "<td>"
+            self.error += str(err.getDescripcion())
+            self.error += "</td>"
+            self.error += "<td>"
+            self.error += str(err.getFila())
+            self.error += "</td>"
+            self.error += "<td>"
+            self.error += str(err.getColumna())
+            self.error += "</td>"
+            self.error += "</tr>"

@@ -90,9 +90,6 @@ class Asignacion(NodoAST):
                 traductor.addSimbolo(simbolo)
                 entorno.addSimbolo(simbolo)
                 return
-            else:
-                print("asignacion de una operacion aritmetica")
-                return
         else:
             valor = self.expresion.traducir(traductor, entorno)
             self.Asignar(traductor.getTipo(valor), valor, self.identificador, entorno, traductor)

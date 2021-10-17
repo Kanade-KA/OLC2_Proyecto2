@@ -45,6 +45,7 @@ class Imprimir(NodoAST):
         for ins in self.expresion:
             if isinstance(ins, Constante):
                 cad = str(ins.traducir(traductor, entorno))
+                print(cad)
                 heap = traductor.putStringHeap(cad)
                 #TENGO QUE TENER UN TEMPORAL QUE ME LLEVE UNA POSICIÓN MAS DEL STACK
                 cadena = "t"+str(traductor.getContador())+" = S + 1;//Se envía en S + 1 donde se guardará el parametro\n"
@@ -67,6 +68,28 @@ class Imprimir(NodoAST):
                     cadena += "fmt.Printf(\"%f\", t"+str(traductor.getContador())+")\n"
                     traductor.IncrementarContador()
                     traductor.addCodigo(cadena)
+                elif tipo == "bool":
+                    puntero = ins.traducir(traductor, entorno)
+                    goto = traductor.getGotos()
+                    cadena = "t"+str(traductor.getContador())+" = stack[int(" + str(puntero)+ ")] //Extraigo el valor para ver cual es\n"
+                    cadena += "if t"+str(traductor.getContador())+ " == 1 {goto L"+str(goto)+"}\n"
+                    cadena += "goto L"+str(goto + 1)+"\n"
+                    cadena += "L"+str(goto)+":\n"
+                    cadena += "fmt.Printf(\"%c\",116)\n" 
+                    cadena += "fmt.Printf(\"%c\",114)\n"
+                    cadena += "fmt.Printf(\"%c\",117)\n"
+                    cadena += "fmt.Printf(\"%c\",101)\n"
+                    cadena += "goto L"+str(goto + 2)+"\n"
+                    cadena += "L"+str(goto + 1)+": \n"
+                    cadena += "fmt.Printf(\"%c\",102)\n" 
+                    cadena += "fmt.Printf(\"%c\",97)\n"
+                    cadena += "fmt.Printf(\"%c\",108)\n"
+                    cadena += "fmt.Printf(\"%c\",115)\n"
+                    cadena += "fmt.Printf(\"%c\",101)\n"
+                    cadena += "L"+str(goto + 2)+": \n"
+                    cadena += "fmt.Printf(\"%c\",10)\n"
+                    traductor.addCodigo(cadena)
+                    traductor.IncrementarGotos(3)
                 else:
                     puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
                     contadortemp = traductor.getContador()#Contador que guarda la posición del stack para volver despues de ir a buscar la variable

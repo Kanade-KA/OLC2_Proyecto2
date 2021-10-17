@@ -724,16 +724,17 @@ def parsetrad(imput):
     arbol = Traductor()
     global input
     input = imput
-
     instrucciones=parser.parse(imput)
     for instruccion in instrucciones:
         instruccion.interpretar(arbol, entorno)
+    error = "No hay Errores :D"
+    salida = arbol.getConsola()
+    ts = arbol.generateTable()
     if len(arbol.getExcepciones())> 0:
-        f = ""
-        for err in arbol.getExcepciones():
-            f += err.toString()
-        return [f, "<h1>Existen Errores, no se puede mostrar la Tabla de Simbolos</h1>", arbol.generateErrors()]
-    return [arbol.getConsola(), arbol.generateTable(), "No hay Errores :D"]
+        error = arbol.generateErrors()
+        ts = "Existen Errores, no se puede ver Tabla de Simbolos"
+        salida = ""
+    return [salida, ts, error]
 
 def parsetrad(imput):
     global errores2
@@ -748,12 +749,15 @@ def parsetrad(imput):
     arbol = Traductor()
     global input
     input = imput
-    
     instrucciones=parser.parse(imput)
-    x = arbol.getEncabezado()
+    codigo = arbol.getEncabezado()
     for instruccion in instrucciones:
         instruccion.traducir(arbol, entorno)
-
-    x += arbol.temporales() + arbol.getMain() + arbol.getCodigo() + arbol.getInservible()+"}\n" + arbol.getFuncion() 
-    
-    return [x, arbol.generateTable(), "No hay Errores :D"]
+    error = "No hay Errores :D"
+    ts = arbol.generateTable()
+    codigo += arbol.temporales() + arbol.getMain() + arbol.getCodigo() + arbol.getInservible()+"}\n" + arbol.getFuncion() 
+    if len(arbol.excepciones) >0:
+        error = arbol.generateErrors()
+        ts = "Hay Errores No se puede mostrar la tabla de simbolos D:"
+        codigo = ""
+    return [codigo, ts, error]
