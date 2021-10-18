@@ -17,7 +17,7 @@ class Identificador(NodoAST):
 
     def getIdentificador(self):
         return self.identificador
-
+#-------------------------------------------------------------------------------------------------------------------
     def traducir(self, traductor, entorno):
         simbolo = entorno.retornarSimbolo(self.identificador.lower())
         if simbolo == None:
@@ -26,10 +26,18 @@ class Identificador(NodoAST):
         else:
             return simbolo.getPosicion()
 
-    def getTipo(self, entorno):
+    def getTipo(self, traductor, entorno):
         simbolo = entorno.retornarSimbolo(self.identificador.lower())
-        return simbolo.getTipo()
+        if simbolo == None:
+            traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no existe.", self.fila, self.columna))
+            return "error"
+        else:
+            return simbolo.getTipo()
 
-    def getValor(self, entorno):
+    def getValor(self, traductor, entorno):
         simbolo = entorno.retornarSimbolo(self.identificador.lower())
-        return simbolo.getValor()
+        if simbolo == None:
+            traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no existe.", self.fila, self.columna))
+            return "error"
+        else:
+            return simbolo.getValor()

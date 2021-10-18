@@ -25,34 +25,8 @@ class Traductor:
         self.print = False
         self.potencia = False
         self.haygotos = False
-        #....................TIPOS DE VARIABLES RETORNADAS......................
-        self.tmpizq = ""
-        self.tmpder = ""
-        self.tipoactual = ""
         self.goto = 0#Este contador me va a servir para contar los Estados que se creen en el main.
-#TIPO BANDERA
-    def cambiarTipo(self, tipo):
-        self.tipoactual = tipo
-
-    def getTipoActual(self):
-        return self.tipoactual
-
-    def setearTemporales(self):
-        self.tmpizq = ""
-        self.tempder = ""
-
-    def setTmpIzq(self, dato):
-        self.tmpizq = dato
-
-    def setTmpDer(self, dato):
-        self.tmpder = dato
-    
-    def getTmpIzq(self):
-        return self.tmpizq
-
-    def getTmpDer(self):
-        return self.tmpder
-
+#-------------------------------PARA AGREGAR CODIGO DE GOTOS, POR QUE SI NO DA CLAVO----------------------------
     def addInservible(self, cadena):
         self.inservible += cadena
 
@@ -64,8 +38,7 @@ class Traductor:
             cadena += "L8000:\n"
             return cadena
         return self.inservible
-#Banderas
-
+#---------------------BANDERAS PARA SABER SI HAY QUE AGREGAR ALGUNO DE ESTOS CÓDIGOS--------------------------------
     def hayPrint(self):
         return self.print
 
@@ -78,7 +51,13 @@ class Traductor:
     def activarPotencia(self):
         self.libfmt = "import \"math\"\n"
         self.print = True
-#Meter un Booleano en el stack 
+
+    def getGotos(self):
+        return self.goto
+
+    def IncrementarGotos(self, numero):
+        self.goto = self.goto + numero
+#---------------------------------PARA METER UN BOOLEANO AL STACK-----------------------------------
     def putBooleanStack(self, valor):
         self.haygotos = True
         if valor == True:
@@ -97,13 +76,8 @@ class Traductor:
         self.IncrementarStack()
         self.addCodigo(cadena)
         return self.getStack()-1
-    def getGotos(self):
-        return self.goto
 
-    def IncrementarGotos(self, numero):
-        self.goto = self.goto + numero
-
-#Metar al Heap String
+#------------------------------------PARA METER UN STRING AL HEAP-------------------------------------------
     def putStringHeap(self, valor):
         temporal = self.getHeap()
         cadena=""
@@ -119,7 +93,7 @@ class Traductor:
         self.IncrementarContador()
         self.addCodigo(cadena)
         return temporal
-
+#---------------------------------AGREGAR UN NUMERO ENTERO AL STACK-------------------------------------
     def putIntStack(self, numero):
         cadena = "//AGREGANDO UN ENTERO "+str(numero) + "\n"
         temporal = self.getStack()
@@ -128,7 +102,7 @@ class Traductor:
         self.addCodigo(cadena)
         self.IncrementarStack()
         return temporal
-
+#------------------------------AGREGAR UN NUMERO DOBLE AL STACK---------------------------------------
     def putDoubleStack(self, numero):
         cadena = "//AGREGANDO UN DOBLE "+str(numero) + "\n"
         temporal = self.getStack()
@@ -137,10 +111,10 @@ class Traductor:
         self.addCodigo(cadena)
         self.IncrementarStack()
         return temporal
-#CONVERTIR A ASCII
+#--------------------------------------------CONVERTIR UNA LETRA A ASCII----------------------------------------
     def getAscii(self, cadena):
         return str(ord(cadena))
-#Inicializar Temporales
+#-----------------------------------------AREA DE TEMPORALES PARA C3D------------------------------------
     def temporales(self):
         temp = "var "
         for i in range(0, self.contador):
@@ -149,31 +123,14 @@ class Traductor:
             else:
                 temp += "t"+str(i)+", "
         return temp
-#Funciones
+#------------------------------------------PARA AGREGAR CODIGO FUERA DEL MAIN------------------------------
     def addFuncion(self, funcion):
         self.funciones += self.funciones + funcion
 
     def getFuncion(self):
         return self.funciones
-#METODO PARA PRINT
-    def Print(self):
-        contadortemp = self.contador
-        cadena = "func imprimir(){\n"
-        cadena += "t"+str(contadortemp) +" = S + 1//Posicionamos en parametro\n"
-        contadortemp += 1
-        cadena += "t"+str(contadortemp) + "stack[int(t"+str(contadortemp-1)+")]\n"
-        contadortemp += 1
-        cadena += "L1:\n"
-        cadena += "t"+str(contadortemp)+" = heap[int(t"+str(contadortemp-1)+")]\n" 
-        cadena += "if t"+str(contadortemp)+" == -1 {goto L0}\n"
-        cadena += "{ asciiValue := int(t"+str(contadortemp)+")\n"
-        cadena += "character := rune(asciiValue)\n"
-        cadena += "fmt.Printf(\"%c\",character)\n"
-        cadena += "t"+str(contadortemp-1)+" = t"+str(contadortemp-1)+" + 1\n"
-        cadena += "goto L1}\n"
-        cadena += "L0:\nreturn\n}"
-        return cadena
-#Para encabezados  
+        
+#-------------------------------------LOS ENCABEZADOS DEL C3D----------------------------------------------
     def getMain(self):
         return self.main
     
@@ -185,7 +142,7 @@ class Traductor:
 
     def getEncabezado(self):
         return self.encabezado
-#CONTADORES, HEAP Y STACK
+#----------------------------------CONTADORES, HEAP Y STACK-------------------------------
     def IncrementarHeap(self):
         self.heap = self.heap + 1
     
@@ -204,7 +161,7 @@ class Traductor:
     
     def getContador(self):
         return self.contador
-#PARA LA TABLA DE SIMBOLOS
+#-------------------------------PARA LA TABLA DE SIMBOLOS---------------------------------
     def getSimbolos(self):
         return self.simbolos
 
@@ -218,25 +175,26 @@ class Traductor:
             if s.getID() == simbolo and s.getFila() == fila:
                     return True
         return False
-#EXCEPCIONES
+#-----------------------------------------------EXCEPCIONES-----------------------------------
     def getExcepciones(self):
         return self.excepciones
 
     def addExcepcion(self, excepciones):
         self.excepciones.append(excepciones)
-#CONSOLA
+        return "Error"
+#-----------------------------------CONSOLA--------------------------------------------
     def getConsola(self):
         return self.consola
 
     def AgregaraConsola(self,cadena):
         self.consola += str(cadena)
-#GRAFICA AST
+#--------------------------------GRAFICA AST---------------------------------------
     def AgregarGrafica(self, grafo):
         self.grafica += str(grafo) + "\n"
 
     def getGrafica(self):
         self.grafica
-#TIPO DE SIMBOLO
+#--------------------------------TIPO DE SIMBOLO-----------------------------------
     def getTipo(self, tipo):
         if isinstance(tipo, bool):
             return TipoObjeto.BOOLEANO
@@ -253,7 +211,7 @@ class Traductor:
         if isinstance(tipo, Arreglo3D):
             return TipoObjeto.ARREGLO
         return TipoObjeto.ANY
-#PARA GENERAR EL STRING DEL TIPO
+#-----------------------------------PARA GENERAR EL STRING DEL TIPO----------------------------
     def tipoToString(self, tipo):
         if tipo == TipoObjeto.ENTERO:
             return "int"
@@ -266,7 +224,7 @@ class Traductor:
         if tipo == TipoObjeto.ARREGLO:
             return "arreglo"
         return "nothing"
-#PARA GENERAR LA TABLA DE SIMBOLOS
+#---------------------------------PARA GENERAR LA TABLA DE SIMBOLOS---------------------------
     def generateTable(self):
         self.cadena +="<table class=\"table\">"
         self.cadena +="<tr>"
@@ -308,7 +266,7 @@ class Traductor:
             self.cadena += "</td>"
             self.cadena += "</tr>"
 
-#PARA GENERAR LA TABLA DE ERRORES
+#--------------------------------PARA GENERAR LA TABLA DE ERRORES----------------------
     def generateErrors(self):
         self.error +="<table class=\"table\">"
         self.error +="<tr>"

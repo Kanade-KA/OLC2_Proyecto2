@@ -46,14 +46,14 @@ class Arbol:
         self.grafica
 #TIPO DE SIMBOLO
     def getTipo(self, tipo):
+        if isinstance(tipo, bool):
+            return TipoObjeto.BOOLEANO
         if isinstance(tipo, int):
             return TipoObjeto.ENTERO
         if isinstance(tipo, float):
             return TipoObjeto.DECIMAL
         if isinstance(tipo, str):
             return TipoObjeto.CADENA
-        if isinstance(tipo, bool):
-            return TipoObjeto.BOOLEANO
         if isinstance(tipo, Arreglo):
             return TipoObjeto.ARREGLO
         if isinstance(tipo, Arreglo2D):

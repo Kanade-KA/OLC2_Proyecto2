@@ -1,3 +1,4 @@
+from Abstract.Objeto import TipoObjeto
 from TablaSimbolo.Error import Error
 from Abstract.NodoAST import NodoAST
 from TablaSimbolo.Tipo import OperadorAritmetico
@@ -54,8 +55,8 @@ class Aritmetica(NodoAST):
                     else:
                         return int(opi % opd)
             return arbol.addExcepcion(Error("Semantico", "Los tipos no coinciden", self.fila, self.columna))
-        arbol.addExcepcion(Error("Semantico", "Operador Nulo", self.fila, self.columna))
-        return
+        return arbol.addExcepcion(Error("Semantico", "Operador Nulo", self.fila, self.columna))
+        
 
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)
@@ -63,93 +64,94 @@ class Aritmetica(NodoAST):
        #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
        #Operador Izquierdo
         if isinstance(self.OperacionIzq, Identificador):
-            traductor.setTmpIzq(self.OperacionIzq.getTipo(entorno))
-            if traductor.getTmpIzq() != "string":
-                traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")]//Traemos la variable\n"
-                opi = "t"+str(traductor.getContador())
-                traductor.addCodigo(traer)
-                traductor.IncrementarContador()
+            tipo = self.OperacionIzq.getTipo(traductor, entorno)
+            resultado = ""
+            if tipo != "error":
+                if tipo != TipoObjeto.CADENA:
+                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")]//Traemos la variable\n"
+                    resultado = "t"+str(traductor.getContador())
+                    traductor.addCodigo(traer)
+                    traductor.IncrementarContador()
+                else:
+                    resultado = self.OperacionIzq.getValor(traductor, entorno)
+                opi=[resultado, tipo]
             else:
-                opi = self.OperacionIzq.getValor(entorno)
+                return "error"
         #Operador Derecho
         if isinstance(self.OperacionDer, Identificador):
-            traductor.setTmpDer(self.OperacionDer.getTipo(entorno))
-            if traductor.getTmpDer() != "string":
-                traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")]//Traemos la variable\n"
-                opd = "t"+str(traductor.getContador())
-                traductor.addCodigo(traer)
-                traductor.IncrementarContador()
+            tipo = self.OperacionDer.getTipo(traductor, entorno)
+            resultadod = ""
+            if tipo != "error":
+                if tipo != TipoObjeto.CADENA:
+                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")]//Traemos la variable\n"
+                    resultadod = "t"+str(traductor.getContador())
+                    traductor.addCodigo(traductor, traer)
+                    traductor.IncrementarContador()
+                else:
+                    resultadod = self.OperacionDer.getValor(entorno)
+                opi = [resultadod, tipo]
             else:
-                opd = self.OperacionDer.getValor(entorno)
+                return "error"
         #----------------------------------------------------------------------------------------------------
         if opi != None and opd != None:
             if (self.operador==OperadorAritmetico.MAS):
-                if self.sinString(traductor, opi, opd):
-                    if  self.HayDoble(traductor, opi, opd):
-                        suma = "t"+ str(traductor.getContador()) + "= "+ str(opi) + "+"+ str(opd)
+                if self.sinString(opi[1], opd[1]):
+                    if  self.HayDoble(opi[1], opd[1]):
+                        suma = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "+"+ str(opd[0])
                         traductor.addCodigo(suma+"\n")
                         traductor.IncrementarContador()
-                        traductor.cambiarTipo("doble")
-                        return  "t"+str(traductor.getContador()-1)
+                        return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
-                        suma = "t"+ str(traductor.getContador()) + "= "+ str(opi) + "+"+ str(opd)
+                        suma = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "+"+ str(opd[0])
                         traductor.addCodigo(suma+"\n")
                         traductor.IncrementarContador()
-                        traductor.cambiarTipo("int")
-                        return  "t"+str(traductor.getContador()-1)
+                        return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
             if (self.operador==OperadorAritmetico.MENOS):
-                if self.sinString(traductor, opi, opd):
-                    if  self.HayDoble(traductor, opi, opd):
-                        resta = "t"+ str(traductor.getContador()) + "= "+ str(opi) + "-"+ str(opd)
+                if self.sinString(opi[1], opd[1]):
+                    if  self.HayDoble(opi[1], opd[1]):
+                        resta = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "-"+ str(opd[0])
                         traductor.addCodigo(resta+"\n")
                         traductor.IncrementarContador()
-                        traductor.cambiarTipo("doble")
-                        return  "t"+str(traductor.getContador()-1)
+                        return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
-                        resta = "t"+ str(traductor.getContador()) + "= "+ str(opi) + "-"+ str(opd)
+                        resta = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "-"+ str(opd[0])
                         traductor.addCodigo(resta+"\n")
                         traductor.IncrementarContador()
-                        traductor.cambiarTipo("int")
-                        return  "t"+str(traductor.getContador()-1)
+                        return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
             if (self.operador == OperadorAritmetico.POR):
-                if self.sinString(traductor, opi, opd):
-                    if self.HayDoble(traductor, opi, opd):
-                        mult = "t"+ str(traductor.getContador()) + "= "+ str(opi) + "*"+ str(opd)
+                if self.sinString(opi[1], opd[1]):
+                    if  self.HayDoble(opi[1], opd[1]):
+                        mult = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "*"+ str(opd[0])
                         traductor.addCodigo(mult+"\n")
                         traductor.IncrementarContador()
-                        traductor.cambiarTipo("doble")
-                        return  "t"+str(traductor.getContador()-1)
+                        return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
-                        mult = "t"+ str(traductor.getContador()) + "= "+ str(opi) + "*"+ str(opd)
+                        mult = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "*"+ str(opd[0])
                         traductor.addCodigo(mult+"\n")
                         traductor.IncrementarContador()
-                        traductor.cambiarTipo("int")
-                        return  "t"+str(traductor.getContador()-1)
-                if self.sonAmbasCadenas(traductor, opi, opd):
-                    cad = opi + opd
-                    traductor.cambiarTipo("string")
-                    return cad
+                        return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
+                if self.sonAmbasCadenas(traductor, opi[1], opd[1]):
+                    cad = str(opi[0]) + str(opd[0])
+                    return [cad, TipoObjeto.CADENA]
             if (self.operador == OperadorAritmetico.DIV):
-                if self.sinString(traductor, opi, opd):
-                    div = "t"+ str(traductor.getContador()) + "= "+ str(opi) + "/"+ str(opd)
+                if self.sinString(opi[1], opd[1]):
+                    div = "t"+ str(traductor.getContador()) + "= "+ str(opi[0]) + "/"+ str(opd[0])
                     traductor.addCodigo(div+"\n")
                     traductor.IncrementarContador()
-                    traductor.cambiarTipo("doble")
-                    return  "t"+str(traductor.getContador()-1)
+                    return ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
             if (self.operador == OperadorAritmetico.POW):
-                if self.sinString(traductor, opi, opd):
+                if self.sinString(opi[1], opd[1]):
                     pow = "t"+str(traductor.getContador())+" = S + 0//Extraemos el stack \n"
                     pow += "t"+str(traductor.getContador())+ " = t"+str(traductor.getContador())+" + 1 // le agregamos 1 al Stack para guardar el primer parametro ya que en P vendrá el retorno\n"
-                    pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opi)+"//Agregamos el primer parametro al stack\n"
+                    pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opi[0])+"//Agregamos el primer parametro al stack\n"
                     pow += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1 // para agregar el segundo\n"
-                    pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opd)+"//Agregamos el segundo parametro al stack\n"
+                    pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opd[0])+"//Agregamos el segundo parametro al stack\n"
                     pow += "potencia()\n"
                     traductor.addCodigo(pow)
                     traductor.IncrementarContador()
                     contres = traductor.getContador()
                     res = "t"+str(contres)+ " = stack[int(S)]\n"
                     traductor.IncrementarContador()
-                    traductor.cambiarTipo("int")
                     traductor.addCodigo(res)
 
                     if not traductor.hayPotencia():
@@ -186,81 +188,43 @@ class Aritmetica(NodoAST):
                         potencia += "}\n\n"
                         traductor.addFuncion(potencia)
                         traductor.activarPotencia()
-                    return "t"+str(contres)
-                if self.CadenaInt(traductor, opi, opd):
+                    return ["t"+str(contres), TipoObjeto.ENTERO]
+                if self.CadenaInt(opi[1], opd[1]):
                     palabra=""
-                    for x in range (opd):
-                        palabra+=opi
-                    traductor.cambiarTipo("string")
-                    return str(palabra)
+                    for x in range (opd[0]):
+                        palabra+=str(opi[0])
+                    return [str(palabra), TipoObjeto.CADENA]
             if (self.operador == OperadorAritmetico.MOD):
-                if opd != 0:
-                    mod = "t" + str(traductor.getContador())+" = math.Mod("+str(opi) +","+str(opd)+")"
+                if opd[0] != 0:
+                    mod = "t" + str(traductor.getContador())+" = math.Mod("+str(opi[0]) +","+str(opd[0])+")"
                     traductor.addCodigo(mod+"\n")
                     traductor.IncrementarContador()
-                    traductor.cambiarTipo("int")
-                    return "t"+ str(traductor.getContador()-1)
-            return traductor.addExcepcion(Error("Semantico", "Los tipos no coinciden", self.fila, self.columna))
+                    return ["t"+ str(traductor.getContador()-1), TipoObjeto.ENTERO]
+            traductor.addExcepcion(Error("Semantico", "Los tipos no coinciden", self.fila, self.columna))
+            return "error"
         traductor.addExcepcion(Error("Semantico", "Operador Nulo", self.fila, self.columna))
-        return
-
-    def sinString(self, traductor, opi, opd):
-        operadorizq = False
-        operadorder = False
-        if isinstance(opi, int) or isinstance(opi, float):
-            operadorizq = True
-        if traductor.getTmpIzq() == "int" or traductor.getTmpIzq() == "doble":
-            operadorizq = True
-        if traductor.getTmpDer() == "int" or traductor.getTmpDer() == "doble":
-            operadorder = True
-        if isinstance(opd, int) or isinstance(opd, float):
-            operadorder = True
-        if operadorizq and operadorder:
-            print("Todos son numeros")
-            return True
-        else:
-            print("Hay cadena")
+        return "error"
+        
+    def sinString(self, opi, opd):
+        print("OPERADOR IZQUIERDO       OPERADOR DERECHO")
+        print(opi , opd)
+        if opi == TipoObjeto.CADENA or opd == TipoObjeto.CADENA:
             return False
+        if opi == TipoObjeto.BOOLEANO or opd == TipoObjeto.BOOLEANO:
+            return False
+        return True
 
-    def HayDoble(self, traductor, opi, opd):
-        if isinstance(opi, float):
-            return True
-        if isinstance(opd, float):
-            return True
-        if traductor.getTmpIzq() == "doble":
-            return True
-        if traductor.getTmpDer() == "doble":
+    def HayDoble(self, opi, opd):
+        if opi == TipoObjeto.DECIMAL or opd == TipoObjeto.DECIMAL:
             return True
         return False
 
-    def sonAmbasCadenas(self, traductor, opi, opd):
-        izquierdo = False
-        derecho = False
-        if traductor.getTmpIzq() == "string" and isinstance(opi, str):
-            izquierdo = True
-        if traductor.getTmpDer() == "string" and isinstance(opd, str):
-            derecho = True
-        if traductor.getTmpIzq() == "" and isinstance(opi, str):
-            izquierdo = True
-        if traductor.getTmpDer() == "" and isinstance(opd, str):
-            derecho = True
-        if izquierdo and derecho:
+    def sonAmbasCadenas(self, opi, opd):
+        if opi == TipoObjeto.CADENA and opd == TipoObjeto.CADENA:
             return True
-        else:
-            return False
+        return False
 
-    def CadenaInt(self, traductor, opi, opd):
-        izquierdo = False
-        derecho = False
-        if traductor.getTmpIzq() == "string" and isinstance(opi, str):
-            izquierdo = True
-        if traductor.getTmpIzq() == "" and isinstance(opi, str):
-            izquierdo = True
-        if isinstance(opd, int):
-            derecho = True
-        if traductor.getTmpDer() == "int":
-            derecho =  True
-        
-        if izquierdo and derecho:
+    def CadenaInt(self, opi, opd):
+        if opi == TipoObjeto.CADENA and opd == TipoObjeto.ENTERO:
             return True
         return False
