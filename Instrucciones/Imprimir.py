@@ -48,126 +48,81 @@ class Imprimir(NodoAST):
             if isinstance(ins, Constante):
                 constante = ins.traducir(traductor, entorno)
                 if constante != "error":
-                    cad = str(constante[0])
-                    #TENGO QUE VER QUE SEA UNA CADENA AUN NO LO HAGO
-                    heap = traductor.putStringHeap(cad)
-                    #TENGO QUE TENER UN TEMPORAL QUE ME LLEVE UNA POSICIÓN MAS DEL STACK
-                    cadena = "t"+str(traductor.getContador())+" = S + 1;//Se envía en S + 1 donde se guardará el parametro\n"
-                    #TENGO QUE EXTRAER EL PUNTERO DEL HEAP Y METERLO AL STACK
-                    cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(heap)+";//Se extrae el puntero del Heap\n"
-                    traductor.IncrementarContador()
-                    cadena += "imprimir();\n"
-                    traductor.addCodigo(cadena)
+                    tipo=constante[1]
+                    if tipo == TipoObjeto.ENTERO:
+                        self.ImprimirInt(traductor, constante[0])
+                    elif tipo == TipoObjeto.DECIMAL:
+                        self.ImprimirDoble(traductor, constante[0])
+                    elif tipo == TipoObjeto.BOOLEANO:
+                        valor = 0
+                        if constante[0]: valor=1
+                        self.ImprimirBooleano(traductor, valor)
+                    else:#Es por que es string
+                        palabra = str(constante[0])
+                        heap = traductor.putStringHeap(palabra)
+                        cadena = "t"+str(traductor.getContador())+" = "+str(heap)+";//Guardo en un temporal el integer del heap\n"
+                        cadena += "stack[int(S)] = t"+str(traductor.getContador())+";\n"
+                        traductor.IncrementarContador();
+                        traductor.addCodigo(cadena)
+                        self.ImprimirString(traductor, traductor.getStack())
             if isinstance(ins, Identificador):
                 tipo = ins.getTipo(traductor, entorno)
                 if tipo != "error":
                     if tipo == TipoObjeto.ENTERO:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
                         cadena = "t"+str(traductor.getContador())+" = stack[int("+str(puntero)+")];//Extraigo el valor y ese lo imprimo\n"
-                        cadena += "fmt.Printf(\"%d\", int(t"+str(traductor.getContador())+"));\n"
-                        traductor.IncrementarContador()
                         traductor.addCodigo(cadena)
+                        valor = "t"+str(traductor.getContador())
+                        traductor.IncrementarContador()
+                        self.ImprimirInt(traductor, valor)
+                        return
                     elif tipo == TipoObjeto.DECIMAL:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
                         cadena = "t"+str(traductor.getContador())+" = stack[int("+str(puntero)+")];//Extraigo el valor y ese lo imprimo\n"
-                        cadena += "fmt.Printf(\"%f\", t"+str(traductor.getContador())+");\n"
-                        traductor.IncrementarContador()
                         traductor.addCodigo(cadena)
+                        valor = "t"+ str(traductor.getContador())
+                        traductor.IncrementarContador()
+                        self.ImprimirDoble(traductor, valor)
+                        return
                     elif tipo == TipoObjeto.BOOLEANO:
                         puntero = ins.traducir(traductor, entorno)
-                        goto = traductor.getGotos()
                         cadena = "t"+str(traductor.getContador())+" = stack[int(" + str(puntero)+ ")];//Extraigo el valor para ver cual es\n"
-                        cadena += "if t"+str(traductor.getContador())+ " == 1 {goto L"+str(goto)+"};\n"
-                        cadena += "goto L"+str(goto + 1)+";\n"
-                        cadena += "L"+str(goto)+":\n"
-                        cadena += "fmt.Printf(\"%c\",116);\n" 
-                        cadena += "fmt.Printf(\"%c\",114);\n"
-                        cadena += "fmt.Printf(\"%c\",117);\n"
-                        cadena += "fmt.Printf(\"%c\",101);\n"
-                        cadena += "goto L"+str(goto + 2)+";\n"
-                        cadena += "L"+str(goto + 1)+": \n"
-                        cadena += "fmt.Printf(\"%c\",102);\n" 
-                        cadena += "fmt.Printf(\"%c\",97);\n"
-                        cadena += "fmt.Printf(\"%c\",108);\n"
-                        cadena += "fmt.Printf(\"%c\",115);\n"
-                        cadena += "fmt.Printf(\"%c\",101);\n"
-                        cadena += "L"+str(goto + 2)+": \n"
-                        cadena += "fmt.Printf(\"%c\",10);\n"
                         traductor.addCodigo(cadena)
-                        traductor.IncrementarGotos(3)
+                        valor = "t"+str(traductor.getContador())
+                        traductor.IncrementarContador()
+                        self.ImprimirBooleano(traductor, valor)
+                        return
                     else:
-                        puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
-                        if puntero != None:
-                            contadortemp = traductor.getContador()#Contador que guarda la posición del stack para volver despues de ir a buscar la variable
-                            cadena = "t"+ str(contadortemp)+" = S;//Para guardar el puntero Stack en donde va\n"
-                            traductor.IncrementarContador()
-                            cadena += "S = "+str(puntero - 1 ) +";//Nos posicionamos en la posición donde está el identificador\n"
-                            traductor.addCodigo(cadena)#Agregamos esto antes del imprimir
-                            traductor.addCodigo("imprimir();\n")
-                            regreso = "S = t"+str(contadortemp)+";//aquí devolvemos el puntero a su posición inicial\n"
-                            traductor.addCodigo(regreso)
-                            traductor.IncrementarContador()
-                        else:
-                            return "error"
+                        puntero = ins.traducir(traductor, entorno)
+                        self.ImprimirString(traductor, puntero)
+                        return
             #Aquí si viene una operacion aritmetica
             if isinstance(ins, Aritmetica):
                 resultado = ins.traducir(traductor, entorno)
                 if resultado != "error":
                     if resultado[1] == TipoObjeto.ENTERO:
-                        traductor.addCodigo("fmt.Printf(\"%d\", int("+str(resultado[0])+"));\n")
+                        self.ImprimirInt(traductor, resultado[0])
                     elif resultado[1] == TipoObjeto.DECIMAL:
-                        traductor.addCodigo("fmt.Printf(\"%f\", "+str(resultado[0])+");\n")
+                        self.ImprimirDoble(traductor, resultado[0])
                     else:
                         cad = str(resultado[0])
                         heap = traductor.putStringHeap(cad)
-                        #TENGO QUE TENER UN TEMPORAL QUE ME LLEVE UNA POSICIÓN MAS DEL STACK
-                        cadena = "t"+str(traductor.getContador())+" = S + 1;//Se envía en S + 1 donde se guardará el parametro\n"
-                        #TENGO QUE EXTRAER EL PUNTERO DEL HEAP Y METERLO AL STACK
-                        cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(heap)+";//Se extrae el puntero del Heap\n"
-                        traductor.IncrementarContador()
-                        cadena += "imprimir();\n"
+                        cadena = "t"+str(traductor.getContador())+" = "+str(heap)+";//Guardo en un temporal el integer del heap\n"
+                        cadena += "stack[int(S)] = t"+str(traductor.getContador())+";\n"
+                        traductor.IncrementarContador();
                         traductor.addCodigo(cadena)
+                        self.ImprimirString(traductor, traductor.getStack())
             if isinstance(ins, Relacional):
                 res = ins.traducir(traductor, entorno)
-                goto = traductor.getGotos()
-                cadena =  str(res[0])+":\n"
-                cadena += "fmt.Printf(\"%c\",116);\n" 
-                cadena += "fmt.Printf(\"%c\",114);\n"
-                cadena += "fmt.Printf(\"%c\",117);\n"
-                cadena += "fmt.Printf(\"%c\",101);\n"
-                cadena += "goto L"+str(goto)+";\n"
-                cadena += str(res[1])+": \n"
-                cadena += "fmt.Printf(\"%c\",102);\n" 
-                cadena += "fmt.Printf(\"%c\",97);\n"
-                cadena += "fmt.Printf(\"%c\",108);\n"
-                cadena += "fmt.Printf(\"%c\",115);\n"
-                cadena += "fmt.Printf(\"%c\",101);\n"
-                cadena += "L"+str(goto)+": \n"
-                cadena += "fmt.Printf(\"%c\",10);\n"
-                traductor.addCodigo(cadena)
-                traductor.IncrementarGotos(1)
+                self.Condiciones(traductor, res[0], res[1])
             if isinstance(ins, Logica):
                 res = ins.traducir(traductor, entorno)
-                goto = traductor.getGotos()
-                cadena =  str(res[0])+":\n"
-                cadena += "fmt.Printf(\"%c\",116);\n" 
-                cadena += "fmt.Printf(\"%c\",114);\n"
-                cadena += "fmt.Printf(\"%c\",117);\n"
-                cadena += "fmt.Printf(\"%c\",101);\n"
-                cadena += "goto L"+str(goto)+";\n"
-                cadena += str(res[1])+": \n"
-                cadena += "fmt.Printf(\"%c\",102);\n" 
-                cadena += "fmt.Printf(\"%c\",97);\n"
-                cadena += "fmt.Printf(\"%c\",108);\n"
-                cadena += "fmt.Printf(\"%c\",115);\n"
-                cadena += "fmt.Printf(\"%c\",101);\n"
-                cadena += "L"+str(goto)+": \n"
-                cadena += "fmt.Printf(\"%c\",10);\n"
-                traductor.addCodigo(cadena)
-                traductor.IncrementarGotos(1)
+                self.Condiciones(traductor, res[0], res[1])
         if self.essalto != 'F':
             traductor.addCodigo("fmt.Printf(\"%c\", 10);\n")
-        #traductor.addCodigo("imprimir();\n")
+        return
+
+    def AgregarMetodoImprimir(self, traductor):
         if not traductor.hayPrint():
             cadena = "func imprimir(){\n"
             cadena += "t"+str(traductor.getContador()) +" = S + 1;//Posicionamos en parametro\n"
@@ -184,4 +139,63 @@ class Imprimir(NodoAST):
             traductor.IncrementarContador()
             traductor.addFuncion(cadena)
             traductor.activarPrint()
+
+    def ImprimirBooleano(self, traductor, valor):
+        goto = traductor.getGotos()
+        cadena = "if "+str(valor)+ " == 1 {goto L"+str(goto)+"};\n"
+        cadena += "goto L"+str(goto + 1)+";\n"
+        cadena += "L"+str(goto)+":\n"
+        cadena += "fmt.Printf(\"%c\",116);\n" 
+        cadena += "fmt.Printf(\"%c\",114);\n"
+        cadena += "fmt.Printf(\"%c\",117);\n"
+        cadena += "fmt.Printf(\"%c\",101);\n"
+        cadena += "goto L"+str(goto + 2)+";\n"
+        cadena += "L"+str(goto + 1)+": \n"
+        cadena += "fmt.Printf(\"%c\",102);\n" 
+        cadena += "fmt.Printf(\"%c\",97);\n"
+        cadena += "fmt.Printf(\"%c\",108);\n"
+        cadena += "fmt.Printf(\"%c\",115);\n"
+        cadena += "fmt.Printf(\"%c\",101);\n"
+        cadena += "L"+str(goto + 2)+": \n"
+        traductor.addCodigo(cadena)
+        traductor.IncrementarGotos(3)
         return
+
+    def ImprimirInt(self, traductor, valor):
+        cadena = "fmt.Printf(\"%d\", int("+str(valor)+"));\n"
+        traductor.addCodigo(cadena)
+        return
+
+    def ImprimirDoble(self, traductor, valor):
+        cadena = "fmt.Printf(\"%f\", "+str(valor)+");\n"
+        traductor.addCodigo(cadena)
+        return
+
+    def Condiciones(self, traductor, acepta, rechaza):
+        goto = traductor.getGotos()
+        cadena =  str(acepta)+":\n"
+        cadena += "fmt.Printf(\"%c\",116);\n" 
+        cadena += "fmt.Printf(\"%c\",114);\n"
+        cadena += "fmt.Printf(\"%c\",117);\n"
+        cadena += "fmt.Printf(\"%c\",101);\n"
+        cadena += "goto L"+str(goto)+";\n"
+        cadena += str(rechaza)+": \n"
+        cadena += "fmt.Printf(\"%c\",102);\n" 
+        cadena += "fmt.Printf(\"%c\",97);\n"
+        cadena += "fmt.Printf(\"%c\",108);\n"
+        cadena += "fmt.Printf(\"%c\",115);\n"
+        cadena += "fmt.Printf(\"%c\",101);\n"
+        cadena += "L"+str(goto)+": \n"
+        traductor.addCodigo(cadena)
+        traductor.IncrementarGotos(1)
+
+    def ImprimirString(self, traductor, valor):
+        contadortemp = traductor.getContador()#Guarda el numero de temporal donde se guardará el Stack
+        traductor.IncrementarContador()
+        cadena = "t"+ str(contadortemp)+" = S;//Para guardar el puntero Stack en donde va\n"
+        cadena += "S = "+str(valor - 1 ) +";//Nos posicionamos en la posición donde está el identificador\n"
+        traductor.addCodigo(cadena)
+        traductor.addCodigo("imprimir();\n")
+        regreso = "S = t"+str(contadortemp)+";//aquí devolvemos el puntero a su posición inicial\n"
+        traductor.addCodigo(regreso)
+        self.AgregarMetodoImprimir(traductor)

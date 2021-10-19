@@ -51,39 +51,21 @@ class If(NodoAST):
         traductor.IncrementarGotos(1)
         cadena =  str(condicional[0])+":\n"
         traductor.addCodigo(cadena)
-        for i in self.instruccionesIf:
-            i.traducir(traductor, entorno)
+        if self.instruccionesIf != None:
+            nuevoentorno = Entorno("IF", entorno)
+            for i in self.instruccionesIf:
+                i.traducir(traductor, nuevoentorno)
         cadena = "goto L"+str(goto)+";\n"
         cadena += str(condicional[1])+": \n"
-        cadena += "L"+str(goto)+": \n"
+        traductor.addCodigo(cadena)
+        if self.instruccionesElse != None:
+            nuevoentorno2 = Entorno("ELSE", entorno)
+            for i in self.instruccionesElse:
+                i.traducir(traductor, nuevoentorno2)
+        cadena = "L"+str(goto)+": \n"
         cadena += "fmt.Printf(\"%c\",10);\n"
         traductor.addCodigo(cadena)
         traductor.IncrementarGotos(1)
-        '''if condicional == True:
-            if self.instruccionesIf != None:
-                nuevoentorno = Entorno("IF", entorno)
-                for instruccion in self.instruccionesIf:
-                    if isinstance(instruccion, Break):
-                        return instruccion
-                    if isinstance(instruccion, Continue):
-                        return instruccion
-                    if isinstance(instruccion, Return):
-                        return instruccion.interpretar(arbol, nuevoentorno)
-                    else:
-                        instruccion.interpretar(arbol, nuevoentorno)
-            return None
-        else:
-            if not self.instruccionesElse == None:
-                nuevoentorno2 = Entorno("ELSE", entorno)
-                for instruccion in self.instruccionesElse:
-                    if isinstance(instruccion, Break):
-                        return instruccion
-                    if isinstance(instruccion, Continue):
-                        return instruccion
-                    if isinstance(instruccion, Return):
-                        return instruccion.interpretar(arbol, nuevoentorno2)
-                    else:
-                        instruccion.interpretar(arbol, nuevoentorno2)
-        if self.elseIf != None:
+        '''if self.elseIf != None:
                 return self.elseIf.interpretar(arbol, entorno)'''
         return 

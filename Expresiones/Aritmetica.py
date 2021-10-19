@@ -130,7 +130,7 @@ class Aritmetica(NodoAST):
                         traductor.addCodigo(mult+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
-                if self.sonAmbasCadenas(traductor, opi[1], opd[1]):
+                if self.sonAmbasCadenas(opi[1], opd[1]):
                     cad = str(opi[0]) + str(opd[0])
                     return [cad, TipoObjeto.CADENA]
             if (self.operador == OperadorAritmetico.DIV):

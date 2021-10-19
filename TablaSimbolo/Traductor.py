@@ -70,20 +70,12 @@ class Traductor:
         self.goto = self.goto + numero
 #---------------------------------PARA METER UN BOOLEANO AL STACK-----------------------------------
     def putBooleanStack(self, valor):
-        self.haygotos = True
+        cadena = "//-------AGREGANDO VALOR BOOLEANO--------\n"
         if valor == True:
-            estado = self.goto
+            cadena += "stack[int(S)] = 1;\n"
         else:
-            estado = self.goto + 1 
-        cadena = "goto L"+str(estado)+";\n"
-        cadena += "L"+str(self.goto)+":\n"
-        cadena += "stack[int(S)] = 1;\n"
-        cadena += "goto L"+str(self.goto + 2)+";\n"
-        cadena += "L"+str(self.goto + 1)+":\n"
-        cadena += "stack[int(S)] = 0;\n"
-        cadena += "L"+ str(self.goto + 2)+":\n"
+            cadena += "stack[int(S)] = 0;\n"
         cadena += "S = S + 1;\n"
-        self.goto = self.goto + 3
         self.IncrementarStack()
         self.addCodigo(cadena)
         return self.getStack()-1
@@ -91,8 +83,7 @@ class Traductor:
 #------------------------------------PARA METER UN STRING AL HEAP-------------------------------------------
     def putStringHeap(self, valor):
         temporal = self.getHeap()
-        cadena=""
-        cadena += "\n//-----Agregando "+ str(valor).replace("\n", "") + " a Heap------\n"
+        cadena = "//-----Agregando String a Heap------\n"
         cadena += "t"+str(self.getContador()) + "= H;//Se extrae la posción libre del heap;\n"
         for letra in valor:
             cadena += "heap[int(H)] = "+ self.getAscii(letra) + ";//Se mete la letra "+letra+"\n"
