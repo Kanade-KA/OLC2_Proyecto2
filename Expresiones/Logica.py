@@ -44,5 +44,5 @@ class Logica(NodoAST):
             opd = self.OperacionDer.traducir(traductor, entorno)
             return [opd[0], opd[1]]
         if self.operador == OperadorLogico.NOT:
-            print("and")
+            return [opi[0], opi[1]]
         return "error"
