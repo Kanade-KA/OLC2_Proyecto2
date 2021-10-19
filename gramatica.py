@@ -755,7 +755,7 @@ def parsetrad(imput):
         instruccion.traducir(arbol, entorno)
     error = "No hay Errores :D"
     ts = arbol.generateTable()
-    codigo += arbol.temporales() + arbol.getMain() + arbol.getCodigo() + arbol.getInservible()+"}\n" + arbol.getFuncion() 
+    codigo += arbol.temporales() + arbol.getMain() + arbol.getCodigo() +"}\n" + arbol.getFuncion() 
     if len(arbol.excepciones) >0:
         error = arbol.generateErrors()
         ts = "Hay Errores No se puede mostrar la tabla de simbolos D:"

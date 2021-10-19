@@ -1,5 +1,6 @@
 from Expresiones.Constante import Constante
 from Expresiones.Identificador import Identificador
+from Expresiones.Logica import Logica
 from Expresiones.Relacional import Relacional
 from Expresiones.Struct import Struct
 from Expresiones.Arreglo3D import Arreglo3D
@@ -128,25 +129,42 @@ class Imprimir(NodoAST):
                         traductor.addCodigo(cadena)
             if isinstance(ins, Relacional):
                 res = ins.traducir(traductor, entorno)
-                print(res)
                 goto = traductor.getGotos()
-                cadena = "L"+str(goto)+":\n"
+                cadena =  str(res[0])+":\n"
                 cadena += "fmt.Printf(\"%c\",116);\n" 
                 cadena += "fmt.Printf(\"%c\",114);\n"
                 cadena += "fmt.Printf(\"%c\",117);\n"
                 cadena += "fmt.Printf(\"%c\",101);\n"
-                cadena += "goto L"+str(goto + 2)+";\n"
-                cadena += "L"+str(goto + 1)+": \n"
+                cadena += "goto L"+str(goto)+";\n"
+                cadena += str(res[1])+": \n"
                 cadena += "fmt.Printf(\"%c\",102);\n" 
                 cadena += "fmt.Printf(\"%c\",97);\n"
                 cadena += "fmt.Printf(\"%c\",108);\n"
                 cadena += "fmt.Printf(\"%c\",115);\n"
                 cadena += "fmt.Printf(\"%c\",101);\n"
-                cadena += "L"+str(goto + 2)+": \n"
+                cadena += "L"+str(goto)+": \n"
                 cadena += "fmt.Printf(\"%c\",10);\n"
                 traductor.addCodigo(cadena)
-                traductor.IncrementarGotos(3)
-                
+                traductor.IncrementarGotos(1)
+            if isinstance(ins, Logica):
+                res = ins.traducir(traductor, entorno)
+                goto = traductor.getGotos()
+                cadena =  str(res[0])+":\n"
+                cadena += "fmt.Printf(\"%c\",116);\n" 
+                cadena += "fmt.Printf(\"%c\",114);\n"
+                cadena += "fmt.Printf(\"%c\",117);\n"
+                cadena += "fmt.Printf(\"%c\",101);\n"
+                cadena += "goto L"+str(goto)+";\n"
+                cadena += str(res[1])+": \n"
+                cadena += "fmt.Printf(\"%c\",102);\n" 
+                cadena += "fmt.Printf(\"%c\",97);\n"
+                cadena += "fmt.Printf(\"%c\",108);\n"
+                cadena += "fmt.Printf(\"%c\",115);\n"
+                cadena += "fmt.Printf(\"%c\",101);\n"
+                cadena += "L"+str(goto)+": \n"
+                cadena += "fmt.Printf(\"%c\",10);\n"
+                traductor.addCodigo(cadena)
+                traductor.IncrementarGotos(1)
         if self.essalto != 'F':
             traductor.addCodigo("fmt.Printf(\"%c\", 10);\n")
         #traductor.addCodigo("imprimir();\n")

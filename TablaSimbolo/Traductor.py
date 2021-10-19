@@ -19,17 +19,14 @@ class Traductor:
         self.stack= 0
         self.contador = 0#Este me sirve para el contador de temporales
         self.c3d = ""
-        self.inservible = ""
         self.main = "func main (){\n//-------------Inicializando Punteros------------\nH = 0; \nS = 0;\n"
         #Banderas para no repetir metodos
         self.print = False
         self.potencia = False
         self.haygotos = False
         self.goto = 0#Este contador me va a servir para contar los Estados que se creen en el main.
+        self.cambio = "L"
 #-------------------------------PARA AGREGAR CODIGO DE GOTOS, POR QUE SI NO DA CLAVO----------------------------
-    def addInservible(self, cadena):
-        self.inservible += cadena
-
     def getInservible(self):
         if self.haygotos:
             cadena = "goto L8000;\n"
@@ -37,7 +34,7 @@ class Traductor:
                 cadena += "goto L"+ str(i)+";\n"
             cadena += "L8000:\n"
             return cadena
-        return self.inservible
+        return ""
 #---------------------BANDERAS PARA SABER SI HAY QUE AGREGAR ALGUNO DE ESTOS CÓDIGOS--------------------------------
     def hayPrint(self):
         return self.print
@@ -53,8 +50,23 @@ class Traductor:
 
     def getGotos(self):
         return self.goto
+#--------------------PARA TRAER UNA ETIQUETA---------
+    def HayCambio(self):
+        if self.cambio == "L":
+            return False
+        else:
+            return True
+    def CambiarEtiqueta(self, et):
+        self.cambio = et
+    
+    def SetearEtiqueta(self):
+        self.cambio = "L"
 
+    def getEtiquetaCambio(self):
+        return self.cambio
+#----------------------------------------------------
     def IncrementarGotos(self, numero):
+        self.haygotos = True
         self.goto = self.goto + numero
 #---------------------------------PARA METER UN BOOLEANO AL STACK-----------------------------------
     def putBooleanStack(self, valor):

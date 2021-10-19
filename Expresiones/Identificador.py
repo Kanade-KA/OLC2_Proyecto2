@@ -37,7 +37,6 @@ class Identificador(NodoAST):
 
     def getValor(self, traductor, entorno):
         simbolo = entorno.retornarSimbolo(self.identificador.lower())
-        print("EN GET VALOR", simbolo)
         if simbolo == None:
             traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no existe.", self.fila, self.columna))
             return "error"

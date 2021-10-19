@@ -85,11 +85,11 @@ class Aritmetica(NodoAST):
                 if tipo != TipoObjeto.CADENA:
                     traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")];//Traemos la variable\n"
                     resultadod = "t"+str(traductor.getContador())
-                    traductor.addCodigo(traductor, traer)
+                    traductor.addCodigo(traer)
                     traductor.IncrementarContador()
                 else:
                     resultadod = self.OperacionDer.getValor(entorno)
-                opi = [resultadod, tipo]
+                opd = [resultadod, tipo]
             else:
                 return "error"
         #----------------------------------------------------------------------------------------------------

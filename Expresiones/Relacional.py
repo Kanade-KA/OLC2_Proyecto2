@@ -54,8 +54,8 @@ class Relacional(NodoAST):
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)
         opd = self.OperacionDer.traducir(traductor, entorno)
-         #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
-       #Operador Izquierdo
+        #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
+        #Operador Izquierdo
         if isinstance(self.OperacionIzq, Identificador):
             tipo = self.OperacionIzq.getTipo(traductor, entorno)
             resultado = ""
@@ -78,56 +78,96 @@ class Relacional(NodoAST):
                 if tipo != TipoObjeto.CADENA:
                     traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")];//Traemos la variable\n"
                     resultadod = "t"+str(traductor.getContador())
-                    traductor.addCodigo(traductor, traer)
+                    traductor.addCodigo(traer)
                     traductor.IncrementarContador()
                 else:
                     resultadod = self.OperacionDer.getValor(entorno)
-                opi = [resultadod, tipo]
+                opd = [resultadod, tipo]
             else:
                 return "error"
         #print(self.operador)
         if self.operador == OperadorRelacional.MAYORQUE:
             if self.VerificarTipo(opi[1], opd[1]):
-                cadena = "if "+str(opi[0])+" > "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
-                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                acepta = "L"+str(traductor.getGotos())
+                if traductor.HayCambio():
+                    rechaza = traductor.getEtiquetaCambio()
+                    traductor.SetearEtiqueta()
+                else:
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                traductor.IncrementarGotos(2)
+                cadena = "if "+str(opi[0])+" > "+ str(opd[0])+" { goto "+acepta+ ";}\n"
+                cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
-                return
+                return [acepta, rechaza]
         if self.operador == OperadorRelacional.MENORQUE:
             if self.VerificarTipo(opi[1], opd[1]):
-                cadena = "if "+str(opi[0])+" < "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
-                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                acepta = "L"+str(traductor.getGotos())
+                if traductor.HayCambio():
+                    rechaza = traductor.getEtiquetaCambio()
+                    traductor.SetearEtiqueta()
+                else:
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                traductor.IncrementarGotos(2)
+                cadena = "if "+str(opi[0])+" < "+ str(opd[0])+" { goto "+acepta+ ";}\n"
+                cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
-                return
+                return [acepta, rechaza]
         if self.operador == OperadorRelacional.MAYORIGUAL:
             if self.VerificarTipo(opi[1], opd[1]):
-                cadena = "if "+str(opi[0])+" >= "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
-                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                acepta = "L"+str(traductor.getGotos())
+                if traductor.HayCambio():
+                    rechaza = traductor.getEtiquetaCambio()
+                    traductor.SetearEtiqueta()
+                else:
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                traductor.IncrementarGotos(2)
+                cadena = "if "+str(opi[0])+" >= "+ str(opd[0])+" { goto "+acepta+ ";}\n"
+                cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
-                return
+                return [acepta, rechaza]
         if self.operador == OperadorRelacional.MENORIGUAL:
             if self.VerificarTipo(opi[1], opd[1]):
-                cadena = "if "+str(opi[0])+" <= "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
-                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                acepta = "L"+str(traductor.getGotos())
+                if traductor.HayCambio():
+                    rechaza = traductor.getEtiquetaCambio()
+                    traductor.SetearEtiqueta()
+                else:
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                traductor.IncrementarGotos(2)
+                cadena = "if "+str(opi[0])+" <= "+ str(opd[0])+" { goto "+acepta+ ";}\n"
+                cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
-                return
+                return [acepta, rechaza]
         if self.operador == OperadorRelacional.IGUALIGUAL:
             if self.VerificarTipo(opi[1], opd[1]):
-                cadena = "if "+str(opi[0])+" == "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
-                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                acepta = "L"+str(traductor.getGotos())
+                if traductor.HayCambio():
+                    rechaza = traductor.getEtiquetaCambio()
+                    traductor.SetearEtiqueta()
+                else:
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                traductor.IncrementarGotos(2)
+                cadena = "if "+str(opi[0])+" == "+ str(opd[0])+" { goto "+acepta+ ";}\n"
+                cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
-                return
+                return [acepta, rechaza]
         if self.operador == OperadorRelacional.DIFERENTE:
             if self.VerificarTipo(opi[1], opd[1]):
-                cadena = "if "+str(opi[0])+" != "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
-                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                acepta = "L"+str(traductor.getGotos())
+                if traductor.HayCambio():
+                    rechaza = traductor.getEtiquetaCambio()
+                    traductor.SetearEtiqueta()
+                else:
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                traductor.IncrementarGotos(2)
+                cadena = "if "+str(opi[0])+" != "+ str(opd[0])+" { goto "+acepta+ ";}\n"
+                cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
-                return
+                return [acepta, rechaza]
         traductor.addExcepcion(Error("Semántico", "Los tipos de operandos no coinciden", self.fila, self.columna))
         return "error"
         
     def VerificarTipo(self, opi, opd):
-        print("OPERADOR IZQUIERDO       OPERADOR DERECHO")
-        print(opi, opd)
         if opi == TipoObjeto.ENTERO or opi == TipoObjeto.DECIMAL:
             if opd == TipoObjeto.ENTERO or opd == TipoObjeto.DECIMAL:
                 return True
