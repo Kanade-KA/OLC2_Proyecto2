@@ -1,4 +1,5 @@
 from Expresiones.Constante import Constante
+from Expresiones.Identificador import Identificador
 from Objeto.Primitivo import Primitivo
 from Abstract.Objeto import TipoObjeto
 from Abstract.NodoAST import NodoAST
@@ -53,43 +54,80 @@ class Relacional(NodoAST):
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)
         opd = self.OperacionDer.traducir(traductor, entorno)
+         #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
+       #Operador Izquierdo
+        if isinstance(self.OperacionIzq, Identificador):
+            tipo = self.OperacionIzq.getTipo(traductor, entorno)
+            resultado = ""
+            if tipo != "error":
+                if tipo != TipoObjeto.CADENA:
+                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")];//Traemos la variable\n"
+                    resultado = "t"+str(traductor.getContador())
+                    traductor.addCodigo(traer)
+                    traductor.IncrementarContador()
+                else:
+                    resultado = self.OperacionIzq.getValor(traductor, entorno)
+                opi=[resultado, tipo]
+            else:
+                return "error"
+        #Operador Derecho
+        if isinstance(self.OperacionDer, Identificador):
+            tipo = self.OperacionDer.getTipo(traductor, entorno)
+            resultadod = ""
+            if tipo != "error":
+                if tipo != TipoObjeto.CADENA:
+                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")];//Traemos la variable\n"
+                    resultadod = "t"+str(traductor.getContador())
+                    traductor.addCodigo(traductor, traer)
+                    traductor.IncrementarContador()
+                else:
+                    resultadod = self.OperacionDer.getValor(entorno)
+                opi = [resultadod, tipo]
+            else:
+                return "error"
         #print(self.operador)
         if self.operador == OperadorRelacional.MAYORQUE:
-            #if self.VerificarTipo(opi[1], opd[1]):
-                cadena = "if "+str(opi[0])+" > "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + "}\n"
-                cadena += "goto L"+str(traductor.getGotos() +1)+"\n"
+            if self.VerificarTipo(opi[1], opd[1]):
+                cadena = "if "+str(opi[0])+" > "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
+                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
                 traductor.addCodigo(cadena)
                 return
         if self.operador == OperadorRelacional.MENORQUE:
             if self.VerificarTipo(opi[1], opd[1]):
-                cadena = "if "+str(opi[0])+" < "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + "}\n"
-                cadena += "goto L"+str(traductor.getGotos() +1)+"\n"
+                cadena = "if "+str(opi[0])+" < "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
+                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
                 traductor.addCodigo(cadena)
                 return
-        '''if self.operador == OperadorRelacional.MAYORIGUAL:
-            if opi >= opd:
-                return True
-            else:
-                return False
+        if self.operador == OperadorRelacional.MAYORIGUAL:
+            if self.VerificarTipo(opi[1], opd[1]):
+                cadena = "if "+str(opi[0])+" >= "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
+                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                traductor.addCodigo(cadena)
+                return
         if self.operador == OperadorRelacional.MENORIGUAL:
-            if opi <= opd:
-                return True
-            else:
-                return False
+            if self.VerificarTipo(opi[1], opd[1]):
+                cadena = "if "+str(opi[0])+" <= "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
+                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                traductor.addCodigo(cadena)
+                return
         if self.operador == OperadorRelacional.IGUALIGUAL:
-            if opi == opd:
-                return True
-            else:
-                return False
+            if self.VerificarTipo(opi[1], opd[1]):
+                cadena = "if "+str(opi[0])+" == "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
+                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                traductor.addCodigo(cadena)
+                return
         if self.operador == OperadorRelacional.DIFERENTE:
-            if opi != opd:
-                return True
-            else:
-                return False'''
+            if self.VerificarTipo(opi[1], opd[1]):
+                cadena = "if "+str(opi[0])+" != "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + ";}\n"
+                cadena += "goto L"+str(traductor.getGotos() +1)+";\n"
+                traductor.addCodigo(cadena)
+                return
         traductor.addExcepcion(Error("Semántico", "Los tipos de operandos no coinciden", self.fila, self.columna))
         return "error"
         
     def VerificarTipo(self, opi, opd):
+        print("OPERADOR IZQUIERDO       OPERADOR DERECHO")
+        print(opi, opd)
         if opi == TipoObjeto.ENTERO or opi == TipoObjeto.DECIMAL:
             if opd == TipoObjeto.ENTERO or opd == TipoObjeto.DECIMAL:
                 return True

@@ -759,5 +759,5 @@ def parsetrad(imput):
     if len(arbol.excepciones) >0:
         error = arbol.generateErrors()
         ts = "Hay Errores No se puede mostrar la tabla de simbolos D:"
-        codigo = ""
+        #codigo = ""
     return [codigo, ts, error]

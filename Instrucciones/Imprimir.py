@@ -59,7 +59,7 @@ class Imprimir(NodoAST):
                     traductor.addCodigo(cadena)
             if isinstance(ins, Identificador):
                 tipo = ins.getTipo(traductor, entorno)
-                if tipo == "error":
+                if tipo != "error":
                     if tipo == TipoObjeto.ENTERO:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
                         cadena = "t"+str(traductor.getContador())+" = stack[int("+str(puntero)+")];//Extraigo el valor y ese lo imprimo\n"
@@ -127,7 +127,8 @@ class Imprimir(NodoAST):
                         cadena += "imprimir();\n"
                         traductor.addCodigo(cadena)
             if isinstance(ins, Relacional):
-                ins.traducir(traductor, entorno)
+                res = ins.traducir(traductor, entorno)
+                print(res)
                 goto = traductor.getGotos()
                 cadena = "L"+str(goto)+":\n"
                 cadena += "fmt.Printf(\"%c\",116);\n" 

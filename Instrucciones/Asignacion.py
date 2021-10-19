@@ -64,7 +64,6 @@ class Asignacion(NodoAST):
                 traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
         if isinstance(self.expresion, Aritmetica):
-            value = self.expresion.traducir(traductor, entorno)
             if value != "error":
                 tipo = value[1]
                 if tipo == TipoObjeto.ENTERO or tipo == TipoObjeto.DECIMAL:
@@ -90,11 +89,10 @@ class Asignacion(NodoAST):
                     traductor.addSimbolo(simbolo)
                     entorno.addSimbolo(simbolo)
                     return
-            else:
-                valor = self.expresion.traducir(traductor, entorno)
-                if valor != "error":
-                    self.Asignar(traductor.getTipo(valor[0]), valor[0], self.identificador, entorno, traductor)
-                return 
+        else:
+            if value != "error":
+                self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
+            return 
 
     def Asignar(self, tipo, valor, id, entorno, traductor):
         if tipo == TipoObjeto.ENTERO:
