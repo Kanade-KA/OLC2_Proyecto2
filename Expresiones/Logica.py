@@ -35,11 +35,14 @@ class Logica(NodoAST):
         opi = self.OperacionIzq.traducir(traductor, entorno)
         if self.operador == OperadorLogico.AND:
             traductor.addCodigo(str(opi[0])+":\n")
-            traductor.CambiarEtiqueta(opi[1])
+            traductor.CambiarEtiqueta(opi[1], 1)
             opd = self.OperacionDer.traducir(traductor, entorno)
             return [opd[0], opd[1]]
         if self.operador == OperadorLogico.OR:
-            print("and")
+            traductor.addCodigo(str(opi[1])+":\n")
+            traductor.CambiarEtiqueta(opi[0], 2)
+            opd = self.OperacionDer.traducir(traductor, entorno)
+            return [opd[0], opd[1]]
         if self.operador == OperadorLogico.NOT:
             print("and")
-        return
+        return "error"

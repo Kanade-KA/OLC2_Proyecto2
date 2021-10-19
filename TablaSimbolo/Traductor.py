@@ -26,15 +26,8 @@ class Traductor:
         self.haygotos = False
         self.goto = 0#Este contador me va a servir para contar los Estados que se creen en el main.
         self.cambio = "L"
-#-------------------------------PARA AGREGAR CODIGO DE GOTOS, POR QUE SI NO DA CLAVO----------------------------
-    def getInservible(self):
-        if self.haygotos:
-            cadena = "goto L8000;\n"
-            for i in range(0, self.goto):
-                cadena += "goto L"+ str(i)+";\n"
-            cadena += "L8000:\n"
-            return cadena
-        return ""
+        self.logica = 0
+
 #---------------------BANDERAS PARA SABER SI HAY QUE AGREGAR ALGUNO DE ESTOS CÓDIGOS--------------------------------
     def hayPrint(self):
         return self.print
@@ -56,14 +49,19 @@ class Traductor:
             return False
         else:
             return True
-    def CambiarEtiqueta(self, et):
+    def CambiarEtiqueta(self, et, logica):
         self.cambio = et
+        self.logica = logica
     
     def SetearEtiqueta(self):
         self.cambio = "L"
+        self.logica = 0
 
     def getEtiquetaCambio(self):
         return self.cambio
+        
+    def getLogica(self):
+        return self.logica
 #----------------------------------------------------
     def IncrementarGotos(self, numero):
         self.haygotos = True

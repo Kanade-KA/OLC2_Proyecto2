@@ -47,25 +47,28 @@ class If(NodoAST):
 
     def traducir(self, traductor, entorno):
         condicional = self.condicion.traducir(traductor, entorno)
-        goto = traductor.getGotos()
-        traductor.IncrementarGotos(1)
-        cadena =  str(condicional[0])+":\n"
-        traductor.addCodigo(cadena)
-        if self.instruccionesIf != None:
-            nuevoentorno = Entorno("IF", entorno)
-            for i in self.instruccionesIf:
-                i.traducir(traductor, nuevoentorno)
-        cadena = "goto L"+str(goto)+";\n"
-        cadena += str(condicional[1])+": \n"
-        traductor.addCodigo(cadena)
-        if self.instruccionesElse != None:
-            nuevoentorno2 = Entorno("ELSE", entorno)
-            for i in self.instruccionesElse:
-                i.traducir(traductor, nuevoentorno2)
-        cadena = "L"+str(goto)+": \n"
-        cadena += "fmt.Printf(\"%c\",10);\n"
-        traductor.addCodigo(cadena)
-        traductor.IncrementarGotos(1)
+        print("Condicional: ", condicional)
+        if condicional != "error":#para evitar errores
+            goto = traductor.getGotos()
+            traductor.IncrementarGotos(1)
+            cadena =  str(condicional[0])+":\n"
+            traductor.addCodigo(cadena)
+            if self.instruccionesIf != None:
+                nuevoentorno = Entorno("IF", entorno)
+                for i in self.instruccionesIf:
+                    i.traducir(traductor, nuevoentorno)
+            cadena = "goto L"+str(goto)+";\n"
+            cadena += str(condicional[1])+": \n"
+            traductor.addCodigo(cadena)
+            if self.instruccionesElse != None:
+                nuevoentorno2 = Entorno("ELSE", entorno)
+                for i in self.instruccionesElse:
+                    i.traducir(traductor, nuevoentorno2)
+            cadena = "L"+str(goto)+": \n"
+            cadena += "fmt.Printf(\"%c\",10);\n"
+            traductor.addCodigo(cadena)
+            traductor.IncrementarGotos(1)
+        
         '''if self.elseIf != None:
-                return self.elseIf.interpretar(arbol, entorno)'''
+                self.elseIf.traducir(traductor, entorno)'''
         return 
