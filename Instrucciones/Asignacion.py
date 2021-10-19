@@ -68,8 +68,8 @@ class Asignacion(NodoAST):
             if value != "error":
                 tipo = value[1]
                 if tipo == TipoObjeto.ENTERO or tipo == TipoObjeto.DECIMAL:
-                    cadena = "stack[int(S)] = "+str(value[0])+"//Agrego la variable\n"
-                    cadena += "S = S + 1\n"
+                    cadena = "stack[int(S)] = "+str(value[0])+";//Agrego la variable\n"
+                    cadena += "S = S + 1;\n"
                     simbolo = Simbolo(entorno.getNombre(), self.identificador, value[0], tipo, "Variable", traductor.getStack(), self.fila, self.columna)
                     traductor.IncrementarStack()
                     traductor.addCodigo(cadena)
@@ -81,7 +81,7 @@ class Asignacion(NodoAST):
                     cadena = ""
                     cadena += "t"+str(traductor.getContador())+" = "+str(ptero) + ";//Guardo en un temporal el integer del heap\n"
                     cadena += "stack[int(S)] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
-                    cadena += "S = S + 1 //Se aumenta el stack para poder meter otro numero\n\n"
+                    cadena += "S = S + 1;//Se aumenta el stack para poder meter otro numero\n\n"
                     traductor.addCodigo(cadena)
                     apuntastack = traductor.getStack()
                     traductor.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
@@ -108,7 +108,7 @@ class Asignacion(NodoAST):
             cadena = ""
             cadena += "t"+str(traductor.getContador())+" = "+str(apuntadorheap) + ";//Guardo en un temporal el integer del heap\n"
             cadena += "stack[int(S)] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
-            cadena += "S = S + 1 //Se aumenta el stack para poder meter otro numero\n\n"
+            cadena += "S = S + 1;//Se aumenta el stack para poder meter otro numero\n\n"
             traductor.addCodigo(cadena)
             apuntastack = traductor.getStack()
             traductor.IncrementarStack()#Incrementamos el stack para que agarre el nuevo

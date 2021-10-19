@@ -2,6 +2,7 @@ from Expresiones.Constante import Constante
 from Objeto.Primitivo import Primitivo
 from Abstract.Objeto import TipoObjeto
 from Abstract.NodoAST import NodoAST
+from TablaSimbolo.Error import Error
 from TablaSimbolo.Tipo import OperadorRelacional
 from Expresiones.Constante import Constante
 from TablaSimbolo.Traductor import Traductor
@@ -54,18 +55,18 @@ class Relacional(NodoAST):
         opd = self.OperacionDer.traducir(traductor, entorno)
         #print(self.operador)
         if self.operador == OperadorRelacional.MAYORQUE:
-            if self.VerificarTipo(traductor, opi, opd):
-                cadena = "if "+str(opi)+" >= "+ str(opd)+" { goto L"+str(traductor.getGotos()) + "}\n"
+            #if self.VerificarTipo(opi[1], opd[1]):
+                cadena = "if "+str(opi[0])+" > "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + "}\n"
                 cadena += "goto L"+str(traductor.getGotos() +1)+"\n"
                 traductor.addCodigo(cadena)
-            else:
-                print("Error")
-        '''if self.operador == OperadorRelacional.MENORQUE:
-            if opi < opd:
-                return True
-            else:
-                return False
-        if self.operador == OperadorRelacional.MAYORIGUAL:
+                return
+        if self.operador == OperadorRelacional.MENORQUE:
+            if self.VerificarTipo(opi[1], opd[1]):
+                cadena = "if "+str(opi[0])+" < "+ str(opd[0])+" { goto L"+str(traductor.getGotos()) + "}\n"
+                cadena += "goto L"+str(traductor.getGotos() +1)+"\n"
+                traductor.addCodigo(cadena)
+                return
+        '''if self.operador == OperadorRelacional.MAYORIGUAL:
             if opi >= opd:
                 return True
             else:
@@ -85,17 +86,16 @@ class Relacional(NodoAST):
                 return True
             else:
                 return False'''
-        return "relacional"
+        traductor.addExcepcion(Error("Semántico", "Los tipos de operandos no coinciden", self.fila, self.columna))
+        return "error"
         
-    def VerificarTipo(self, traductor, opi, opd):
-        tipoizq = traductor.getTipo(opi)
-        tipoder = traductor.getTipo(opd)
-        if tipoder == TipoObjeto.DECIMAL or tipoder == TipoObjeto.ENTERO :
-            if tipoizq == TipoObjeto.CADENA or tipoizq == TipoObjeto.BOOLEANO :
-                return False
+    def VerificarTipo(self, opi, opd):
+        if opi == TipoObjeto.ENTERO or opi == TipoObjeto.DECIMAL:
+            if opd == TipoObjeto.ENTERO or opd == TipoObjeto.DECIMAL:
+                return True
+            return False
+        if opi == TipoObjeto.CADENA and opd == TipoObjeto.CADENA:
             return True
-        if tipoizq == TipoObjeto.CADENA and tipoder == TipoObjeto.CADENA:
-            return True
-        if tipoizq == TipoObjeto.BOOLEANO and tipoizq == TipoObjeto.BOOLEANO:
+        if opi == TipoObjeto.BOOLEANO and opd == TipoObjeto.BOOLEANO:
             return True
         return False

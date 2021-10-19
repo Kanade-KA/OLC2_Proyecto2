@@ -68,7 +68,7 @@ class Aritmetica(NodoAST):
             resultado = ""
             if tipo != "error":
                 if tipo != TipoObjeto.CADENA:
-                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")]//Traemos la variable\n"
+                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")];//Traemos la variable\n"
                     resultado = "t"+str(traductor.getContador())
                     traductor.addCodigo(traer)
                     traductor.IncrementarContador()
@@ -83,7 +83,7 @@ class Aritmetica(NodoAST):
             resultadod = ""
             if tipo != "error":
                 if tipo != TipoObjeto.CADENA:
-                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")]//Traemos la variable\n"
+                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")];//Traemos la variable\n"
                     resultadod = "t"+str(traductor.getContador())
                     traductor.addCodigo(traductor, traer)
                     traductor.IncrementarContador()
@@ -98,36 +98,36 @@ class Aritmetica(NodoAST):
                 if self.sinString(opi[1], opd[1]):
                     if  self.HayDoble(opi[1], opd[1]):
                         suma = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "+"+ str(opd[0])
-                        traductor.addCodigo(suma+"\n")
+                        traductor.addCodigo(suma+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
                         suma = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "+"+ str(opd[0])
-                        traductor.addCodigo(suma+"\n")
+                        traductor.addCodigo(suma+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
             if (self.operador==OperadorAritmetico.MENOS):
                 if self.sinString(opi[1], opd[1]):
                     if  self.HayDoble(opi[1], opd[1]):
                         resta = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "-"+ str(opd[0])
-                        traductor.addCodigo(resta+"\n")
+                        traductor.addCodigo(resta+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
                         resta = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "-"+ str(opd[0])
-                        traductor.addCodigo(resta+"\n")
+                        traductor.addCodigo(resta+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
             if (self.operador == OperadorAritmetico.POR):
                 if self.sinString(opi[1], opd[1]):
                     if  self.HayDoble(opi[1], opd[1]):
                         mult = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "*"+ str(opd[0])
-                        traductor.addCodigo(mult+"\n")
+                        traductor.addCodigo(mult+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
                         mult = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "*"+ str(opd[0])
-                        traductor.addCodigo(mult+"\n")
+                        traductor.addCodigo(mult+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
                 if self.sonAmbasCadenas(traductor, opi[1], opd[1]):
@@ -136,55 +136,55 @@ class Aritmetica(NodoAST):
             if (self.operador == OperadorAritmetico.DIV):
                 if self.sinString(opi[1], opd[1]):
                     div = "t"+ str(traductor.getContador()) + "= "+ str(opi[0]) + "/"+ str(opd[0])
-                    traductor.addCodigo(div+"\n")
+                    traductor.addCodigo(div+";\n")
                     traductor.IncrementarContador()
                     return ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
             if (self.operador == OperadorAritmetico.POW):
                 if self.sinString(opi[1], opd[1]):
-                    pow = "t"+str(traductor.getContador())+" = S + 0//Extraemos el stack \n"
-                    pow += "t"+str(traductor.getContador())+ " = t"+str(traductor.getContador())+" + 1 // le agregamos 1 al Stack para guardar el primer parametro ya que en P vendrá el retorno\n"
-                    pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opi[0])+"//Agregamos el primer parametro al stack\n"
-                    pow += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1 // para agregar el segundo\n"
-                    pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opd[0])+"//Agregamos el segundo parametro al stack\n"
-                    pow += "potencia()\n"
+                    pow = "t"+str(traductor.getContador())+" = S + 0;//Extraemos el stack \n"
+                    pow += "t"+str(traductor.getContador())+ " = t"+str(traductor.getContador())+" + 1;// le agregamos 1 al Stack para guardar el primer parametro ya que en P vendrá el retorno\n"
+                    pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opi[0])+";//Agregamos el primer parametro al stack\n"
+                    pow += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1;// para agregar el segundo\n"
+                    pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opd[0])+";//Agregamos el segundo parametro al stack\n"
+                    pow += "potencia();\n"
                     traductor.addCodigo(pow)
                     traductor.IncrementarContador()
                     contres = traductor.getContador()
-                    res = "t"+str(contres)+ " = stack[int(S)]\n"
+                    res = "t"+str(contres)+ " = stack[int(S)];\n"
                     traductor.IncrementarContador()
                     traductor.addCodigo(res)
 
                     if not traductor.hayPotencia():
                         #----------------------------POTENCIA--------------------------------
                         potencia = "func potencia(){\n"
-                        potencia += "t"+str(traductor.getContador())+" = S + 1//para sacar el primer parametro\n"
+                        potencia += "t"+str(traductor.getContador())+" = S + 1;//para sacar el primer parametro\n"
                         traductor.IncrementarContador()
-                        potencia += "t"+str(traductor.getContador())+" = stack[int(t"+str(traductor.getContador()-1)+")]//Saco el primer parametro\n"
+                        potencia += "t"+str(traductor.getContador())+" = stack[int(t"+str(traductor.getContador()-1)+")];//Saco el primer parametro\n"
                         traductor.IncrementarContador()
                         numero = traductor.getContador()#base la que siempre va a estar cambiando
-                        potencia += "t"+str(numero)+" = t"+str(numero - 1)+"//en esta variable se guarda el numero\n"
+                        potencia += "t"+str(numero)+" = t"+str(numero - 1)+";//en esta variable se guarda el numero\n"
                         traductor.IncrementarContador()
                         multip = traductor.getContador()#numero por el que se multiplicará nunca va a cambiar
-                        potencia += "t"+str(multip) + " = t"+str(numero -1)+"//esta se va a usar para el que se multiplica\n"
+                        potencia += "t"+str(multip) + " = t"+str(numero -1)+";//esta se va a usar para el que se multiplica\n"
                         traductor.IncrementarContador()
-                        potencia += "t"+str(traductor.getContador())+" = S + 2// va a posicionarse en el segundo parametro (cuantas veces va a mult)\n"
+                        potencia += "t"+str(traductor.getContador())+" = S + 2;//va a posicionarse en el segundo parametro (cuantas veces va a mult)\n"
                         traductor.IncrementarContador()
                         repeticion = traductor.getContador()#para el while que se va  ahacer
-                        potencia += "t"+str(repeticion)+" = stack[int(t"+str(traductor.getContador()-1)+")]//Saco el segundo parametro del stack\n"
+                        potencia += "t"+str(repeticion)+" = stack[int(t"+str(traductor.getContador()-1)+")];//Saco el segundo parametro del stack\n"
                         traductor.IncrementarContador()
-                        potencia += "if t"+str(repeticion)+" == 0 { goto L1 }//Si es 0 es por que un numero elevado a 0 es 1\n"
+                        potencia += "if t"+str(repeticion)+" == 0 { goto L1 };//Si es 0 es por que un numero elevado a 0 es 1\n"
                         potencia += "L2:\n"
-                        potencia += "if t"+str(repeticion)+" <= 1 { goto L0 }\n"
-                        potencia += "t"+str(numero) +" = t"+str(numero)+ " * t"+str(multip)+"//para multiplicar por la base\n"
-                        potencia += "t"+str(repeticion) + " = t"+str(repeticion)+ "- 1 // se resta uno \n"
-                        potencia += "goto L2\n"
+                        potencia += "if t"+str(repeticion)+" <= 1 { goto L0; }\n"
+                        potencia += "t"+str(numero) +" = t"+str(numero)+ " * t"+str(multip)+";//para multiplicar por la base\n"
+                        potencia += "t"+str(repeticion) + " = t"+str(repeticion)+ "- 1;// se resta uno \n"
+                        potencia += "goto L2;\n"
                         potencia += "L0:\n"
-                        potencia += "stack[int(S)] = t"+str(numero) +"\n"
-                        potencia += "goto L3\n"
+                        potencia += "stack[int(S)] = t"+str(numero) +";\n"
+                        potencia += "goto L3;\n"
                         potencia += "L1:\n"
                         potencia += "stack[int(S)] = 1;\n"
                         potencia += "L3:\n"
-                        potencia += "return\n"
+                        potencia += "return;\n"
                         potencia += "}\n\n"
                         traductor.addFuncion(potencia)
                         traductor.activarPotencia()
@@ -196,7 +196,7 @@ class Aritmetica(NodoAST):
                     return [str(palabra), TipoObjeto.CADENA]
             if (self.operador == OperadorAritmetico.MOD):
                 if opd[0] != 0:
-                    mod = "t" + str(traductor.getContador())+" = math.Mod("+str(opi[0]) +","+str(opd[0])+")"
+                    mod = "t" + str(traductor.getContador())+" = math.Mod("+str(opi[0]) +","+str(opd[0])+");"
                     traductor.addCodigo(mod+"\n")
                     traductor.IncrementarContador()
                     return ["t"+ str(traductor.getContador()-1), TipoObjeto.ENTERO]
@@ -206,8 +206,6 @@ class Aritmetica(NodoAST):
         return "error"
         
     def sinString(self, opi, opd):
-        print("OPERADOR IZQUIERDO       OPERADOR DERECHO")
-        print(opi , opd)
         if opi == TipoObjeto.CADENA or opd == TipoObjeto.CADENA:
             return False
         if opi == TipoObjeto.BOOLEANO or opd == TipoObjeto.BOOLEANO:

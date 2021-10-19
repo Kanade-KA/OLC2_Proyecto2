@@ -13,14 +13,14 @@ class Traductor:
         self.cadena = ""
         self.error = ""
         self.libmath = ""
-        self.libfmt = "import \"fmt\"\n"
-        self.encabezado = "//------------------------HEADER-----------------------------\npackage main\n"+self.libmath+self.libfmt+"var stack [19121997]float64\nvar heap [19121997]float64\nvar S, H float64\n"
+        self.libfmt = "import (\"fmt\");\n"
+        self.encabezado = "//------------------------HEADER-----------------------------\npackage main;\n"+self.libmath+self.libfmt+"var stack [19121997]float64;\nvar heap [19121997]float64;\nvar S, H float64;\n"
         self.heap = 0
         self.stack= 0
         self.contador = 0#Este me sirve para el contador de temporales
         self.c3d = ""
         self.inservible = ""
-        self.main = "func main (){\n//-------------Inicializando Punteros------------\nH = 0 \nS = 0\n"
+        self.main = "func main (){\n//-------------Inicializando Punteros------------\nH = 0; \nS = 0;\n"
         #Banderas para no repetir metodos
         self.print = False
         self.potencia = False
@@ -32,9 +32,9 @@ class Traductor:
 
     def getInservible(self):
         if self.haygotos:
-            cadena = "goto L8000\n"
+            cadena = "goto L8000;\n"
             for i in range(0, self.goto):
-                cadena += "goto L"+ str(i)+"\n"
+                cadena += "goto L"+ str(i)+";\n"
             cadena += "L8000:\n"
             return cadena
         return self.inservible
@@ -49,8 +49,7 @@ class Traductor:
         return self.potencia
 
     def activarPotencia(self):
-        self.libfmt = "import \"math\"\n"
-        self.print = True
+        self.potencia = True
 
     def getGotos(self):
         return self.goto
@@ -64,14 +63,14 @@ class Traductor:
             estado = self.goto
         else:
             estado = self.goto + 1 
-        cadena = "goto L"+str(estado)+"\n"
+        cadena = "goto L"+str(estado)+";\n"
         cadena += "L"+str(self.goto)+":\n"
-        cadena += "stack[int(S)] = 1\n"
-        cadena += "goto L"+str(self.goto + 2)+"\n"
+        cadena += "stack[int(S)] = 1;\n"
+        cadena += "goto L"+str(self.goto + 2)+";\n"
         cadena += "L"+str(self.goto + 1)+":\n"
-        cadena += "stack[int(S)] = 0\n"
+        cadena += "stack[int(S)] = 0;\n"
         cadena += "L"+ str(self.goto + 2)+":\n"
-        cadena += "S = S + 1\n"
+        cadena += "S = S + 1;\n"
         self.goto = self.goto + 3
         self.IncrementarStack()
         self.addCodigo(cadena)
@@ -82,13 +81,13 @@ class Traductor:
         temporal = self.getHeap()
         cadena=""
         cadena += "\n//-----Agregando "+ str(valor).replace("\n", "") + " a Heap------\n"
-        cadena += "t"+str(self.getContador()) + "= H//Se extrae la posción libre del heap\n"
+        cadena += "t"+str(self.getContador()) + "= H;//Se extrae la posción libre del heap;\n"
         for letra in valor:
             cadena += "heap[int(H)] = "+ self.getAscii(letra) + ";//Se mete la letra "+letra+"\n"
-            cadena += "H = H + 1//Se suma uno al heap\n"
+            cadena += "H = H + 1;//Se suma uno al heap\n"
             self.IncrementarHeap()
         cadena += "heap[int(H)] = -1;//Se ingresa al heap el fin de la cadena\n"
-        cadena += "H = H + 1//Se suma uno para que se pueda volver a usar el heap\n"
+        cadena += "H = H + 1;//Se suma uno para que se pueda volver a usar el heap\n"
         self.IncrementarHeap()
         self.IncrementarContador()
         self.addCodigo(cadena)
@@ -98,7 +97,7 @@ class Traductor:
         cadena = "//AGREGANDO UN ENTERO "+str(numero) + "\n"
         temporal = self.getStack()
         cadena += "stack[int("+ str(temporal) + ")] = "+str(numero)+";\n"
-        cadena += "S = S + 1\n"
+        cadena += "S = S + 1;\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
         return temporal
@@ -107,7 +106,7 @@ class Traductor:
         cadena = "//AGREGANDO UN DOBLE "+str(numero) + "\n"
         temporal = self.getStack()
         cadena += "stack["+ str(temporal) + "] = "+str(numero)+";\n"
-        cadena += "S = S + 1\n"
+        cadena += "S = S + 1;\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
         return temporal
@@ -119,7 +118,7 @@ class Traductor:
         temp = "var "
         for i in range(0, self.contador):
             if i + 1 == self.contador:
-                temp += "t"+str(i)+ " float64\n"
+                temp += "t"+str(i)+ " float64;\n"
             else:
                 temp += "t"+str(i)+", "
         return temp
