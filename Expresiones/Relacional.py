@@ -87,21 +87,11 @@ class Relacional(NodoAST):
                 return "error"
         #print(self.operador)
         if self.operador == OperadorRelacional.MAYORQUE:
+
             if self.VerificarTipo(opi[1], opd[1]):
-                acepta = ""
-                rechaza= ""
-                if traductor.HayCambio():
-                    if traductor.getLogica() == 1:
-                        rechaza = traductor.getEtiquetaCambio()
-                        acepta = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                    elif traductor.getLogica() == 2:
-                        acepta = traductor.getEtiquetaCambio()
-                        rechaza = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                else:
-                    acepta = "L"+str(traductor.getGotos())
-                    rechaza = "L"+str(traductor.getGotos()+1)
+                valor = self.getEtiqueta(traductor)
+                acepta = valor[0]
+                rechaza= valor[1]
 
                 traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" > "+ str(opd[0])+" { goto "+acepta+ ";}\n"
@@ -110,20 +100,9 @@ class Relacional(NodoAST):
                 return [acepta, rechaza]
         if self.operador == OperadorRelacional.MENORQUE:
             if self.VerificarTipo(opi[1], opd[1]):
-                acepta = ""
-                rechaza= ""
-                if traductor.HayCambio():
-                    if traductor.getLogica() == 1:
-                        rechaza = traductor.getEtiquetaCambio()
-                        acepta = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                    elif traductor.getLogica() == 2:
-                        acepta = traductor.getEtiquetaCambio()
-                        rechaza = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                else:
-                    acepta = "L"+str(traductor.getGotos())
-                    rechaza = "L"+str(traductor.getGotos()+1)
+                valor = self.getEtiqueta(traductor)
+                acepta = valor[0]
+                rechaza= valor[1]
 
                 traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" < "+ str(opd[0])+" { goto "+acepta+ ";}\n"
@@ -132,20 +111,9 @@ class Relacional(NodoAST):
                 return [acepta, rechaza]
         if self.operador == OperadorRelacional.MAYORIGUAL:
             if self.VerificarTipo(opi[1], opd[1]):
-                acepta = ""
-                rechaza= ""
-                if traductor.HayCambio():
-                    if traductor.getLogica() == 1:
-                        rechaza = traductor.getEtiquetaCambio()
-                        acepta = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                    elif traductor.getLogica() == 2:
-                        acepta = traductor.getEtiquetaCambio()
-                        rechaza = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                else:
-                    acepta = "L"+str(traductor.getGotos())
-                    rechaza = "L"+str(traductor.getGotos()+1)
+                valor = self.getEtiqueta(traductor)
+                acepta = valor[0]
+                rechaza= valor[1]
 
                 traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" >= "+ str(opd[0])+" { goto "+acepta+ ";}\n"
@@ -154,20 +122,9 @@ class Relacional(NodoAST):
                 return [acepta, rechaza]
         if self.operador == OperadorRelacional.MENORIGUAL:
             if self.VerificarTipo(opi[1], opd[1]):
-                acepta = ""
-                rechaza= ""
-                if traductor.HayCambio():
-                    if traductor.getLogica() == 1:
-                        rechaza = traductor.getEtiquetaCambio()
-                        acepta = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                    elif traductor.getLogica() == 2:
-                        acepta = traductor.getEtiquetaCambio()
-                        rechaza = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                else:
-                    acepta = "L"+str(traductor.getGotos())
-                    rechaza = "L"+str(traductor.getGotos()+1)
+                valor = self.getEtiqueta(traductor)
+                acepta = valor[0]
+                rechaza= valor[1]
 
                 traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" <= "+ str(opd[0])+" { goto "+acepta+ ";}\n"
@@ -176,20 +133,9 @@ class Relacional(NodoAST):
                 return [acepta, rechaza]
         if self.operador == OperadorRelacional.IGUALIGUAL:
             if self.VerificarTipo(opi[1], opd[1]):
-                acepta = ""
-                rechaza= ""
-                if traductor.HayCambio():
-                    if traductor.getLogica() == 1:
-                        rechaza = traductor.getEtiquetaCambio()
-                        acepta = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                    elif traductor.getLogica() == 2:
-                        acepta = traductor.getEtiquetaCambio()
-                        rechaza = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                else:
-                    acepta = "L"+str(traductor.getGotos())
-                    rechaza = "L"+str(traductor.getGotos()+1)
+                valor = self.getEtiqueta(traductor)
+                acepta = valor[0]
+                rechaza= valor[1]
 
                 traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" == "+ str(opd[0])+" { goto "+acepta+ ";}\n"
@@ -198,21 +144,10 @@ class Relacional(NodoAST):
                 return [acepta, rechaza]
         if self.operador == OperadorRelacional.DIFERENTE:
             if self.VerificarTipo(opi[1], opd[1]):
-                acepta = ""
-                rechaza= ""
-                if traductor.HayCambio():
-                    if traductor.getLogica() == 1:
-                        rechaza = traductor.getEtiquetaCambio()
-                        acepta = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                    elif traductor.getLogica() == 2:
-                        acepta = traductor.getEtiquetaCambio()
-                        rechaza = "L"+str(traductor.getGotos())
-                        traductor.SetearEtiqueta()
-                else:
-                    acepta = "L"+str(traductor.getGotos())
-                    rechaza = "L"+str(traductor.getGotos()+1)
-                    
+                valor = self.getEtiqueta(traductor)
+                acepta = valor[0]
+                rechaza= valor[1]
+        
                 traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" != "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
@@ -231,3 +166,20 @@ class Relacional(NodoAST):
         if opi == TipoObjeto.BOOLEANO and opd == TipoObjeto.BOOLEANO:
             return True
         return False
+
+    def getEtiqueta(self, traductor):
+        rechaza=""
+        acepta = ""
+        if traductor.HayCambio():
+            if traductor.getLogica() == 1:
+                rechaza = traductor.getEtiquetaCambio()
+                acepta = "L"+str(traductor.getGotos())
+                traductor.SetearEtiqueta()
+            elif traductor.getLogica() == 2:
+                acepta = traductor.getEtiquetaCambio()
+                rechaza = "L"+str(traductor.getGotos())
+                traductor.SetearEtiqueta()
+        else:
+            acepta = "L"+str(traductor.getGotos())
+            rechaza = "L"+str(traductor.getGotos()+1)
+        return [acepta, rechaza]

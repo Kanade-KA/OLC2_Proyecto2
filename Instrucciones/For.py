@@ -113,4 +113,5 @@ class For(NodoAST):
         return None
 
     def traducir(self, traductor, entorno):
-        return "For"
+        
+        return 
