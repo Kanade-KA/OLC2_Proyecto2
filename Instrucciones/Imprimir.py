@@ -61,7 +61,7 @@ class Imprimir(NodoAST):
                         palabra = str(constante[0])
                         heap = traductor.putStringHeap(palabra)
                         cadena = "t"+str(traductor.getContador())+" = "+str(heap)+";//Guardo en un temporal el integer del heap\n"
-                        cadena += "stack[int(S)] = t"+str(traductor.getContador())+";\n"
+                        cadena += "stack[int("+str(traductor.getStack())+")] = t"+str(traductor.getContador())+";\n"
                         traductor.IncrementarContador();
                         traductor.addCodigo(cadena)
                         self.ImprimirString(traductor, traductor.getStack())
@@ -108,7 +108,7 @@ class Imprimir(NodoAST):
                         cad = str(resultado[0])
                         heap = traductor.putStringHeap(cad)
                         cadena = "t"+str(traductor.getContador())+" = "+str(heap)+";//Guardo en un temporal el integer del heap\n"
-                        cadena += "stack[int(S)] = t"+str(traductor.getContador())+";\n"
+                        cadena += "stack[int("+str(traductor.getStack())+")] = t"+str(traductor.getContador())+";\n"
                         traductor.IncrementarContador();
                         traductor.addCodigo(cadena)
                         self.ImprimirString(traductor, traductor.getStack())

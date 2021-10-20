@@ -70,9 +70,9 @@ class Traductor:
     def putBooleanStack(self, valor):
         cadena = "//-------AGREGANDO VALOR BOOLEANO--------\n"
         if valor == True:
-            cadena += "stack[int(S)] = 1;\n"
-        else:
-            cadena += "stack[int(S)] = 0;\n"
+            cadena += "stack[int("+str(self.getStack())+")] = 1;\n"
+        else:   
+            cadena += "stack[int("+str(self.getStack())+")] = 0;\n"
         cadena += "S = S + 1;\n"
         self.IncrementarStack()
         self.addCodigo(cadena)

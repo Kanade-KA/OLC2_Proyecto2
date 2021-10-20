@@ -150,7 +150,7 @@ class Aritmetica(NodoAST):
                     traductor.addCodigo(pow)
                     traductor.IncrementarContador()
                     contres = traductor.getContador()
-                    res = "t"+str(contres)+ " = stack[int(S)];\n"
+                    res = "t"+str(contres)+ " = stack[int("+str(traductor.getStack())+")];\n"
                     traductor.IncrementarContador()
                     traductor.addCodigo(res)
 
@@ -179,15 +179,16 @@ class Aritmetica(NodoAST):
                         potencia += "t"+str(repeticion) + " = t"+str(repeticion)+ "- 1;// se resta uno \n"
                         potencia += "goto L2;\n"
                         potencia += "L0:\n"
-                        potencia += "stack[int(S)] = t"+str(numero) +";\n"
+                        potencia += "stack[int("+str(traductor.getStack())+")] = t"+str(numero) +";\n"
                         potencia += "goto L3;\n"
                         potencia += "L1:\n"
-                        potencia += "stack[int(S)] = 1;\n"
+                        potencia += "stack[int("+str(traductor.getStack())+")] = 1;\n"
                         potencia += "L3:\n"
                         potencia += "return;\n"
                         potencia += "}\n\n"
                         traductor.addFuncion(potencia)
                         traductor.activarPotencia()
+                        traductor.IncrementarStack()
                     return ["t"+str(contres), TipoObjeto.ENTERO]
                 if self.CadenaInt(opi[1], opd[1]):
                     palabra=""

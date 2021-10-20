@@ -67,7 +67,7 @@ class Asignacion(NodoAST):
             if value != "error":
                 tipo = value[1]
                 if tipo == TipoObjeto.ENTERO or tipo == TipoObjeto.DECIMAL:
-                    cadena = "stack[int(S)] = "+str(value[0])+";//Agrego la variable\n"
+                    cadena = "stack[int("+str(traductor.getStack())+")] = "+str(value[0])+";//Agrego la variable\n"
                     cadena += "S = S + 1;\n"
                     simbolo = Simbolo(entorno.getNombre(), self.identificador, value[0], tipo, "Variable", traductor.getStack(), self.fila, self.columna)
                     traductor.IncrementarStack()
@@ -79,7 +79,7 @@ class Asignacion(NodoAST):
                     ptero = traductor.putStringHeap(value[0])
                     cadena = ""
                     cadena += "t"+str(traductor.getContador())+" = "+str(ptero) + ";//Guardo en un temporal el integer del heap\n"
-                    cadena += "stack[int(S)] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
+                    cadena += "stack[int("+str(traductor.getStack())+")] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
                     cadena += "S = S + 1;//Se aumenta el stack para poder meter otro numero\n\n"
                     traductor.addCodigo(cadena)
                     apuntastack = traductor.getStack()
@@ -105,7 +105,7 @@ class Asignacion(NodoAST):
             #Tengo que guardar el apuntador del heap en el stack
             cadena = ""
             cadena += "t"+str(traductor.getContador())+" = "+str(apuntadorheap) + ";//Guardo en un temporal el integer del heap\n"
-            cadena += "stack[int(S)] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
+            cadena += "stack[int("+str(traductor.getStack())+")] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
             cadena += "S = S + 1;//Se aumenta el stack para poder meter otro numero\n\n"
             traductor.addCodigo(cadena)
             apuntastack = traductor.getStack()
