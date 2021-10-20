@@ -65,34 +65,13 @@ class Asignacion(NodoAST):
                 return
         if isinstance(self.expresion, Aritmetica):
             if value != "error":
-                tipo = value[1]
-                if tipo == TipoObjeto.ENTERO or tipo == TipoObjeto.DECIMAL:
-                    cadena = "stack[int("+str(traductor.getStack())+")] = "+str(value[0])+";//Agrego la variable\n"
-                    cadena += "S = S + 1;\n"
-                    simbolo = Simbolo(entorno.getNombre(), self.identificador, value[0], tipo, "Variable", traductor.getStack(), self.fila, self.columna)
-                    traductor.IncrementarStack()
-                    traductor.addCodigo(cadena)
-                    entorno.addSimbolo(simbolo)
-                    traductor.addSimbolo(simbolo)
-                    return
-                elif tipo == TipoObjeto.CADENA:#Es un string
-                    ptero = traductor.putStringHeap(value[0])
-                    cadena = ""
-                    cadena += "t"+str(traductor.getContador())+" = "+str(ptero) + ";//Guardo en un temporal el integer del heap\n"
-                    cadena += "stack[int("+str(traductor.getStack())+")] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
-                    cadena += "S = S + 1;//Se aumenta el stack para poder meter otro numero\n\n"
-                    traductor.addCodigo(cadena)
-                    apuntastack = traductor.getStack()
-                    traductor.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
-                    traductor.IncrementarContador()
-                    simbolo = Simbolo(entorno.getNombre(), self.identificador, value[0], tipo, "Variable", apuntastack, self.fila, self.columna)
-                    traductor.addSimbolo(simbolo)
-                    entorno.addSimbolo(simbolo)
-                    return
+                self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
+                return
         else:
             if value != "error":
                 self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
-            return 
+                return
+        return "error" 
 
     def Asignar(self, tipo, valor, id, entorno, traductor):
         if tipo == TipoObjeto.ENTERO:
@@ -102,15 +81,7 @@ class Asignacion(NodoAST):
             traductor.addSimbolo(simbolo)
         if tipo == TipoObjeto.CADENA:
             apuntadorheap = traductor.putStringHeap(valor)
-            #Tengo que guardar el apuntador del heap en el stack
-            cadena = ""
-            cadena += "t"+str(traductor.getContador())+" = "+str(apuntadorheap) + ";//Guardo en un temporal el integer del heap\n"
-            cadena += "stack[int("+str(traductor.getStack())+")] = t"+str(traductor.getContador())+";//Guardo en el stack el puntero del heap\n"
-            cadena += "S = S + 1;//Se aumenta el stack para poder meter otro numero\n\n"
-            traductor.addCodigo(cadena)
-            apuntastack = traductor.getStack()
-            traductor.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
-            traductor.IncrementarContador()
+            apuntastack = traductor.putStringHStack(apuntadorheap)
             simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntastack, self.fila, self.columna)
             traductor.addSimbolo(simbolo)
             entorno.addSimbolo(simbolo)

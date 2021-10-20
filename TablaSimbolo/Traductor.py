@@ -68,15 +68,15 @@ class Traductor:
         self.goto = self.goto + numero
 #---------------------------------PARA METER UN BOOLEANO AL STACK-----------------------------------
     def putBooleanStack(self, valor):
-        cadena = "//-------AGREGANDO VALOR BOOLEANO--------\n"
+        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
+        temporal = self.getStack()
         if valor == True:
-            cadena += "stack[int("+str(self.getStack())+")] = 1;\n"
+            cadena += "stack[int(t"+str(self.getContador())+")] = 1;\n"
         else:   
-            cadena += "stack[int("+str(self.getStack())+")] = 0;\n"
-        cadena += "S = S + 1;\n"
+            cadena += "stack[int(t"+str(self.getContador())+")] = 0;\n"
         self.IncrementarStack()
         self.addCodigo(cadena)
-        return self.getStack()-1
+        return temporal
 
 #------------------------------------PARA METER UN STRING AL HEAP-------------------------------------------
     def putStringHeap(self, valor):
@@ -95,22 +95,34 @@ class Traductor:
         return temporal
 #---------------------------------AGREGAR UN NUMERO ENTERO AL STACK-------------------------------------
     def putIntStack(self, numero):
-        cadena = "//AGREGANDO UN ENTERO "+str(numero) + "\n"
+        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
         temporal = self.getStack()
-        cadena += "stack[int("+ str(temporal) + ")] = "+str(numero)+";\n"
-        cadena += "S = S + 1;\n"
+        cadena += "stack[int(t"+ str(self.getContador()) + ")] = "+str(numero)+";\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
+        self.IncrementarContador()
         return temporal
 #------------------------------AGREGAR UN NUMERO DOBLE AL STACK---------------------------------------
     def putDoubleStack(self, numero):
-        cadena = "//AGREGANDO UN DOBLE "+str(numero) + "\n"
+        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
         temporal = self.getStack()
         cadena += "stack["+ str(temporal) + "] = "+str(numero)+";\n"
-        cadena += "S = S + 1;\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
+        self.IncrementarContador()
         return temporal
+#-----------------------------AGREGAR EL PUNTERO DEL HEAP AL STACK----------------------------------
+    def putStringHStack(self, heap):
+        cadena = "t"+ str(self.getContador())+ " = S +"+str(self.getStack())+"; //PARA VER EN QUE POSICIÓN DE STACK SE GUARDARÁ\n"
+        self.IncrementarContador()
+        cadena += "t"+str(self.getContador())+" = "+str(heap) + ";//Guardo en un temporal el integer del heap\n"
+        cadena += "stack[int(t"+str(self.getContador()-1)+")] = t"+str(self.getContador())+";//Guardo en el stack el puntero del heap\n"
+        self.addCodigo(cadena)
+        apuntastack = self.getStack()
+        self.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
+        self.IncrementarContador()
+        return apuntastack
+
 #--------------------------------------------CONVERTIR UNA LETRA A ASCII----------------------------------------
     def getAscii(self, cadena):
         return str(ord(cadena))
