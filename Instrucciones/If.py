@@ -47,7 +47,6 @@ class If(NodoAST):
 
     def traducir(self, traductor, entorno):
         condicional = self.condicion.traducir(traductor, entorno)
-        print("Condicional: ", condicional)
         if condicional != "error":#para evitar errores
             goto = traductor.getGotos()
             traductor.IncrementarGotos(1)
@@ -60,6 +59,8 @@ class If(NodoAST):
             cadena = "goto L"+str(goto)+";\n"
             cadena += str(condicional[1])+": \n"
             traductor.addCodigo(cadena)
+            if self.elseIf != None:
+                self.elseIf.traducir(traductor, entorno)
             if self.instruccionesElse != None:
                 nuevoentorno2 = Entorno("ELSE", entorno)
                 for i in self.instruccionesElse:
@@ -67,8 +68,5 @@ class If(NodoAST):
             cadena = "L"+str(goto)+": \n"
             cadena += "fmt.Printf(\"%c\",10);\n"
             traductor.addCodigo(cadena)
-            traductor.IncrementarGotos(1)
-        
-        '''if self.elseIf != None:
-                self.elseIf.traducir(traductor, entorno)'''
+            traductor.IncrementarGotos(1)   
         return 
