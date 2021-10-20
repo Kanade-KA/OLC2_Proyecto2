@@ -80,9 +80,8 @@ class Traductor:
 
 #------------------------------------PARA METER UN STRING AL HEAP-------------------------------------------
     def putStringHeap(self, valor):
-        temporal = self.getHeap()
-        cadena = "//-----Agregando String a Heap------\n"
-        cadena += "t"+str(self.getContador()) + "= H;//Se extrae la posción libre del heap;\n"
+        temporal = "t"+str(self.getContador())
+        cadena = temporal + "= H;//Se extrae la posción libre del heap;\n"
         for letra in valor:
             cadena += "heap[int(H)] = "+ self.getAscii(letra) + ";//Se mete la letra "+letra+"\n"
             cadena += "H = H + 1;//Se suma uno al heap\n"

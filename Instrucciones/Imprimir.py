@@ -60,11 +60,8 @@ class Imprimir(NodoAST):
                     else:#Es por que es string
                         palabra = str(constante[0])
                         heap = traductor.putStringHeap(palabra)
-                        cadena = "t"+str(traductor.getContador())+" = "+str(heap)+";//Guardo en un temporal el integer del heap\n"
-                        cadena += "stack[int("+str(traductor.getStack())+")] = t"+str(traductor.getContador())+";\n"
-                        traductor.IncrementarContador();
-                        traductor.addCodigo(cadena)
-                        self.ImprimirString(traductor, traductor.getStack())
+                        stack = traductor.putStringHStack(heap)
+                        self.ImprimirString(traductor, stack)
             if isinstance(ins, Identificador):
                 tipo = ins.getTipo(traductor, entorno)
                 if tipo != "error":
@@ -75,7 +72,6 @@ class Imprimir(NodoAST):
                         valor = "t"+str(traductor.getContador())
                         traductor.IncrementarContador()
                         self.ImprimirInt(traductor, valor)
-                        return
                     elif tipo == TipoObjeto.DECIMAL:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
                         cadena = "t"+str(traductor.getContador())+" = stack[int("+str(puntero)+")];//Extraigo el valor y ese lo imprimo\n"
@@ -83,7 +79,6 @@ class Imprimir(NodoAST):
                         valor = "t"+ str(traductor.getContador())
                         traductor.IncrementarContador()
                         self.ImprimirDoble(traductor, valor)
-                        return
                     elif tipo == TipoObjeto.BOOLEANO:
                         puntero = ins.traducir(traductor, entorno)
                         cadena = "t"+str(traductor.getContador())+" = stack[int(" + str(puntero)+ ")];//Extraigo el valor para ver cual es\n"
@@ -91,11 +86,9 @@ class Imprimir(NodoAST):
                         valor = "t"+str(traductor.getContador())
                         traductor.IncrementarContador()
                         self.ImprimirBooleano(traductor, valor)
-                        return
                     else:
                         puntero = ins.traducir(traductor, entorno)
                         self.ImprimirString(traductor, puntero)
-                        return
             #Aquí si viene una operacion aritmetica
             if isinstance(ins, Aritmetica):
                 resultado = ins.traducir(traductor, entorno)
@@ -107,11 +100,8 @@ class Imprimir(NodoAST):
                     else:
                         cad = str(resultado[0])
                         heap = traductor.putStringHeap(cad)
-                        cadena = "t"+str(traductor.getContador())+" = "+str(heap)+";//Guardo en un temporal el integer del heap\n"
-                        cadena += "stack[int("+str(traductor.getStack())+")] = t"+str(traductor.getContador())+";\n"
-                        traductor.IncrementarContador();
-                        traductor.addCodigo(cadena)
-                        self.ImprimirString(traductor, traductor.getStack())
+                        stack = traductor.putStringHStack(heap)
+                        self.ImprimirString(traductor, stack)
             if isinstance(ins, Relacional):
                 res = ins.traducir(traductor, entorno)
                 self.Condiciones(traductor, res[0], res[1])
