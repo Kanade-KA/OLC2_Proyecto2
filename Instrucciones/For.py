@@ -113,5 +113,68 @@ class For(NodoAST):
         return None
 
     def traducir(self, traductor, entorno):
-        
-        return 
+        traductor.addCodigo("//------------------------------------for--------------------------------\n")
+        etiquetainicio="L"+str(traductor.getGotos())
+        etiquetaejecutar = "L"+ str(traductor.getGotos()+1)
+        etiquetareinicio = "L"+ str(traductor.getGotos()+2)
+        etiquetafin = "L"+str(traductor.getGotos()+3)
+        traductor.IncrementarGotos(4)
+        nuevoentorno = Entorno("FOR", entorno)
+        indice = self.indice.getIdentificador()
+        if self.fin != None:#Quiere decir que es un rango 
+            inicio = self.inicio.traducir(traductor, entorno)
+            fin = self.fin.traducir(traductor, entorno)
+            #VER SI ES ID...
+            if isinstance(self.inicio, Identificador):
+                tipo = self.inicio.getTipo(traductor, entorno)
+                traer = "t"+str(traductor.getContador())+" = stack[int("+str(inicio)+")];//Traemos la variable\n"
+                resultado = "t"+str(traductor.getContador())
+                traductor.addCodigo(traer)
+                traductor.IncrementarContador()
+                inicio = [resultado, tipo]
+            if isinstance(self.fin, Identificador):
+                tipo = self.fin.getTipo(traductor, entorno)
+                traer = "t"+str(traductor.getContador())+" = stack[int("+str(fin)+")];//Traemos la variable\n"
+                resultado = "t"+str(traductor.getContador())
+                traductor.addCodigo(traer)
+                traductor.IncrementarContador()
+                fin = [resultado, tipo]
+
+            if self.verificarTipo(inicio[1], fin[1]):
+                #Agregando el indice
+                guardavariable = "t"+str(traductor.getContador())
+                cadena = guardavariable +" = S + "+ str(traductor.getStack())+"; //generando un tmp para meter la variable\n"
+                cadena += "stack[int("+str(guardavariable)+")] = "+str(inicio[0])+";//Inicializando el indice\n"
+                simbolo = Simbolo("FOR", indice, inicio[0], inicio[1], "Variable", traductor.getStack(), self.fila, self.columna)
+                nuevoentorno.addSimbolo(simbolo)
+                traductor.addSimbolo(simbolo)
+                traductor.IncrementarStack()
+                traductor.addCodigo(cadena)
+                traductor.IncrementarContador()
+                traductor.addCodigo(etiquetainicio+":\n")
+                #Aqui debo de traer la variable, y hacer el if:
+                cadena = "t"+str(traductor.getContador())+" = stack[int("+guardavariable+")];//Traigo el indice\n"
+                cadena += "if t"+str(traductor.getContador()) +" <= "+str(fin[0])+"{ goto "+etiquetaejecutar+"; }//Lo comparo\n"
+                cadena += "goto "+etiquetafin +";\n"
+                cadena += etiquetaejecutar + "://EJECUTA LAS INSTRUCCIONES\n"
+                traductor.addCodigo(cadena)
+                traductor.IncrementarContador()
+                for i in self.instrucciones:
+                    i.traducir(traductor, nuevoentorno)
+                cadena = "goto "+etiquetareinicio+";\n"
+                cadena += etiquetareinicio+"://ETIQUETA PARA REALIZAR EL INCREMENTO Y QUE REGRESE\n"
+                cadena += "t"+str(traductor.getContador())+" = stack[int("+guardavariable+")];\n"
+                traductor.IncrementarContador()
+                cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador()-1)+" + 1;\n"
+                cadena += "stack[int("+guardavariable+")] = t"+str(traductor.getContador())+";\n"
+                cadena += "goto "+etiquetainicio+";\n"
+                cadena += etiquetafin+":\n"
+                traductor.IncrementarContador()
+                traductor.addCodigo(cadena)
+        return
+
+    def verificarTipo(self, opi, opd):
+        if opi == TipoObjeto.ENTERO or opi == TipoObjeto.DECIMAL:
+            if opd == TipoObjeto.ENTERO or opd == TipoObjeto.DECIMAL:
+                return True
+        return False

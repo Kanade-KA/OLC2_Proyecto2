@@ -1,3 +1,6 @@
+from TablaSimbolo.Simbolo import Simbolo
+
+
 class Entorno:
     def __init__(self, nombre, anterior = None):
         self.tabla = {} # Diccionario Vacio

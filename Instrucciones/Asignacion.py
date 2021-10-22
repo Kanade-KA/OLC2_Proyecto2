@@ -75,25 +75,55 @@ class Asignacion(NodoAST):
 
     def Asignar(self, tipo, valor, id, entorno, traductor):
         if tipo == TipoObjeto.ENTERO:
-            apuntador = traductor.putIntStack(valor)
-            simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntador, self.fila, self.columna)
-            entorno.addSimbolo(simbolo)
-            traductor.addSimbolo(simbolo)
+            existe = entorno.retornarSimbolo(id)
+            if existe==None:
+                apuntador = traductor.putIntStack(valor)
+                simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntador, self.fila, self.columna)
+                entorno.addSimbolo(simbolo)
+                traductor.addSimbolo(simbolo)
+            else:
+                cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
+                traductor.addCodigo(cadena)
+                traductor.IncrementarContador()
         if tipo == TipoObjeto.CADENA:
-            apuntadorheap = traductor.putStringHeap(valor)
-            apuntastack = traductor.putStringHStack(apuntadorheap)
-            simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntastack, self.fila, self.columna)
-            traductor.addSimbolo(simbolo)
-            entorno.addSimbolo(simbolo)
+            existe = entorno.retornarSimbolo(id)
+            if existe==None:
+                apuntadorheap = traductor.putStringHeap(valor)
+                apuntastack = traductor.putStringHStack(apuntadorheap)
+                simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntastack, self.fila, self.columna)
+                traductor.addSimbolo(simbolo)
+                entorno.addSimbolo(simbolo)
+            else:
+                print("ENTRO ACÁ")
+                apuntadorheap = traductor.putStringHeap(valor)
+                cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(apuntadorheap)+";//Meto el nuevo puntero del heap\n"
+                traductor.addCodigo(cadena)
+                traductor.IncrementarContador()
         if tipo == TipoObjeto.DECIMAL:
-            apuntador = traductor.putDoubleStack(valor)
-            simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntador, self.fila, self.columna)
-            entorno.addSimbolo(simbolo)
-            traductor.addSimbolo(simbolo)
+            existe = entorno.retornarSimbolo(id)
+            if existe==None:
+                apuntador = traductor.putDoubleStack(valor)
+                simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntador, self.fila, self.columna)
+                entorno.addSimbolo(simbolo)
+                traductor.addSimbolo(simbolo)
+            else:
+                cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
+                traductor.addCodigo(cadena)
+                traductor.IncrementarContador()
         if tipo == TipoObjeto.BOOLEANO:
-            apuntador = traductor.putBooleanStack(valor)
-            simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntador, self.fila, self.columna)
-            entorno.addSimbolo(simbolo)
-            traductor.addSimbolo(simbolo)
+            existe = entorno.retornarSimbolo(id)
+            if existe==None:
+                apuntador = traductor.putBooleanStack(valor)
+                simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntador, self.fila, self.columna)
+                entorno.addSimbolo(simbolo)
+                traductor.addSimbolo(simbolo)
+            else:
+                cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
+                traductor.addCodigo(cadena)
+                traductor.IncrementarContador()
             return
         return
