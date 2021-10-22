@@ -61,19 +61,18 @@ class Aritmetica(NodoAST):
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)
         opd = self.OperacionDer.traducir(traductor, entorno)
+        esHeapI = False
+        esHeapD = False
        #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
        #Operador Izquierdo
         if isinstance(self.OperacionIzq, Identificador):
             tipo = self.OperacionIzq.getTipo(traductor, entorno)
             resultado = ""
             if tipo != "error":
-                if tipo != TipoObjeto.CADENA:
-                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")];//Traemos la variable\n"
-                    resultado = "t"+str(traductor.getContador())
-                    traductor.addCodigo(traer)
-                    traductor.IncrementarContador()
-                else:
-                    resultado = self.OperacionIzq.getValor(traductor, entorno)
+                traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")];//Traemos la variable\n"
+                resultado = "t"+str(traductor.getContador())
+                traductor.addCodigo(traer)
+                traductor.IncrementarContador()
                 opi=[resultado, tipo]
             else:
                 return "error"
@@ -82,13 +81,10 @@ class Aritmetica(NodoAST):
             tipo = self.OperacionDer.getTipo(traductor, entorno)
             resultadod = ""
             if tipo != "error":
-                if tipo != TipoObjeto.CADENA:
-                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")];//Traemos la variable\n"
-                    resultadod = "t"+str(traductor.getContador())
-                    traductor.addCodigo(traer)
-                    traductor.IncrementarContador()
-                else:
-                    resultadod = self.OperacionDer.getValor(entorno)
+                traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")];//Traemos la variable\n"
+                resultadod = "t"+str(traductor.getContador())
+                traductor.addCodigo(traer)
+                traductor.IncrementarContador()
                 opd = [resultadod, tipo]
             else:
                 return "error"
@@ -131,8 +127,19 @@ class Aritmetica(NodoAST):
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
                 if self.sonAmbasCadenas(opi[1], opd[1]):
-                    cad = str(opi[0]) + str(opd[0])
-                    return [cad, TipoObjeto.CADENA]
+                    heap = traductor.getHeap()
+                    cadena = "t"+str(traductor.getContador())+ " = S;//Guarda donde va el stack\n"
+                    traductor.IncrementarContador()
+                    cadena += "t"+str(traductor.getContador())+ " = S + 1;// para meter el primer parametro\n"
+                    cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(opi[0])+";\n"
+                    traductor.IncrementarContador()
+                    cadena += "t"+str(traductor.getContador())+ " = S + 2;// para meter el segundo parametro\n"
+                    cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(opd[0])+";\n"
+                    traductor.IncrementarContador()
+                    cadena += "MultString();\n"
+                    traductor.addCodigo(cadena)
+                    self.ConcatenaString(traductor)
+                    return [heap, TipoObjeto.CADENA]
             if (self.operador == OperadorAritmetico.DIV):
                 if self.sinString(opi[1], opd[1]):
                     div = "t"+ str(traductor.getContador()) + "= "+ str(opi[0]) + "/"+ str(opd[0])
@@ -153,42 +160,8 @@ class Aritmetica(NodoAST):
                     res = "t"+str(contres)+ " = stack[int("+str(traductor.getStack())+")];\n"
                     traductor.IncrementarContador()
                     traductor.addCodigo(res)
-
                     if not traductor.hayPotencia():
-                        #----------------------------POTENCIA--------------------------------
-                        potencia = "func potencia(){\n"
-                        potencia += "t"+str(traductor.getContador())+" = S + 1;//para sacar el primer parametro\n"
-                        traductor.IncrementarContador()
-                        potencia += "t"+str(traductor.getContador())+" = stack[int(t"+str(traductor.getContador()-1)+")];//Saco el primer parametro\n"
-                        traductor.IncrementarContador()
-                        numero = traductor.getContador()#base la que siempre va a estar cambiando
-                        potencia += "t"+str(numero)+" = t"+str(numero - 1)+";//en esta variable se guarda el numero\n"
-                        traductor.IncrementarContador()
-                        multip = traductor.getContador()#numero por el que se multiplicará nunca va a cambiar
-                        potencia += "t"+str(multip) + " = t"+str(numero -1)+";//esta se va a usar para el que se multiplica\n"
-                        traductor.IncrementarContador()
-                        potencia += "t"+str(traductor.getContador())+" = S + 2;//va a posicionarse en el segundo parametro (cuantas veces va a mult)\n"
-                        traductor.IncrementarContador()
-                        repeticion = traductor.getContador()#para el while que se va  ahacer
-                        potencia += "t"+str(repeticion)+" = stack[int(t"+str(traductor.getContador()-1)+")];//Saco el segundo parametro del stack\n"
-                        traductor.IncrementarContador()
-                        potencia += "if t"+str(repeticion)+" == 0 { goto L1 };//Si es 0 es por que un numero elevado a 0 es 1\n"
-                        potencia += "L2:\n"
-                        potencia += "if t"+str(repeticion)+" <= 1 { goto L0; }\n"
-                        potencia += "t"+str(numero) +" = t"+str(numero)+ " * t"+str(multip)+";//para multiplicar por la base\n"
-                        potencia += "t"+str(repeticion) + " = t"+str(repeticion)+ "- 1;// se resta uno \n"
-                        potencia += "goto L2;\n"
-                        potencia += "L0:\n"
-                        potencia += "stack[int("+str(traductor.getStack())+")] = t"+str(numero) +";\n"
-                        potencia += "goto L3;\n"
-                        potencia += "L1:\n"
-                        potencia += "stack[int("+str(traductor.getStack())+")] = 1;\n"
-                        potencia += "L3:\n"
-                        potencia += "return;\n"
-                        potencia += "}\n\n"
-                        traductor.addFuncion(potencia)
-                        traductor.activarPotencia()
-                        traductor.IncrementarStack()
+                        self.Potencia(traductor)
                     return ["t"+str(contres), TipoObjeto.ENTERO]
                 if self.CadenaInt(opi[1], opd[1]):
                     palabra=""
@@ -227,3 +200,86 @@ class Aritmetica(NodoAST):
         if opi == TipoObjeto.CADENA and opd == TipoObjeto.ENTERO:
             return True
         return False
+
+    def ConcatenaString(self, traductor):
+        if not traductor.hayMultString():
+            etiquetainicio1 = "L1"
+            etiquetair2 = "L2"
+            etiquetainicio2 = "L3"
+            etiquetafin="L4"
+
+            heap = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            pal1 = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            pal2 = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            h1 = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            tmp1 = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+
+            cadena = "func MultString(){\n"
+            cadena += heap +" = H;//Sacamos el puntero libre del heap\n"
+            cadena += pal1 +" = S + 1;//Sacamos el primer parámetro\n"
+            cadena += pal2 +" = S + 2;//Sacamos el segundo parametro\n"
+            cadena += h1 +"= stack[int("+pal1+")];//Sacamos el puntero del heap\n"
+            cadena += etiquetainicio1 +"://Inicio de la primera palabra\n"
+            cadena += tmp1+" = heap[int("+h1+")];\n"
+            cadena += "if "+tmp1+" == -1 { goto "+ etiquetair2+"; }\n"
+            cadena += "heap[int(H)] = "+tmp1+";\n"
+            cadena += "H = H + 1;\n"
+            cadena += h1 +" = "+h1+" + 1;\n"
+            cadena += "goto "+etiquetainicio1+";\n"
+            cadena += etiquetair2+":\n"
+            cadena += h1 +"= stack[int("+pal2+")];//Sacamos el segundo puntero heap\n"
+            cadena += etiquetainicio2+":\n"
+            cadena += tmp1+" = heap[int("+h1+")];\n"
+            cadena += "if "+tmp1 +" == -1 { goto "+etiquetafin+"; }\n"
+            cadena += "heap[int(H)] ="+tmp1+";\n"
+            cadena += "H = H + 1;\n"
+            cadena += h1 +" = "+h1+" + 1;\n"
+            cadena += "goto "+etiquetainicio2+";\n"
+            cadena += etiquetafin+":\n"
+            cadena += "heap[int(H)] = -1;\n"
+            cadena += "H = H + 1;\n"
+            cadena += "stack[int(S)] = "+heap+";\n\n"
+            cadena += "return;\n}\n"
+            traductor.activarMultString()
+            traductor.addFuncion(cadena)
+
+    def Potencia(self, traductor):
+        #----------------------------POTENCIA--------------------------------
+        potencia = "func potencia(){\n"
+        potencia += "t"+str(traductor.getContador())+" = S + 1;//para sacar el primer parametro\n"
+        traductor.IncrementarContador()
+        potencia += "t"+str(traductor.getContador())+" = stack[int(t"+str(traductor.getContador()-1)+")];//Saco el primer parametro\n"
+        traductor.IncrementarContador()
+        numero = traductor.getContador()#base la que siempre va a estar cambiando
+        potencia += "t"+str(numero)+" = t"+str(numero - 1)+";//en esta variable se guarda el numero\n"
+        traductor.IncrementarContador()
+        multip = traductor.getContador()#numero por el que se multiplicará nunca va a cambiar
+        potencia += "t"+str(multip) + " = t"+str(numero -1)+";//esta se va a usar para el que se multiplica\n"
+        traductor.IncrementarContador()
+        potencia += "t"+str(traductor.getContador())+" = S + 2;//va a posicionarse en el segundo parametro (cuantas veces va a mult)\n"
+        traductor.IncrementarContador()
+        repeticion = traductor.getContador()#para el while que se va  ahacer
+        potencia += "t"+str(repeticion)+" = stack[int(t"+str(traductor.getContador()-1)+")];//Saco el segundo parametro del stack\n"
+        traductor.IncrementarContador()
+        potencia += "if t"+str(repeticion)+" == 0 { goto L1 };//Si es 0 es por que un numero elevado a 0 es 1\n"
+        potencia += "L2:\n"
+        potencia += "if t"+str(repeticion)+" <= 1 { goto L0; }\n"
+        potencia += "t"+str(numero) +" = t"+str(numero)+ " * t"+str(multip)+";//para multiplicar por la base\n"
+        potencia += "t"+str(repeticion) + " = t"+str(repeticion)+ "- 1;// se resta uno \n"
+        potencia += "goto L2;\n"
+        potencia += "L0:\n"
+        potencia += "stack[int("+str(traductor.getStack())+")] = t"+str(numero) +";\n"
+        potencia += "goto L3;\n"
+        potencia += "L1:\n"
+        potencia += "stack[int("+str(traductor.getStack())+")] = 1;\n"
+        potencia += "L3:\n"
+        potencia += "return;\n"
+        potencia += "}\n\n"
+        traductor.addFuncion(potencia)
+        traductor.activarPotencia()
+        traductor.IncrementarStack()

@@ -41,7 +41,8 @@ class Constante(NodoAST):
     def traducir(self, traductor, entorno):
         if isinstance(self.valor, Primitivo):
             if self.valor.tipo == TipoObjeto.CADENA:
-                return [self.valor.toString(), TipoObjeto.CADENA]
+                heap = traductor.putStringHeap(self.valor.toString())
+                return [heap, TipoObjeto.CADENA]
             if self.valor.tipo == TipoObjeto.BOOLEANO:
                 return [self.valor.toBoolean(), TipoObjeto.BOOLEANO]
             if self.valor.tipo == TipoObjeto.DECIMAL:

@@ -89,16 +89,13 @@ class Asignacion(NodoAST):
         if tipo == TipoObjeto.CADENA:
             existe = entorno.retornarSimbolo(id)
             if existe==None:
-                apuntadorheap = traductor.putStringHeap(valor)
-                apuntastack = traductor.putStringHStack(apuntadorheap)
+                apuntastack = traductor.putStringHStack(valor)
                 simbolo = Simbolo(entorno.getNombre(), id, valor, tipo, "Variable", apuntastack, self.fila, self.columna)
                 traductor.addSimbolo(simbolo)
                 entorno.addSimbolo(simbolo)
             else:
-                print("ENTRO ACÁ")
-                apuntadorheap = traductor.putStringHeap(valor)
                 cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
-                cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(apuntadorheap)+";//Meto el nuevo puntero del heap\n"
+                cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(valor)+";//Meto el nuevo puntero del heap\n"
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()
         if tipo == TipoObjeto.DECIMAL:

@@ -58,9 +58,7 @@ class Imprimir(NodoAST):
                         if constante[0]: valor=1
                         self.ImprimirBooleano(traductor, valor)
                     else:#Es por que es string
-                        palabra = str(constante[0])
-                        heap = traductor.putStringHeap(palabra)
-                        stack = traductor.putStringHStack(heap)
+                        stack = traductor.putStringHStack(constante[0])
                         self.ImprimirString(traductor, stack)
             if isinstance(ins, Identificador):
                 tipo = ins.getTipo(traductor, entorno)
@@ -98,9 +96,7 @@ class Imprimir(NodoAST):
                     elif resultado[1] == TipoObjeto.DECIMAL:
                         self.ImprimirDoble(traductor, resultado[0])
                     else:
-                        cad = str(resultado[0])
-                        heap = traductor.putStringHeap(cad)
-                        stack = traductor.putStringHStack(heap)
+                        stack = traductor.putStringHStack(resultado[0])
                         self.ImprimirString(traductor, stack)
             if isinstance(ins, Relacional):
                 res = ins.traducir(traductor, entorno)
