@@ -58,8 +58,7 @@ class Imprimir(NodoAST):
                         if constante[0]: valor=1
                         self.ImprimirBooleano(traductor, valor)
                     else:#Es por que es string
-                        stack = traductor.putStringHStack(constante[0])
-                        self.ImprimirString(traductor, stack)
+                        self.ImprimirString(traductor, constante[0])
             if isinstance(ins, Identificador):
                 tipo = ins.getTipo(traductor, entorno)
                 if tipo != "error":

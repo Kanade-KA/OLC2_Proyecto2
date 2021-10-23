@@ -83,7 +83,7 @@ class Traductor:
 #---------------------------------PARA METER UN BOOLEANO AL STACK-----------------------------------
     def putBooleanStack(self, valor):
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
-        temporal = self.getStack()
+        temporal = "t"+str(self.getContador())
         if valor == True:
             cadena += "stack[int(t"+str(self.getContador())+")] = 1;\n"
         else:   
@@ -109,7 +109,7 @@ class Traductor:
 #---------------------------------AGREGAR UN NUMERO ENTERO AL STACK-------------------------------------
     def putIntStack(self, numero):
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
-        temporal = self.getStack()
+        temporal = "t"+str(self.getContador())
         cadena += "stack[int(t"+ str(self.getContador()) + ")] = "+str(numero)+";\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
@@ -118,8 +118,8 @@ class Traductor:
 #------------------------------AGREGAR UN NUMERO DOBLE AL STACK---------------------------------------
     def putDoubleStack(self, numero):
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
-        temporal = self.getStack()
-        cadena += "stack["+ str(temporal) + "] = "+str(numero)+";\n"
+        temporal = "t"+str(self.getContador())
+        cadena += "stack[int("+ str(temporal) + ")] = "+str(numero)+";\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
         self.IncrementarContador()

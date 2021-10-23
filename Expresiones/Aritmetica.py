@@ -148,23 +148,23 @@ class Aritmetica(NodoAST):
                     return ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
             if (self.operador == OperadorAritmetico.POW):
                 if self.sinString(opi[1], opd[1]):
-                    pow = "t"+str(traductor.getContador())+" = S + 0;//Extraemos el stack \n"
+                    pow = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";//Extraemos el stack \n"
                     pow += "t"+str(traductor.getContador())+ " = t"+str(traductor.getContador())+" + 1;// le agregamos 1 al Stack para guardar el primer parametro ya que en P vendrá el retorno\n"
                     pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opi[0])+";//Agregamos el primer parametro al stack\n"
                     pow += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1;// para agregar el segundo\n"
                     pow += "stack[int(t"+ str(traductor.getContador())+")] = "+str(opd[0])+";//Agregamos el segundo parametro al stack\n"
+                    pow += "S = S +"+str(traductor.getStack())+";\n"
+                    traductor.IncrementarContador()
                     pow += "potencia();\n"
+                    resultado = "t"+str(traductor.getContador())
+                    pow += resultado + " = stack[int(S)];\n"
+                    pow += "S = S - "+str(traductor.getStack())+";\n"
                     traductor.addCodigo(pow)
                     traductor.IncrementarContador()
-                    contres = traductor.getContador()
-                    res = "t"+str(contres)+ " = stack[int("+str(traductor.getStack())+")];\n"
-                    traductor.IncrementarContador()
-                    traductor.addCodigo(res)
                     if not traductor.hayPotencia():
                         self.Potencia(traductor)
-                    return ["t"+str(contres), TipoObjeto.ENTERO]
+                    return [resultado, TipoObjeto.ENTERO]
                 if self.CadenaInt(opi[1], opd[1]):
-                    print("OPERADOR IZQUIERDO", opi[0])
                     cadena = "t"+str(traductor.getContador())+ " = S + "+str(traductor.getStack())+";//Guarda donde va el stack\n"
                     cadena += "t"+str(traductor.getContador())+ " = t"+str(traductor.getContador())+" + 1;// para meter el primer parametro\n"
                     cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(opi[0])+";\n"
@@ -326,10 +326,10 @@ class Aritmetica(NodoAST):
         potencia += "t"+str(repeticion) + " = t"+str(repeticion)+ "- 1;// se resta uno \n"
         potencia += "goto L2;\n"
         potencia += "L0:\n"
-        potencia += "stack[int("+str(traductor.getStack())+")] = t"+str(numero) +";\n"
+        potencia += "stack[int(S)] = t"+str(numero) +";\n"
         potencia += "goto L3;\n"
         potencia += "L1:\n"
-        potencia += "stack[int("+str(traductor.getStack())+")] = 1;\n"
+        potencia += "stack[int(S)] = 1;\n"
         potencia += "L3:\n"
         potencia += "return;\n"
         potencia += "}\n\n"
