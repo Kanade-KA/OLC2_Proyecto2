@@ -86,7 +86,11 @@ class Imprimir(NodoAST):
                         self.ImprimirBooleano(traductor, valor)
                     else:
                         puntero = ins.traducir(traductor, entorno)
-                        self.ImprimirString(traductor, puntero)
+                        cadena = "t"+str(traductor.getContador())+" = "+str(puntero)+"\n"
+                        traductor.IncrementarContador()
+                        cadena += "t"+str(traductor.getContador())+" = stack[int(t"+str(traductor.getContador()-1)+")];\n"
+                        traductor.IncrementarContador()
+                        self.ImprimirString(traductor, "t"+str(traductor.getContador()-1))
             #Aquí si viene una operacion aritmetica
             if isinstance(ins, Aritmetica):
                 resultado = ins.traducir(traductor, entorno)
@@ -96,8 +100,7 @@ class Imprimir(NodoAST):
                     elif resultado[1] == TipoObjeto.DECIMAL:
                         self.ImprimirDoble(traductor, resultado[0])
                     else:
-                        stack = traductor.putStringHStack(resultado[0])
-                        self.ImprimirString(traductor, stack)
+                        self.ImprimirString(traductor, resultado[0])
             if isinstance(ins, Relacional):
                 res = ins.traducir(traductor, entorno)
                 self.Condiciones(traductor, res[0], res[1])
@@ -121,7 +124,7 @@ class Imprimir(NodoAST):
             cadena += "fmt.Printf(\"%c\", int(t"+str(traductor.getContador())+"));\n"
             cadena += "t"+str(traductor.getContador()-1)+" = t"+str(traductor.getContador()-1)+" + 1;\n"
             cadena += "goto L1;\n"
-            cadena += "L0:\nreturn;\n}"
+            cadena += "L0:\nreturn;\n}\n\n"
             traductor.IncrementarContador()
             traductor.addFuncion(cadena)
             traductor.activarPrint()
@@ -176,12 +179,12 @@ class Imprimir(NodoAST):
         traductor.IncrementarGotos(1)
 
     def ImprimirString(self, traductor, valor):
-        contadortemp = traductor.getContador()#Guarda el numero de temporal donde se guardará el Stack
+        cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";//Ve un espacio libre en el stack\n"
+        cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador()) +" + 1;//Para enviar el parametro\n"
+        cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(valor)+";//Guarda el puntero del heap\n"
+        cadena += "S = S + "+str(traductor.getStack())+";//Para llevar hasta ahí el puntero para que imprima\n"
+        cadena += "imprimir();\n"
+        cadena += "S = S - "+str(traductor.getStack())+";//Volvemos a posicionarnos en el stack donde se debe\n"
         traductor.IncrementarContador()
-        cadena = "t"+ str(contadortemp)+" = S;//Para guardar el puntero Stack en donde va\n"
-        cadena += "S = "+str(valor - 1 ) +";//Nos posicionamos en la posición donde está el identificador\n"
         traductor.addCodigo(cadena)
-        traductor.addCodigo("imprimir();\n")
-        regreso = "S = t"+str(contadortemp)+";//aquí devolvemos el puntero a su posición inicial\n"
-        traductor.addCodigo(regreso)
         self.AgregarMetodoImprimir(traductor)

@@ -127,16 +127,18 @@ class Aritmetica(NodoAST):
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
                 if self.sonAmbasCadenas(opi[1], opd[1]):
-                    heap = traductor.getHeap()
-                    cadena = "t"+str(traductor.getContador())+ " = S;//Guarda donde va el stack\n"
-                    traductor.IncrementarContador()
-                    cadena += "t"+str(traductor.getContador())+ " = S + 1;// para meter el primer parametro\n"
+                    cadena = "t"+str(traductor.getContador())+ " = S + "+str(traductor.getStack())+";//Guarda donde va el stack\n"
+                    cadena += "t"+str(traductor.getContador())+ " = t"+str(traductor.getContador())+" + 1;// para meter el primer parametro\n"
                     cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(opi[0])+";\n"
-                    traductor.IncrementarContador()
-                    cadena += "t"+str(traductor.getContador())+ " = S + 2;// para meter el segundo parametro\n"
+                    cadena += "t"+str(traductor.getContador())+ " = t"+str(traductor.getContador())+" + 1;// para meter el segundo parametro\n"
                     cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(opd[0])+";\n"
+                    cadena += "S = S + "+str(traductor.getStack())+";\n"
                     traductor.IncrementarContador()
                     cadena += "MultString();\n"
+                    heap = "t"+str(traductor.getContador())
+                    cadena += "t"+str(traductor.getContador())+" = stack[int(S)];//Sacamos el retorno\n"
+                    cadena += "S = S - "+str(traductor.getStack())+";\n"
+                    traductor.IncrementarContador()
                     traductor.addCodigo(cadena)
                     self.ConcatenaString(traductor)
                     return [heap, TipoObjeto.CADENA]
