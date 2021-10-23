@@ -86,9 +86,10 @@ class Imprimir(NodoAST):
                         self.ImprimirBooleano(traductor, valor)
                     else:
                         puntero = ins.traducir(traductor, entorno)
-                        cadena = "t"+str(traductor.getContador())+" = "+str(puntero)+"\n"
+                        cadena = "t"+str(traductor.getContador())+" = "+str(puntero)+"//Traigo el puntero de la variable string\n"
                         traductor.IncrementarContador()
                         cadena += "t"+str(traductor.getContador())+" = stack[int(t"+str(traductor.getContador()-1)+")];\n"
+                        traductor.addCodigo(cadena)
                         traductor.IncrementarContador()
                         self.ImprimirString(traductor, "t"+str(traductor.getContador()-1))
             #Aquí si viene una operacion aritmetica
