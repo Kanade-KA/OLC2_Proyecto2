@@ -61,8 +61,6 @@ class Aritmetica(NodoAST):
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)
         opd = self.OperacionDer.traducir(traductor, entorno)
-        esHeapI = False
-        esHeapD = False
        #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
        #Operador Izquierdo
         if isinstance(self.OperacionIzq, Identificador):
@@ -166,10 +164,20 @@ class Aritmetica(NodoAST):
                         self.Potencia(traductor)
                     return ["t"+str(contres), TipoObjeto.ENTERO]
                 if self.CadenaInt(opi[1], opd[1]):
-                    palabra=""
-                    for x in range (opd[0]):
-                        palabra+=str(opi[0])
-                    return [str(palabra), TipoObjeto.CADENA]
+                    print("OPERADOR IZQUIERDO", opi[0])
+                    cadena = "t"+str(traductor.getContador())+ " = S + "+str(traductor.getStack())+";//Guarda donde va el stack\n"
+                    cadena += "t"+str(traductor.getContador())+ " = t"+str(traductor.getContador())+" + 1;// para meter el primer parametro\n"
+                    cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(opi[0])+";\n"
+                    cadena += "S = S + "+str(traductor.getStack())+";\n"
+                    traductor.IncrementarContador()
+                    cadena += "PotenciaString();\n"
+                    heap = "t"+str(traductor.getContador())
+                    cadena += "t"+str(traductor.getContador())+" = stack[int(S)];//Sacamos el retorno\n"
+                    cadena += "S = S - "+str(traductor.getStack())+";\n"
+                    traductor.IncrementarContador()
+                    traductor.addCodigo(cadena)
+                    self.PotenciaString(traductor, opd[0])
+                    return [heap, TipoObjeto.CADENA]
             if (self.operador == OperadorAritmetico.MOD):
                 if opd[0] != 0:
                     mod = "t" + str(traductor.getContador())+" = math.Mod("+str(opi[0]) +","+str(opd[0])+");"
@@ -180,7 +188,50 @@ class Aritmetica(NodoAST):
             return "error"
         traductor.addExcepcion(Error("Semantico", "Operador Nulo", self.fila, self.columna))
         return "error"
-        
+
+    def PotenciaString(self, traductor, num):
+        if not traductor.hayPotString():
+            reinicio = "L1"
+            concatena = "L3"
+            revision = "L4"
+            fin = "L5"
+
+            heap = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            palabra = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            temporal = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            cont = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            tmpheap = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+
+            cadena = "func PotenciaString(){\n"
+            cadena += heap +" = H;//Sacamos el puntero libre del heap\n"
+            cadena += palabra +" = S + 1;//Sacamos la palabra\n"
+            cadena += cont +" = 0;\n"
+            cadena += reinicio +"://Reiniciamos la palabra\n"
+            cadena += temporal +" = stack[int("+palabra+")];//Sacamos el puntero del heap\n"
+            cadena += "if "+str(cont)+" >= "+str(num) +"{ goto "+fin+";}\n"
+            cadena += concatena+"://Concatenación de palabra\n"
+            cadena += tmpheap+" = heap[int("+temporal+")];\n"
+            cadena += "if "+tmpheap+" == -1 { goto "+ revision+"; }\n"
+            cadena += "heap[int(H)] = "+tmpheap+";\n"
+            cadena += "H = H + 1;\n"
+            cadena += temporal +" = "+temporal+" + 1;\n"
+            cadena += "goto "+concatena+";\n"
+            cadena += revision+":\n"
+            cadena += cont +"= "+cont + " + 1;\n"
+            cadena += "goto "+ reinicio +";\n"
+            cadena += fin +":\n"
+            cadena += "heap[int(H)] = -1;\n"
+            cadena += "H = H + 1;\n"
+            cadena += "stack[int(S)] = "+heap+";\n\n"
+            cadena += "return;\n}\n"
+            traductor.activarPotString()
+            traductor.addFuncion(cadena)
+
     def sinString(self, opi, opd):
         if opi == TipoObjeto.CADENA or opd == TipoObjeto.CADENA:
             return False
