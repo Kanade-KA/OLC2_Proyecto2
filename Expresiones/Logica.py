@@ -39,6 +39,18 @@ class Logica(NodoAST):
                 traductor.addCodigo(str(opi[0])+":\n")
                 traductor.CambiarEtiqueta(opi[1], 1)
                 opd = self.OperacionDer.traducir(traductor, entorno)
+                if self.esBooleano(opd) == 0:
+                    rechaza = "L"+str(traductor.getGotos())
+                    cadena = "goto "+rechaza+";\n"
+                    traductor.addCodigo(cadena)
+                    traductor.IncrementarGotos(1)
+                    return [opi[1], rechaza]
+                elif self.esBooleano(opd) == 1:
+                    acepta = "L"+str(traductor.getGotos())
+                    cadena = "goto "+acepta+";\n"
+                    traductor.addCodigo(cadena)
+                    traductor.IncrementarGotos(1)
+                    return [acepta, opi[1]]
                 return [opd[0], opd[1]]
             elif self.esBooleano(opi) == 1:
                 acepta ="L"+ str(traductor.getGotos())
@@ -62,11 +74,6 @@ class Logica(NodoAST):
                 opd = self.OperacionDer.traducir(traductor, entorno)
                 return [opd[0], opd[1]]
             elif self.esBooleano(opi) == 1 or self.esBooleano(opi) == 0:
-                opd = self.OperacionDer.traducir(traductor, entorno)
-                return [opd[0], opd[1]]
-            else:
-                traductor.addCodigo(str(opi[1])+":\n")
-                traductor.CambiarEtiqueta(opi[0], 2)
                 opd = self.OperacionDer.traducir(traductor, entorno)
                 return [opd[0], opd[1]]
         if self.operador == OperadorLogico.NOT:
