@@ -93,7 +93,7 @@ class Relacional(NodoAST):
                 acepta = valor[0]
                 rechaza= valor[1]
 
-                traductor.IncrementarGotos(2)
+                #traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" > "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
@@ -104,7 +104,7 @@ class Relacional(NodoAST):
                 acepta = valor[0]
                 rechaza= valor[1]
 
-                traductor.IncrementarGotos(2)
+                #traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" < "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
@@ -115,7 +115,7 @@ class Relacional(NodoAST):
                 acepta = valor[0]
                 rechaza= valor[1]
 
-                traductor.IncrementarGotos(2)
+                #traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" >= "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
@@ -126,7 +126,7 @@ class Relacional(NodoAST):
                 acepta = valor[0]
                 rechaza= valor[1]
 
-                traductor.IncrementarGotos(2)
+                #traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" <= "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
@@ -137,7 +137,7 @@ class Relacional(NodoAST):
                 acepta = valor[0]
                 rechaza= valor[1]
 
-                traductor.IncrementarGotos(2)
+                #traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" == "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
@@ -148,7 +148,7 @@ class Relacional(NodoAST):
                 acepta = valor[0]
                 rechaza= valor[1]
         
-                traductor.IncrementarGotos(2)
+                #traductor.IncrementarGotos(2)
                 cadena = "if "+str(opi[0])+" != "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
@@ -175,11 +175,14 @@ class Relacional(NodoAST):
                 rechaza = traductor.getEtiquetaCambio()
                 acepta = "L"+str(traductor.getGotos())
                 traductor.SetearEtiqueta()
+                traductor.IncrementarGotos(1)
             elif traductor.getLogica() == 2:
                 acepta = traductor.getEtiquetaCambio()
                 rechaza = "L"+str(traductor.getGotos())
                 traductor.SetearEtiqueta()
+                traductor.IncrementarGotos(1)
         else:
             acepta = "L"+str(traductor.getGotos())
             rechaza = "L"+str(traductor.getGotos()+1)
+            traductor.IncrementarGotos(2)
         return [acepta, rechaza]

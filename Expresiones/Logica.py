@@ -50,7 +50,7 @@ class Logica(NodoAST):
             else:
                 acepta = "L"+str(traductor.getGotos())
                 traductor.addCodigo("goto "+acepta+";\n")
-                traductor.IncrementarGotos(2)
+                traductor.IncrementarGotos(1)
                 traductor.CambiarEtiqueta(acepta, 1)
                 opd = self.OperacionDer.traducir(traductor, entorno)
                 return[opd[0], opd[1]]
@@ -62,6 +62,11 @@ class Logica(NodoAST):
                 opd = self.OperacionDer.traducir(traductor, entorno)
                 return [opd[0], opd[1]]
             elif self.esBooleano(opi) == 1 or self.esBooleano(opi) == 0:
+                opd = self.OperacionDer.traducir(traductor, entorno)
+                return [opd[0], opd[1]]
+            else:
+                traductor.addCodigo(str(opi[1])+":\n")
+                traductor.CambiarEtiqueta(opi[0], 2)
                 opd = self.OperacionDer.traducir(traductor, entorno)
                 return [opd[0], opd[1]]
         if self.operador == OperadorLogico.NOT:

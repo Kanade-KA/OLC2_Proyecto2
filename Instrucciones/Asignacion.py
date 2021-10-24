@@ -1,11 +1,10 @@
 from Abstract.Objeto import TipoObjeto
 from Expresiones.Aritmetica import Aritmetica
-from Instrucciones.LlamaMatriz import LlamaMatriz
-from Instrucciones.Return import Return
 from Abstract.NodoAST import NodoAST
 from TablaSimbolo.Simbolo import Simbolo
 from TablaSimbolo.Error import Error
-from Instrucciones.Retonar import Retornar
+from Expresiones.Relacional import Relacional
+from Expresiones.Logica import Logica
 class Asignacion(NodoAST):
     def __init__(self, identificador, expresion, tipo, fila, columna):
         self.identificador = identificador
@@ -67,6 +66,23 @@ class Asignacion(NodoAST):
             if value != "error":
                 self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
                 return
+        elif isinstance(self.expresion, Logica) or isinstance(self.expresion, Relacional):
+            cadena = value[0]+": \n"
+            cadena += "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
+            cadena += "stack[int(t"+str(traductor.getContador())+")] = 1;\n"
+            cadena += "goto L"+str(traductor.getGotos())+";\n"
+            cadena += value[1]+":\n"
+            cadena += "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
+            cadena += "stack[int(t"+str(traductor.getContador())+")] = 0;\n"
+            cadena += "L"+str(traductor.getGotos())+":\n"
+            traductor.addCodigo(cadena)
+            traductor.IncrementarStack()
+            traductor.IncrementarContador()
+            traductor.IncrementarGotos(1)
+            simbolo = Simbolo(entorno.getNombre(), self.identificador, None, TipoObjeto.BOOLEANO, "Variable", "t"+str(traductor.getContador()-1), self.fila, self.columna)
+            entorno.addSimbolo(simbolo)
+            traductor.addSimbolo(simbolo)
+            return
         else:
             if value != "error":
                 self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
