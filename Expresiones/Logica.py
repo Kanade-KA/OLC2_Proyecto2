@@ -58,6 +58,22 @@ class Logica(NodoAST):
                 traductor.addCodigo(acepta+":\n")
                 traductor.IncrementarGotos(1)
                 opd = self.OperacionDer.traducir(traductor, entorno)
+                if self.esBooleano(opd) == 0:
+                    rechaza = "L"+str(traductor.getGotos())
+                    cadena = "goto "+rechaza+";\n"
+                    acepta = "L"+str(traductor.getGotos()+1)
+                    cadena += "goto "+acepta+";\n"
+                    traductor.addCodigo(cadena)
+                    traductor.IncrementarGotos(2)
+                    return [acepta, rechaza]
+                elif self.esBooleano(opd) == 1:
+                    acepta = "L"+str(traductor.getGotos())
+                    cadena = "goto "+acepta+";\n"
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                    cadena += "goto "+rechaza+";\n"
+                    traductor.addCodigo(cadena)
+                    traductor.IncrementarGotos(2)
+                    return [acepta, rechaza]
                 return [opd[0], opd[1]]
             else:
                 acepta = "L"+str(traductor.getGotos())
@@ -65,6 +81,11 @@ class Logica(NodoAST):
                 traductor.IncrementarGotos(1)
                 traductor.CambiarEtiqueta(acepta, 1)
                 opd = self.OperacionDer.traducir(traductor, entorno)
+                if self.esBooleano(opd) == 1 or self.esBooleano(opd) == 0:
+                    rechaza = "L"+str(traductor.getGotos())
+                    traductor.addCodigo("goto "+rechaza+";\n")
+                    traductor.IncrementarGotos(1)
+                    return [rechaza, acepta]
                 return[opd[0], opd[1]]
 
         if self.operador == OperadorLogico.OR:
@@ -72,9 +93,46 @@ class Logica(NodoAST):
                 traductor.addCodigo(str(opi[1])+":\n")
                 traductor.CambiarEtiqueta(opi[0], 2)
                 opd = self.OperacionDer.traducir(traductor, entorno)
+                if self.esBooleano(opd) == 1:
+                    cadena = "goto "+opi[0]+";\n"
+                    rechaza = "L"+str(traductor.getGotos())
+                    cadena += "goto "+rechaza+";\n"
+                    traductor.addCodigo(cadena)
+                    traductor.IncrementarGotos(1)
+                    return[opi[0], rechaza] 
+                elif self.esBooleano(opd) == 0:
+                    rechaza = "L"+str(traductor.getGotos())
+                    cadena = "goto "+rechaza+";\n"
+                    traductor.addCodigo(cadena)
+                    traductor.IncrementarGotos(1)
+                    return[opi[0], rechaza]
                 return [opd[0], opd[1]]
-            elif self.esBooleano(opi) == 1 or self.esBooleano(opi) == 0:
+            elif self.esBooleano(opi) == 1:
                 opd = self.OperacionDer.traducir(traductor, entorno)
+                if self.esBooleano(opd) != 2:
+                    acepta = "L"+str(traductor.getGotos())
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                    traductor.addCodigo("goto "+acepta+";\n")
+                    traductor.addCodigo("goto "+rechaza+";\n")
+                    traductor.IncrementarGotos(2)
+                    return[acepta, rechaza] 
+                return [opd[0], opd[1]]
+            else:
+                opd = self.OperacionDer.traducir(traductor, entorno)
+                if self.esBooleano(opd) == 1:
+                    acepta = "L"+str(traductor.getGotos())
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                    traductor.addCodigo("goto "+acepta+";\n")
+                    traductor.addCodigo("goto "+rechaza+";\n")
+                    traductor.IncrementarGotos(2)
+                    return[acepta, rechaza] 
+                elif self.esBooleano(opd) == 0:
+                    acepta = "L"+str(traductor.getGotos())
+                    rechaza = "L"+str(traductor.getGotos()+1)
+                    traductor.addCodigo("goto "+rechaza+";\n")
+                    traductor.addCodigo("goto "+acepta+";\n")
+                    traductor.IncrementarGotos(2)
+                    return[acepta, rechaza]
                 return [opd[0], opd[1]]
         if self.operador == OperadorLogico.NOT:
             if self.esBooleano(opi) ==2:
