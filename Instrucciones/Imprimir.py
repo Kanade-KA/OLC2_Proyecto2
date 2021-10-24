@@ -131,7 +131,7 @@ class Imprimir(NodoAST):
 
     def ImprimirBooleano(self, traductor, valor):
         goto = traductor.getGotos()
-        cadena = "if "+str(valor)+ " == 1 {goto L"+str(goto)+"};\n"
+        cadena = "if "+str(valor)+ " == 1 {goto L"+str(goto)+";}\n"
         cadena += "goto L"+str(goto + 1)+";\n"
         cadena += "L"+str(goto)+":\n"
         cadena += "fmt.Printf(\"%c\",116);\n" 

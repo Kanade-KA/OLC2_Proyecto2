@@ -52,8 +52,37 @@ class Relacional(NodoAST):
         return "Error de tipos"
 
     def traducir(self, traductor, entorno):
+        sonRelacionales=False;
+        valortmp = ""
+        valortmp2 = ""
         opi = self.OperacionIzq.traducir(traductor, entorno)
+        if isinstance(self.OperacionIzq, Relacional):
+            cadena = opi[0]+":\n"
+            valortmp = "t"+str(traductor.getContador())
+            cadena += valortmp +" = 1;\n"
+            nuevaetiqueta = "L"+str(traductor.getGotos())
+            cadena += "goto "+nuevaetiqueta+";\n"
+            cadena += opi[1]+":\n"
+            cadena += valortmp +" = 0;\n"
+            cadena += nuevaetiqueta+":\n"
+            traductor.IncrementarGotos(1)
+            traductor.IncrementarContador()
+            traductor.addCodigo(cadena)
+
         opd = self.OperacionDer.traducir(traductor, entorno)
+        if isinstance(self.OperacionDer, Relacional):
+            cadena = opd[0]+":\n"
+            valortmp2 = "t"+str(traductor.getContador())
+            cadena += valortmp2 +" = 1;\n"
+            nuevaetiqueta = "L"+str(traductor.getGotos())
+            cadena += "goto "+nuevaetiqueta+";\n"
+            cadena += opd[1]+":\n"
+            cadena += valortmp2 +" = 0;\n"
+            cadena += nuevaetiqueta+":\n"
+            traductor.IncrementarGotos(1)
+            traductor.IncrementarContador()
+            traductor.addCodigo(cadena)
+            sonRelacionales = True
         #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
         #Operador Izquierdo
         if isinstance(self.OperacionIzq, Identificador):
@@ -132,23 +161,45 @@ class Relacional(NodoAST):
                 traductor.addCodigo(cadena)
                 return [acepta, rechaza]
         if self.operador == OperadorRelacional.IGUALIGUAL:
-            if self.VerificarTipo(opi[1], opd[1]):
+            if sonRelacionales:
                 valor = self.getEtiqueta(traductor)
                 acepta = valor[0]
                 rechaza= valor[1]
-
-                #traductor.IncrementarGotos(2)
+                cadena = "if "+str(valortmp)+" == "+ str(valortmp2)+" { goto "+acepta+ ";}\n"
+                cadena += "goto "+rechaza+";\n"
+                traductor.addCodigo(cadena)
+                return [acepta, rechaza]
+            if self.VerificarTipo(opi[1], opd[1]):
+                if opi[1] == TipoObjeto.BOOLEANO:
+                    opizq = self.EtiquetaBooleana(traductor, opi[0])
+                    opder = self.EtiquetaBooleana(traductor, opd[0])
+                    opi[0]=opizq
+                    opd[0]=opder
+                valor = self.getEtiqueta(traductor)
+                acepta = valor[0]
+                rechaza= valor[1]
                 cadena = "if "+str(opi[0])+" == "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
                 return [acepta, rechaza]
         if self.operador == OperadorRelacional.DIFERENTE:
-            if self.VerificarTipo(opi[1], opd[1]):
+            if sonRelacionales:
                 valor = self.getEtiqueta(traductor)
                 acepta = valor[0]
                 rechaza= valor[1]
-        
-                #traductor.IncrementarGotos(2)
+                cadena = "if "+str(valortmp)+" != "+ str(valortmp2)+" { goto "+acepta+ ";}\n"
+                cadena += "goto "+rechaza+";\n"
+                traductor.addCodigo(cadena)
+                return [acepta, rechaza]
+            if self.VerificarTipo(opi[1], opd[1]):
+                if opi[1] == TipoObjeto.BOOLEANO:
+                    opizq = self.EtiquetaBooleana(traductor, opi[0])
+                    opder = self.EtiquetaBooleana(traductor, opd[0])
+                    opi[0]=opizq
+                    opd[0]=opder
+                valor = self.getEtiqueta(traductor)
+                acepta = valor[0]
+                rechaza= valor[1]
                 cadena = "if "+str(opi[0])+" != "+ str(opd[0])+" { goto "+acepta+ ";}\n"
                 cadena += "goto "+rechaza+";\n"
                 traductor.addCodigo(cadena)
@@ -165,6 +216,8 @@ class Relacional(NodoAST):
             return True
         if opi == TipoObjeto.BOOLEANO and opd == TipoObjeto.BOOLEANO:
             return True
+        if type(opi) is str and type(opd) is str:
+            return None
         return False
 
     def getEtiqueta(self, traductor):
@@ -186,3 +239,16 @@ class Relacional(NodoAST):
             rechaza = "L"+str(traductor.getGotos()+1)
             traductor.IncrementarGotos(2)
         return [acepta, rechaza]
+
+    def EtiquetaBooleana(self, traductor, operador):
+        etiqueta = "t"+str(traductor.getContador())
+        traductor.IncrementarContador()
+        cadena = ""
+        if operador == True:
+            cadena += etiqueta + " = 1;\n"
+        elif operador == False:
+            cadena += etiqueta + " = 0; \n"
+        else:
+            return operador[0]
+        traductor.addCodigo(cadena)
+        return etiqueta
