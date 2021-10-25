@@ -26,6 +26,7 @@ class Traductor:
         self.haygotos = False
         self.multstring = False
         self.potstring = False
+        self.compstring = False
         self.goto = 0#Este contador me va a servir para contar los Estados que se creen en el main.
         self.cambio = "L"
         self.logica = 0
@@ -57,6 +58,12 @@ class Traductor:
 
     def hayPotString(self):
         return self.potstring
+    
+    def activarCompString(self):
+        self.compstring = True
+
+    def hayCompString(self):
+        return self.compstring
 #--------------------PARA TRAER UNA ETIQUETA---------
     def HayCambio(self):
         if self.cambio == "L":
