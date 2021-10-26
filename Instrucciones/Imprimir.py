@@ -105,7 +105,10 @@ class Imprimir(NodoAST):
                         self.ImprimirString(traductor, resultado[0])
             if isinstance(ins, Nativas):
                 resultado = ins.traducir(traductor, entorno)
-                self.ImprimirString(traductor, resultado)
+                if resultado[1] == TipoObjeto.CADENA:
+                    self.ImprimirString(traductor, resultado[0])
+                if resultado[1] == TipoObjeto.ENTERO:
+                    self.ImprimirInt(traductor, resultado[0])
             if isinstance(ins, Parse):
                 resultado = ins.traducir(traductor, entorno)
                 if resultado[1] == TipoObjeto.ENTERO:

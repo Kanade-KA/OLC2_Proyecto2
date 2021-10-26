@@ -29,6 +29,7 @@ class Traductor:
         self.parseint = False
         self.parsedoble = False
         self.multstring = False
+        self.trunc = False
         self.potstring = False
         self.compstring = False
         self.goto = 0#Este contador me va a servir para contar los Estados que se creen en el main.
@@ -92,6 +93,12 @@ class Traductor:
 
     def hayParseDoble(self):
         return self.parsedoble
+
+    def activarTrunc(self):
+        self.trunc = True
+
+    def hayTrunc(self):
+        return self.trunc
 #--------------------PARA TRAER UNA ETIQUETA---------
     def HayCambio(self):
         if self.cambio == "L":

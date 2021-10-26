@@ -73,7 +73,7 @@ class Nativas(NodoAST):
             cadena += "S = S - "+str(traductor.getStack())+";\n"
             traductor.addCodigo(cadena)
             self.getLower(traductor)
-            return resultado
+            return [resultado, TipoObjeto.CADENA]
         if self.operador == OperadorNativo.UPPERCASE:
             if op[1] != TipoObjeto.CADENA:
                 return "error"
@@ -89,7 +89,18 @@ class Nativas(NodoAST):
             cadena += "S = S - "+str(traductor.getStack())+";\n"
             traductor.addCodigo(cadena)
             self.getUpper(traductor)
-            return resultado
+            return [resultado, TipoObjeto.CADENA]
+        if self.operador == OperadorNativo.TRUNC:
+            if op[1] != TipoObjeto.DECIMAL:
+                return "error"
+            cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
+            cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(op[0])+";\n"
+            traductor.IncrementarContador()
+            resultado = "t"+str(traductor.getContador())
+            cadena += resultado +" = stack[int(t"+str(traductor.getContador()-1)+")];\n"
+            traductor.IncrementarContador()
+            traductor.addCodigo(cadena)
+            return [resultado, TipoObjeto.ENTERO]
 
     def getLower(self, traductor):
         if not traductor.hayLower():
@@ -190,3 +201,54 @@ class Nativas(NodoAST):
             traductor.addFuncion(cadena)
             traductor.activarUpper()
         return
+
+    def getTrunc(self, traductor):
+        if not traductor.hayTrunc():
+            inicio = "L0"
+            fin = "L1"
+            punto = "L2"
+            entero = "L3"
+            ultimo = "L4"
+
+            heap = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            numero = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            unidades = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            suma = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+
+            cadena = "func trunc(){\n"
+            cadena += heap +" = S + 1;\n"
+            cadena += unidades +" = 1;\n"
+            cadena += inicio+":\n"
+            cadena += numero +" = heap[int("+heap+")];\n"
+            cadena += "if "+numero+" == 46 { goto "+punto +"; }\n"
+            cadena += heap +" = "+heap +" + 1;\n"
+            cadena += "goto "+inicio+";\n"
+            cadena += punto +":\n"
+            cadena += heap +" = "+heap +" - 1;\n"
+            cadena += entero+":\n"
+            cadena += numero +" = heap[int("+heap+")];\n"
+            cadena += "if "+heap+" == 0 { goto "+ultimo+"; }\n"
+            cadena += "if "+numero+" == -1 { goto "+fin+"; }\n"
+            cadena += "t"+str(traductor.getContador())+" = "+numero+";\n"
+            cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador()) +" - 48;\n"
+            cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador()) +" / "+ unidades+";\n"
+            cadena += unidades +" = "+unidades +" * 10;\n"
+            cadena += suma +" = "+suma+" + t"+str(traductor.getContador())+";\n"
+            traductor.IncrementarContador()
+            cadena += heap +" = "+heap +" - 1;\n"
+            cadena += "goto "+entero+";\n"
+            cadena += ultimo+"://SI ENCUENTRA UN 0 ES POR QUE NO PUDO GUARDAR ESE LO HACE DE ULTIMO\n"
+            cadena += "t"+str(traductor.getContador())+" = "+numero+";\n"
+            cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador()) +" - 48;\n"
+            cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador()) +" * "+ unidades+";\n"
+            cadena += suma +" = "+suma+" + t"+str(traductor.getContador())+";\n"
+            traductor.IncrementarContador()
+            cadena += fin +"://FIN SOLO GUARDA LA SUMA QUE DIÓ EN TODO\n"
+            cadena += "stack[int(S)] = "+suma+";\n"
+            cadena += "return;\n}\n\n"
+            traductor.addFuncion(cadena)
+            traductor.activarTrunc()
