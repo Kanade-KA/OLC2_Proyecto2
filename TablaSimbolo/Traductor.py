@@ -24,6 +24,8 @@ class Traductor:
         self.print = False
         self.potencia = False
         self.haygotos = False
+        self.haylower = False
+        self.hayupper = False
         self.multstring = False
         self.potstring = False
         self.compstring = False
@@ -64,6 +66,18 @@ class Traductor:
 
     def hayCompString(self):
         return self.compstring
+
+    def activarLower(self):
+        self.haylower = True
+
+    def hayLower(self):
+        return self.haylower
+    
+    def activarUpper(self):
+        self.hayupper = True
+
+    def hayUpper(self):
+        return self.hayupper
 #--------------------PARA TRAER UNA ETIQUETA---------
     def HayCambio(self):
         if self.cambio == "L":
@@ -148,6 +162,8 @@ class Traductor:
         return str(ord(cadena))
 #-----------------------------------------AREA DE TEMPORALES PARA C3D------------------------------------
     def temporales(self):
+        if self.contador==0:
+            return ""
         temp = "var "
         for i in range(0, self.contador):
             if i + 1 == self.contador:

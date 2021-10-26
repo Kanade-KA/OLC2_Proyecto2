@@ -1,6 +1,7 @@
 from Expresiones.Constante import Constante
 from Expresiones.Identificador import Identificador
 from Expresiones.Logica import Logica
+from Expresiones.Nativas import Nativas
 from Expresiones.Relacional import Relacional
 from Expresiones.Struct import Struct
 from Expresiones.Arreglo3D import Arreglo3D
@@ -101,6 +102,9 @@ class Imprimir(NodoAST):
                         self.ImprimirDoble(traductor, resultado[0])
                     else:
                         self.ImprimirString(traductor, resultado[0])
+            if isinstance(ins, Nativas):
+                resultado = ins.traducir(traductor, entorno)
+                self.ImprimirString(traductor, resultado)
             if isinstance(ins, Relacional):
                 res = ins.traducir(traductor, entorno)
                 self.Condiciones(traductor, res[0], res[1])
