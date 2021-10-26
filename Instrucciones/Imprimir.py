@@ -2,6 +2,7 @@ from Expresiones.Constante import Constante
 from Expresiones.Identificador import Identificador
 from Expresiones.Logica import Logica
 from Expresiones.Nativas import Nativas
+from Expresiones.Parse import Parse
 from Expresiones.Relacional import Relacional
 from Expresiones.Struct import Struct
 from Expresiones.Arreglo3D import Arreglo3D
@@ -46,6 +47,7 @@ class Imprimir(NodoAST):
 
     def traducir(self, traductor, entorno):
         for ins in self.expresion:
+            print(type(ins))
             if isinstance(ins, Constante):
                 constante = ins.traducir(traductor, entorno)
                 if constante != "error":
@@ -92,7 +94,6 @@ class Imprimir(NodoAST):
                         traductor.addCodigo(cadena)
                         traductor.IncrementarContador()
                         self.ImprimirString(traductor, "t"+str(traductor.getContador()-1))
-            #Aquí si viene una operacion aritmetica
             if isinstance(ins, Aritmetica):
                 resultado = ins.traducir(traductor, entorno)
                 if resultado != "error":
@@ -105,6 +106,12 @@ class Imprimir(NodoAST):
             if isinstance(ins, Nativas):
                 resultado = ins.traducir(traductor, entorno)
                 self.ImprimirString(traductor, resultado)
+            if isinstance(ins, Parse):
+                resultado = ins.traducir(traductor, entorno)
+                if resultado[1] == TipoObjeto.ENTERO:
+                    self.ImprimirInt(traductor, resultado[0])
+                elif resultado[1] == TipoObjeto.DECIMAL:
+                    self.ImprimirDoble(traductor, resultado[0])
             if isinstance(ins, Relacional):
                 res = ins.traducir(traductor, entorno)
                 self.Condiciones(traductor, res[0], res[1])

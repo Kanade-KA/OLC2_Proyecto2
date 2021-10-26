@@ -26,6 +26,8 @@ class Traductor:
         self.haygotos = False
         self.haylower = False
         self.hayupper = False
+        self.parseint = False
+        self.parsedoble = False
         self.multstring = False
         self.potstring = False
         self.compstring = False
@@ -78,6 +80,18 @@ class Traductor:
 
     def hayUpper(self):
         return self.hayupper
+
+    def activarParseInt(self):
+        self.parseint = True
+
+    def hayParseInt(self):
+        return self.parseint
+
+    def activarParseDoble(self):
+        self.parsedoble = True
+
+    def hayParseDoble(self):
+        return self.parsedoble
 #--------------------PARA TRAER UNA ETIQUETA---------
     def HayCambio(self):
         if self.cambio == "L":
