@@ -109,6 +109,8 @@ class Imprimir(NodoAST):
                     self.ImprimirString(traductor, resultado[0])
                 if resultado[1] == TipoObjeto.ENTERO:
                     self.ImprimirInt(traductor, resultado[0])
+                if resultado[1] == TipoObjeto.DECIMAL:
+                    self.ImprimirDoble(traductor, resultado[0])
             if isinstance(ins, Parse):
                 resultado = ins.traducir(traductor, entorno)
                 if resultado[1] == TipoObjeto.ENTERO:

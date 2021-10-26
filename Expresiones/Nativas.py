@@ -1,6 +1,7 @@
 from Abstract.NodoAST import NodoAST
 from Abstract.Objeto import TipoObjeto
 from Expresiones.Identificador import Identificador
+from TablaSimbolo.Error import Error
 from TablaSimbolo.Tipo import OperadorNativo
 import math
 
@@ -60,6 +61,7 @@ class Nativas(NodoAST):
                 return "error"
         if self.operador == OperadorNativo.LOWERCASE:
             if op[1] != TipoObjeto.CADENA:
+                traductor.addExcepcion(Error("Semantico", "Lowercase acepta solo Cadenas", self.fila, self.columna))
                 return "error"
             cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
             cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1;//Para ingresar el parametro\n"
@@ -76,6 +78,7 @@ class Nativas(NodoAST):
             return [resultado, TipoObjeto.CADENA]
         if self.operador == OperadorNativo.UPPERCASE:
             if op[1] != TipoObjeto.CADENA:
+                traductor.addExcepcion(Error("Semantico", "Uppercase acepta solo Cadenas", self.fila, self.columna))
                 return "error"
             cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
             cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1;//Para ingresar el parametro\n"
@@ -92,6 +95,7 @@ class Nativas(NodoAST):
             return [resultado, TipoObjeto.CADENA]
         if self.operador == OperadorNativo.TRUNC:
             if op[1] != TipoObjeto.DECIMAL:
+                traductor.addExcepcion(Error("Semantico", "Trunc acepta solo float64", self.fila, self.columna))
                 return "error"
             cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
             cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(op[0])+";\n"
@@ -101,6 +105,18 @@ class Nativas(NodoAST):
             traductor.IncrementarContador()
             traductor.addCodigo(cadena)
             return [resultado, TipoObjeto.ENTERO]
+        if self.operador == OperadorNativo.FLOAT:
+            if op[1] != TipoObjeto.ENTERO:
+                traductor.addExcepcion(Error("Semantico", "Trunc acepta solo float64", self.fila, self.columna))
+                return "error"
+            cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
+            cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(op[0])+";\n"
+            traductor.IncrementarContador()
+            resultado = "t"+str(traductor.getContador())
+            cadena += resultado +" = stack[int(t"+str(traductor.getContador()-1)+")];\n"
+            traductor.IncrementarContador()
+            traductor.addCodigo(cadena)
+            return [resultado, TipoObjeto.DECIMAL]
 
     def getLower(self, traductor):
         if not traductor.hayLower():
