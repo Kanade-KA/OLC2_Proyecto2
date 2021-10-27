@@ -117,6 +117,22 @@ class Nativas(NodoAST):
             traductor.IncrementarContador()
             traductor.addCodigo(cadena)
             return [resultado, TipoObjeto.DECIMAL]
+        if self.operador == OperadorNativo.STRING:
+            fin = "L0"
+            palabra = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            cadena = palabra+" = "+str(op[0])+";\n"
+            cadena += "t"+str(traductor.getContador())+" = "+palabra+" - 1;\n"
+            cadena += "if heap[int("+palabra+")] == 0 { goto L1; }\n"
+            cadena += "if heap[int(t"+str(traductor.getContador())+")] != -1 { goto "+fin+"; }\n"
+            cadena += "L1:\n"
+            traductor.addCodigo(cadena)
+            heap = traductor.putStringHeap(str(op[0]))
+            cadena = palabra +" = "+heap+";\n"
+            cadena += fin+":\n"
+            traductor.addCodigo(cadena)
+            return[palabra, TipoObjeto.CADENA]
+
 
     def getLower(self, traductor):
         if not traductor.hayLower():
