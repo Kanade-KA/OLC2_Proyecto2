@@ -67,10 +67,7 @@ class Aritmetica(NodoAST):
             tipo = self.OperacionIzq.getTipo(traductor, entorno)
             resultado = ""
             if tipo != "error":
-                traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")];//Traemos la variable\n"
-                resultado = "t"+str(traductor.getContador())
-                traductor.addCodigo(traer)
-                traductor.IncrementarContador()
+                resultado = traductor.ExtraerVariable(traductor, opi)
                 opi=[resultado, tipo]
             else:
                 return "error"
@@ -79,11 +76,8 @@ class Aritmetica(NodoAST):
             tipo = self.OperacionDer.getTipo(traductor, entorno)
             resultadod = ""
             if tipo != "error":
-                traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")];//Traemos la variable\n"
-                resultadod = "t"+str(traductor.getContador())
-                traductor.addCodigo(traer)
-                traductor.IncrementarContador()
-                opd = [resultadod, tipo]
+                resultadod = traductor.ExtraerVariable(traductor, opd)
+                opd=[resultadod, tipo]
             else:
                 return "error"
         #----------------------------------------------------------------------------------------------------

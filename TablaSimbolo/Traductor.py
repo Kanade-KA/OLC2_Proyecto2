@@ -105,10 +105,11 @@ class Traductor:
             return False
         else:
             return True
+
     def CambiarEtiqueta(self, et, logica):
         self.cambio = et
         self.logica = logica
-    
+
     def SetearEtiqueta(self):
         self.cambio = "L"
         self.logica = 0
@@ -125,7 +126,7 @@ class Traductor:
 #---------------------------------PARA METER UN BOOLEANO AL STACK-----------------------------------
     def putBooleanStack(self, valor):
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
-        temporal = "t"+str(self.getContador())
+        temporal = self.getStack()
         if valor == True:
             cadena += "stack[int(t"+str(self.getContador())+")] = 1;\n"
         else:   
@@ -133,7 +134,6 @@ class Traductor:
         self.IncrementarStack()
         self.addCodigo(cadena)
         return temporal
-
 #------------------------------------PARA METER UN STRING AL HEAP-------------------------------------------
     def putStringHeap(self, valor):
         temporal = "t"+str(self.getContador())
@@ -151,7 +151,7 @@ class Traductor:
 #---------------------------------AGREGAR UN NUMERO ENTERO AL STACK-------------------------------------
     def putIntStack(self, numero):
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
-        temporal = "t"+str(self.getContador())
+        temporal = self.getStack()
         cadena += "stack[int(t"+ str(self.getContador()) + ")] = "+str(numero)+";\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
@@ -160,7 +160,7 @@ class Traductor:
 #------------------------------AGREGAR UN NUMERO DOBLE AL STACK---------------------------------------
     def putDoubleStack(self, numero):
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
-        temporal = "t"+str(self.getContador())
+        temporal = self.getStack()
         cadena += "stack[int("+ str(temporal) + ")] = "+str(numero)+";\n"
         self.addCodigo(cadena)
         self.IncrementarStack()
@@ -177,7 +177,15 @@ class Traductor:
         self.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
         self.IncrementarContador()
         return apuntastack
-
+#--------------------------------------JALAR VARIABLE DEL STRING-------------------------------------
+    def ExtraerVariable(self, traductor, stack):
+        cadena = "t"+str(traductor.getContador()) +" = S + "+str(stack)+";\n"
+        traductor.IncrementarContador()
+        valor = "t"+str(traductor.getContador())
+        cadena += valor +" = stack[int(t"+str(traductor.getContador()-1)+")];//Extraigo el valor y ese lo imprimo\n"
+        traductor.addCodigo(cadena)
+        traductor.IncrementarContador()
+        return valor
 #--------------------------------------------CONVERTIR UNA LETRA A ASCII----------------------------------------
     def getAscii(self, cadena):
         return str(ord(cadena))

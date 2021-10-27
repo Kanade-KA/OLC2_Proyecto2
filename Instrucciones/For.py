@@ -127,17 +127,11 @@ class For(NodoAST):
             #VER SI ES ID...
             if isinstance(self.inicio, Identificador):
                 tipo = self.inicio.getTipo(traductor, entorno)
-                traer = "t"+str(traductor.getContador())+" = stack[int("+str(inicio)+")];//Traemos la variable\n"
-                resultado = "t"+str(traductor.getContador())
-                traductor.addCodigo(traer)
-                traductor.IncrementarContador()
+                resultado = traductor.ExtraerVariable(traductor, inicio)
                 inicio = [resultado, tipo]
             if isinstance(self.fin, Identificador):
                 tipo = self.fin.getTipo(traductor, entorno)
-                traer = "t"+str(traductor.getContador())+" = stack[int("+str(fin)+")];//Traemos la variable\n"
-                resultado = "t"+str(traductor.getContador())
-                traductor.addCodigo(traer)
-                traductor.IncrementarContador()
+                resultado = traductor.ExtraerVariable(traductor, fin)
                 fin = [resultado, tipo]
 
             if self.verificarTipo(inicio[1], fin[1]):

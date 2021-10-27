@@ -11,6 +11,7 @@ from Expresiones.Arreglo import Arreglo
 from Abstract.Objeto import TipoObjeto
 from Abstract.NodoAST import NodoAST
 from Expresiones.Aritmetica import Aritmetica
+from TablaSimbolo.Traductor import Traductor
 
 class Imprimir(NodoAST):
     def __init__(self, expresion, esln, fila, columna):
@@ -67,33 +68,20 @@ class Imprimir(NodoAST):
                 if tipo != "error":
                     if tipo == TipoObjeto.ENTERO:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
-                        cadena = "t"+str(traductor.getContador())+" = stack[int("+str(puntero)+")];//Extraigo el valor y ese lo imprimo\n"
-                        traductor.addCodigo(cadena)
-                        valor = "t"+str(traductor.getContador())
-                        traductor.IncrementarContador()
+                        valor = traductor.ExtraerVariable(traductor, puntero)
                         self.ImprimirInt(traductor, valor)
                     elif tipo == TipoObjeto.DECIMAL:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
-                        cadena = "t"+str(traductor.getContador())+" = stack[int("+str(puntero)+")];//Extraigo el valor y ese lo imprimo\n"
-                        traductor.addCodigo(cadena)
-                        valor = "t"+ str(traductor.getContador())
-                        traductor.IncrementarContador()
+                        valor = traductor.ExtraerVariable(traductor, puntero)
                         self.ImprimirDoble(traductor, valor)
                     elif tipo == TipoObjeto.BOOLEANO:
                         puntero = ins.traducir(traductor, entorno)
-                        cadena = "t"+str(traductor.getContador())+" = stack[int(" + str(puntero)+ ")];//Extraigo el valor para ver cual es\n"
-                        traductor.addCodigo(cadena)
-                        valor = "t"+str(traductor.getContador())
-                        traductor.IncrementarContador()
+                        valor = traductor.ExtraerVariable(traductor, puntero)
                         self.ImprimirBooleano(traductor, valor)
                     else:
                         puntero = ins.traducir(traductor, entorno)
-                        cadena = "t"+str(traductor.getContador())+" = "+str(puntero)+"//Traigo el puntero de la variable string\n"
-                        traductor.IncrementarContador()
-                        cadena += "t"+str(traductor.getContador())+" = stack[int(t"+str(traductor.getContador()-1)+")];\n"
-                        traductor.addCodigo(cadena)
-                        traductor.IncrementarContador()
-                        self.ImprimirString(traductor, "t"+str(traductor.getContador()-1))
+                        valor = traductor.ExtraerVariable(traductor, puntero)
+                        self.ImprimirString(traductor, valor)
             if isinstance(ins, Aritmetica):
                 resultado = ins.traducir(traductor, entorno)
                 if resultado != "error":

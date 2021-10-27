@@ -98,7 +98,7 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
-                cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                cadena = "t"+str(traductor.getContador()) +" = S + "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
                 cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()
@@ -110,7 +110,7 @@ class Asignacion(NodoAST):
                 traductor.addSimbolo(simbolo)
                 entorno.addSimbolo(simbolo)
             else:
-                cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                cadena = "t"+str(traductor.getContador()) +" = S +"+str(existe.getPosicion())+";//traigo el apuntador del id\n"
                 cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(valor)+";//Meto el nuevo puntero del heap\n"
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()
@@ -122,7 +122,7 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
-                cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                cadena = "t"+str(traductor.getContador()) +" = S + "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
                 cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()
@@ -134,7 +134,7 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
-                cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                cadena = "t"+str(traductor.getContador()) +" = S +"+str(existe.getPosicion())+";//traigo el apuntador del id\n"
                 cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()

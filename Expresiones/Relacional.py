@@ -90,10 +90,8 @@ class Relacional(NodoAST):
             resultado = ""
             if tipo != "error":
                 if tipo != TipoObjeto.CADENA:
-                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opi)+")];//Traemos la variable\n"
-                    resultado = "t"+str(traductor.getContador())
-                    traductor.addCodigo(traer)
-                    traductor.IncrementarContador()
+                    resultado = traductor.ExtraerVariable(traductor, opi)
+                    opi=[resultado, tipo]
                 else:
                     resultado = self.OperacionIzq.getValor(traductor, entorno)
                 opi=[resultado, tipo]
@@ -105,10 +103,8 @@ class Relacional(NodoAST):
             resultadod = ""
             if tipo != "error":
                 if tipo != TipoObjeto.CADENA:
-                    traer = "t"+str(traductor.getContador())+" = stack[int("+str(opd)+")];//Traemos la variable\n"
-                    resultadod = "t"+str(traductor.getContador())
-                    traductor.addCodigo(traer)
-                    traductor.IncrementarContador()
+                    resultadod = traductor.ExtraerVariable(traductor, opd)
+                    opd=[resultadod, tipo]
                 else:
                     resultadod = self.OperacionDer.getValor(entorno)
                 opd = [resultadod, tipo]
