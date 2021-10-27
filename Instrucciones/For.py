@@ -113,7 +113,7 @@ class For(NodoAST):
         return None
 
     def traducir(self, traductor, entorno):
-        traductor.addCodigo("//------------------------------------for--------------------------------\n")
+        traductor.addCodigo("//**************************FOR**************************\n")
         etiquetainicio="L"+str(traductor.getGotos())
         etiquetaejecutar = "L"+ str(traductor.getGotos()+1)
         etiquetareinicio = "L"+ str(traductor.getGotos()+2)
@@ -165,7 +165,54 @@ class For(NodoAST):
                 cadena += etiquetafin+":\n"
                 traductor.IncrementarContador()
                 traductor.addCodigo(cadena)
-        return
+        else:
+            #Etiquetas
+            etinicio = "L"+str(traductor.getGotos())
+            traductor.IncrementarGotos(1)
+            fin = "L"+str(traductor.getGotos())    
+            traductor.IncrementarGotos(1)
+
+            inicio = self.inicio.traducir(traductor, entorno)
+            #VER SI ES ID...
+            if isinstance(self.inicio, Identificador):
+                tipo = self.inicio.getTipo(traductor, entorno)
+                resultado = traductor.ExtraerVariable(traductor, inicio)
+                inicio = [resultado, tipo]
+                
+            tmpCadena = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            guardavariable = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            letra = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            newheap = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+
+            cadena =  guardavariable +" = S + "+ str(traductor.getStack())+"; //generando un tmp para meter la variable\n"
+            cadena += "stack[int("+str(guardavariable)+")] = "+str(inicio[0])+";//Inicializando el indice\n"
+            #Metiendo el indice a la tabla de simbolo
+            simbolo = Simbolo("FOR", indice, inicio[0], inicio[1], "Variable", traductor.getStack(), self.fila, self.columna)
+            nuevoentorno.addSimbolo(simbolo)
+            traductor.addSimbolo(simbolo)
+            traductor.IncrementarStack()
+            cadena += tmpCadena +" = "+str(inicio[0])+";//El inicio(heap) de la cadena en este caso\n"
+            cadena += etinicio+":\n"
+            cadena += letra +" = heap[int("+tmpCadena+")];\n"
+            cadena += newheap+" = H;\n"
+            cadena += "heap[int(H)] = "+letra+";\n"
+            cadena += "H = H + 1;\n"
+            cadena += "heap[int(H)] = -1;\n"
+            cadena += "H = H + 1;\n"
+            cadena += "stack[int("+str(guardavariable)+")] = "+newheap+";\n"#No se si va ahí 
+            cadena += "if "+letra+" == -1 { goto "+fin+"; }\n"
+            traductor.addCodigo(cadena)
+            for i in self.instrucciones:
+                i.traducir(traductor, nuevoentorno)
+            cadena = tmpCadena +" = "+tmpCadena +" + 1;\n"
+            cadena += "goto "+etinicio+";\n"
+            cadena += fin+":\n"
+            traductor.addCodigo(cadena)
+            return
 
     def verificarTipo(self, opi, opd):
         if opi == TipoObjeto.ENTERO or opi == TipoObjeto.DECIMAL:

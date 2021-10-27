@@ -63,6 +63,7 @@ class Nativas(NodoAST):
             if op[1] != TipoObjeto.CADENA:
                 traductor.addExcepcion(Error("Semantico", "Lowercase acepta solo Cadenas", self.fila, self.columna))
                 return "error"
+            traductor.addCodigo("//**************************KOWER CASE**************************\n")
             cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
             cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1;//Para ingresar el parametro\n"
             cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(op[0])+";\n"
@@ -80,6 +81,7 @@ class Nativas(NodoAST):
             if op[1] != TipoObjeto.CADENA:
                 traductor.addExcepcion(Error("Semantico", "Uppercase acepta solo Cadenas", self.fila, self.columna))
                 return "error"
+            traductor.addCodigo("//**************************UPPER CASE**************************\n")
             cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
             cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1;//Para ingresar el parametro\n"
             cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(op[0])+";\n"
@@ -97,6 +99,7 @@ class Nativas(NodoAST):
             if op[1] != TipoObjeto.DECIMAL:
                 traductor.addExcepcion(Error("Semantico", "Trunc acepta solo float64", self.fila, self.columna))
                 return "error"
+            traductor.addCodigo("//**************************TRUNC CASE**************************\n")
             cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
             cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(op[0])+";\n"
             traductor.IncrementarContador()
@@ -109,6 +112,7 @@ class Nativas(NodoAST):
             if op[1] != TipoObjeto.ENTERO:
                 traductor.addExcepcion(Error("Semantico", "Trunc acepta solo float64", self.fila, self.columna))
                 return "error"
+            traductor.addCodigo("//**************************FLOAT CASE**************************\n")
             cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
             cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(op[0])+";\n"
             traductor.IncrementarContador()
@@ -118,6 +122,7 @@ class Nativas(NodoAST):
             traductor.addCodigo(cadena)
             return [resultado, TipoObjeto.DECIMAL]
         if self.operador == OperadorNativo.STRING:
+            traductor.addCodigo("//**************************STRING CASE**************************\n")
             fin = "L0"
             palabra = "t"+str(traductor.getContador())
             traductor.IncrementarContador()

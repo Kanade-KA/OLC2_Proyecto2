@@ -47,6 +47,7 @@ class Imprimir(NodoAST):
         return
 
     def traducir(self, traductor, entorno):
+        traductor.addCodigo("//**************************IMPRIMIR**************************\n")
         for ins in self.expresion:
             print(type(ins))
             if isinstance(ins, Constante):

@@ -313,7 +313,7 @@ class Aritmetica(NodoAST):
         repeticion = traductor.getContador()#para el while que se va  ahacer
         potencia += "t"+str(repeticion)+" = stack[int(t"+str(traductor.getContador()-1)+")];//Saco el segundo parametro del stack\n"
         traductor.IncrementarContador()
-        potencia += "if t"+str(repeticion)+" == 0 { goto L1 };//Si es 0 es por que un numero elevado a 0 es 1\n"
+        potencia += "if t"+str(repeticion)+" == 0 { goto L1; }//Si es 0 es por que un numero elevado a 0 es 1\n"
         potencia += "L2:\n"
         potencia += "if t"+str(repeticion)+" <= 1 { goto L0; }\n"
         potencia += "t"+str(numero) +" = t"+str(numero)+ " * t"+str(multip)+";//para multiplicar por la base\n"

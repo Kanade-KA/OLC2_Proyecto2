@@ -32,6 +32,7 @@ class Parse(NodoAST):
         if resultado[1] != TipoObjeto.CADENA:
             traductor.addExcepcion(Error("Semantico", "Parse, solo acepta tipo String", self.fila, self.columna))
             return "error"
+        traductor.addCodigo("//**************************CASO PARSE**************************\n")
         if self.operador.lower() == "int64":
             cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";\n"
             cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador())+" + 1;//Para ingresar el parametro\n"

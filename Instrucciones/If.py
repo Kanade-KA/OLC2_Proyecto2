@@ -46,6 +46,7 @@ class If(NodoAST):
         return None
 
     def traducir(self, traductor, entorno):
+        traductor.addCodigo("//**************************IF**************************\n")
         condicional = self.condicion.traducir(traductor, entorno)
         if condicional != "error":#para evitar errores
             goto = traductor.getGotos()
