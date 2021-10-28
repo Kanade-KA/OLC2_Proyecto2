@@ -127,11 +127,11 @@ class For(NodoAST):
             #VER SI ES ID...
             if isinstance(self.inicio, Identificador):
                 tipo = self.inicio.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(traductor, inicio)
+                resultado = traductor.ExtraerVariable(inicio)
                 inicio = [resultado, tipo]
             if isinstance(self.fin, Identificador):
                 tipo = self.fin.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(traductor, fin)
+                resultado = traductor.ExtraerVariable(fin)
                 fin = [resultado, tipo]
 
             if self.verificarTipo(inicio[1], fin[1]):
@@ -176,7 +176,7 @@ class For(NodoAST):
             #VER SI ES ID...
             if isinstance(self.inicio, Identificador):
                 tipo = self.inicio.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(traductor, inicio)
+                resultado = traductor.ExtraerVariable(inicio)
                 inicio = [resultado, tipo]
                 
             tmpCadena = "t"+str(traductor.getContador())

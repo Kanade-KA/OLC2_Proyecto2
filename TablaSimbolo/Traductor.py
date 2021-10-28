@@ -119,12 +119,13 @@ class Traductor:
         
     def getLogica(self):
         return self.logica
-#----------------------------------------------------
+
     def IncrementarGotos(self, numero):
         self.haygotos = True
         self.goto = self.goto + numero
 #---------------------------------PARA METER UN BOOLEANO AL STACK-----------------------------------
     def putBooleanStack(self, valor):
+        self.addCodigo("//*************AGREGANDO BOOLEANO***************\n")
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
         temporal = self.getStack()
         if valor == True:
@@ -136,21 +137,23 @@ class Traductor:
         return temporal
 #------------------------------------PARA METER UN STRING AL HEAP-------------------------------------------
     def putStringHeap(self, valor):
+        self.addCodigo("//*************AGREGANDO STRING EN HEAP***************\n")
         temporal = "t"+str(self.getContador())
-        cadena = temporal + "= H;//Se extrae la posción libre del heap;\n"
+        cadena = temporal + " = H;\n"
         for letra in valor:
-            cadena += "heap[int(H)] = "+ self.getAscii(letra) + ";//Se mete la letra "+letra+"\n"
-            cadena += "H = H + 1;//Se suma uno al heap\n"
+            cadena += "heap[int(H)] = "+self.getAscii(letra)+";\n"
+            cadena += "H = H + 1;\n"
             self.IncrementarHeap()
-        cadena += "heap[int(H)] = -1;//Se ingresa al heap el fin de la cadena\n"
-        cadena += "H = H + 1;//Se suma uno para que se pueda volver a usar el heap\n"
+        cadena += "heap[int(H)] = -1;\n"
+        cadena += "H = H + 1;\n"
         self.IncrementarHeap()
         self.IncrementarContador()
         self.addCodigo(cadena)
         return temporal
 #---------------------------------AGREGAR UN NUMERO ENTERO AL STACK-------------------------------------
     def putIntStack(self, numero):
-        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
+        self.addCodigo("//*************AGREGANDO ENTERO***************\n")
+        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ ";\n"
         temporal = self.getStack()
         cadena += "stack[int(t"+ str(self.getContador()) + ")] = "+str(numero)+";\n"
         self.addCodigo(cadena)
@@ -159,7 +162,8 @@ class Traductor:
         return temporal
 #------------------------------AGREGAR UN NUMERO DOBLE AL STACK---------------------------------------
     def putDoubleStack(self, numero):
-        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
+        self.addCodigo("//*************AGREGANDO DOBLE***************\n")
+        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ ";\n"
         temporal = self.getStack()
         cadena += "stack[int("+ str(temporal) + ")] = "+str(numero)+";\n"
         self.addCodigo(cadena)
@@ -168,23 +172,25 @@ class Traductor:
         return temporal
 #-----------------------------AGREGAR EL PUNTERO DEL HEAP AL STACK----------------------------------
     def putStringHStack(self, heap):
-        cadena = "t"+ str(self.getContador())+ " = S +"+str(self.getStack())+"; //PARA VER EN QUE POSICIÓN DE STACK SE GUARDARÁ\n"
+        self.addCodigo("//*************AGREGANDO HEAP A STACK***************\n")
+        cadena = "t"+ str(self.getContador())+ " = S + "+str(self.getStack())+";\n"
         self.IncrementarContador()
-        cadena += "t"+str(self.getContador())+" = "+str(heap) + ";//Guardo en un temporal el integer del heap\n"
-        cadena += "stack[int(t"+str(self.getContador()-1)+")] = t"+str(self.getContador())+";//Guardo en el stack el puntero del heap\n"
+        cadena += "t"+str(self.getContador())+" = "+str(heap) + ";\n"
+        cadena += "stack[int(t"+str(self.getContador()-1)+")] = t"+str(self.getContador())+";\n"
         self.addCodigo(cadena)
         apuntastack = self.getStack()
         self.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
         self.IncrementarContador()
         return apuntastack
-#--------------------------------------JALAR VARIABLE DEL STRING-------------------------------------
-    def ExtraerVariable(self, traductor, stack):
-        cadena = "t"+str(traductor.getContador()) +" = S + "+str(stack)+";\n"
-        traductor.IncrementarContador()
-        valor = "t"+str(traductor.getContador())
-        cadena += valor +" = stack[int(t"+str(traductor.getContador()-1)+")];//Extraigo el valor y ese lo imprimo\n"
-        traductor.addCodigo(cadena)
-        traductor.IncrementarContador()
+#--------------------------------------JALAR VARIABLE-------------------------------------
+    def ExtraerVariable(self, stack):
+        self.addCodigo("//*************EXTRAYENDO DEL STACK***************\n")
+        cadena = "t"+str(self.getContador()) +" = S + "+str(stack)+";\n"
+        self.IncrementarContador()
+        valor = "t"+str(self.getContador())
+        cadena += valor +" = stack[int(t"+str(self.getContador()-1)+")];\n"
+        self.addCodigo(cadena)
+        self.IncrementarContador()
         return valor
 #--------------------------------------------CONVERTIR UNA LETRA A ASCII----------------------------------------
     def getAscii(self, cadena):

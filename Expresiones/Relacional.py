@@ -90,7 +90,7 @@ class Relacional(NodoAST):
             resultado = ""
             if tipo != "error":
                 if tipo != TipoObjeto.CADENA:
-                    resultado = traductor.ExtraerVariable(traductor, opi)
+                    resultado = traductor.ExtraerVariable(opi)
                     opi=[resultado, tipo]
                 else:
                     resultado = self.OperacionIzq.getValor(traductor, entorno)
@@ -103,7 +103,7 @@ class Relacional(NodoAST):
             resultadod = ""
             if tipo != "error":
                 if tipo != TipoObjeto.CADENA:
-                    resultadod = traductor.ExtraerVariable(traductor, opd)
+                    resultadod = traductor.ExtraerVariable(opd)
                     opd=[resultadod, tipo]
                 else:
                     resultadod = self.OperacionDer.getValor(entorno)

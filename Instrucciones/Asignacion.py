@@ -1,6 +1,7 @@
 from Abstract.Objeto import TipoObjeto
 from Expresiones.Aritmetica import Aritmetica
 from Abstract.NodoAST import NodoAST
+from Expresiones.Identificador import Identificador
 from TablaSimbolo.Simbolo import Simbolo
 from TablaSimbolo.Error import Error
 from Expresiones.Relacional import Relacional
@@ -45,6 +46,14 @@ class Asignacion(NodoAST):
         value = None
         if not self.expresion == None:
             value = self.expresion.traducir(traductor, entorno)
+            if isinstance(self.expresion, Identificador):
+                tipo = self.expresion.getTipo(traductor, entorno)
+                resultado = ""
+                if tipo != "error":
+                    resultado = traductor.ExtraerVariable(value)
+                    self.tipo = "variable"
+                else:
+                    return "error"
         #----------------------------SI SE DECLARA CON TIPO-----------------------------------------------------
         if self.tipo.lower() == "int64":
             if not isinstance(value[0], int):
@@ -62,6 +71,9 @@ class Asignacion(NodoAST):
             if not isinstance(value[0], bool):
                 traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
+        if self.tipo.lower() == "variable":
+            self.Asignar(tipo, resultado, self.identificador, entorno, traductor)
+            return
         if isinstance(self.expresion, Aritmetica):
             if value != "error":
                 self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
@@ -90,6 +102,7 @@ class Asignacion(NodoAST):
         return "error" 
 
     def Asignar(self, tipo, valor, id, entorno, traductor):
+        traductor.addCodigo("//**************************ASIGNACION VARIABLE**************************\n")
         if tipo == TipoObjeto.ENTERO:
             existe = entorno.retornarSimbolo(id)
             if existe==None:

@@ -67,7 +67,7 @@ class Aritmetica(NodoAST):
             tipo = self.OperacionIzq.getTipo(traductor, entorno)
             resultado = ""
             if tipo != "error":
-                resultado = traductor.ExtraerVariable(traductor, opi)
+                resultado = traductor.ExtraerVariable(opi)
                 opi=[resultado, tipo]
             else:
                 return "error"
@@ -76,7 +76,7 @@ class Aritmetica(NodoAST):
             tipo = self.OperacionDer.getTipo(traductor, entorno)
             resultadod = ""
             if tipo != "error":
-                resultadod = traductor.ExtraerVariable(traductor, opd)
+                resultadod = traductor.ExtraerVariable(opd)
                 opd=[resultadod, tipo]
             else:
                 return "error"

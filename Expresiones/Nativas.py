@@ -52,10 +52,7 @@ class Nativas(NodoAST):
             tipo = self.operando.getTipo(traductor, entorno)
             resultado = ""
             if tipo != "error":
-                traer = "t"+str(traductor.getContador())+" = stack[int("+str(op)+")];//Traemos la variable\n"
-                resultado = "t"+str(traductor.getContador())
-                traductor.addCodigo(traer)
-                traductor.IncrementarContador()
+                resultado = traductor.ExtraerVariable(op)
                 op=[resultado, tipo]
             else:
                 return "error"
@@ -123,20 +120,27 @@ class Nativas(NodoAST):
             return [resultado, TipoObjeto.DECIMAL]
         if self.operador == OperadorNativo.STRING:
             traductor.addCodigo("//**************************STRING CASE**************************\n")
-            fin = "L0"
-            palabra = "t"+str(traductor.getContador())
+            valor = "t"+str(traductor.getContador())
             traductor.IncrementarContador()
-            cadena = palabra+" = "+str(op[0])+";\n"
-            cadena += "t"+str(traductor.getContador())+" = "+palabra+" - 1;\n"
-            cadena += "if heap[int("+palabra+")] == 0 { goto L1; }\n"
-            cadena += "if heap[int(t"+str(traductor.getContador())+")] != -1 { goto "+fin+"; }\n"
+            heap = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            cadena = valor+" = "+str(op[0])+";\n"
+            cadena += heap +" = heap[int("+valor+")];\n"
+            cadena += "if "+heap+" == 0 { goto L0 }\n"
+            cadena += valor +" = "+valor+" - 1;\n"
+            cadena += "if "+valor+" == -1 { goto L1 }\n"
+            cadena += heap +" = heap[int("+valor+")];"
+            cadena += "if "+heap+" == -1 { goto L1 }\n"
+            cadena += "L0:\n"
+            traductor.addCodigo(cadena)
+            newheap = traductor.putStringHeap(str(op[0]))
+            cadena = valor +" = "+newheap+";\n"
+            cadena += "goto L2;\n"
             cadena += "L1:\n"
+            cadena += valor +" = "+str(op[0])+";\n"
+            cadena += "L2:\n"
             traductor.addCodigo(cadena)
-            heap = traductor.putStringHeap(str(op[0]))
-            cadena = palabra +" = "+heap+";\n"
-            cadena += fin+":\n"
-            traductor.addCodigo(cadena)
-            return[palabra, TipoObjeto.CADENA]
+            return[valor, TipoObjeto.CADENA]
 
 
     def getLower(self, traductor):

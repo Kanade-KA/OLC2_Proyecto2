@@ -69,19 +69,19 @@ class Imprimir(NodoAST):
                 if tipo != "error":
                     if tipo == TipoObjeto.ENTERO:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
-                        valor = traductor.ExtraerVariable(traductor, puntero)
+                        valor = traductor.ExtraerVariable(puntero)
                         self.ImprimirInt(traductor, valor)
                     elif tipo == TipoObjeto.DECIMAL:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
-                        valor = traductor.ExtraerVariable(traductor, puntero)
+                        valor = traductor.ExtraerVariable(puntero)
                         self.ImprimirDoble(traductor, valor)
                     elif tipo == TipoObjeto.BOOLEANO:
                         puntero = ins.traducir(traductor, entorno)
-                        valor = traductor.ExtraerVariable(traductor, puntero)
+                        valor = traductor.ExtraerVariable(puntero)
                         self.ImprimirBooleano(traductor, valor)
                     else:
                         puntero = ins.traducir(traductor, entorno)
-                        valor = traductor.ExtraerVariable(traductor, puntero)
+                        valor = traductor.ExtraerVariable(puntero)
                         self.ImprimirString(traductor, valor)
             if isinstance(ins, Aritmetica):
                 resultado = ins.traducir(traductor, entorno)
