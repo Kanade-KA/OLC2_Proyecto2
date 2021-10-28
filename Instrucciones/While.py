@@ -32,4 +32,14 @@ class While(NodoAST):
         return None
 
     def traducir(self, traductor, entorno):
-        return "While"
+        traductor.addCodigo("//******************WHILE************************\n")
+        inicio="L"+str(traductor.getGotos())
+        traductor.IncrementarGotos(1)
+        traductor.addCodigo(inicio+":\n")
+        op = self.condicion.traducir(traductor, entorno)
+        traductor.addCodigo(op[0]+":\n")
+        for i in self.instrucciones:#TENGO QUE CAMBIAR ENTORNO OJO
+            i.traducir(traductor, entorno)
+        traductor.addCodigo("goto "+inicio+";\n")
+        traductor.addCodigo(op[1]+":\n")
+        return
