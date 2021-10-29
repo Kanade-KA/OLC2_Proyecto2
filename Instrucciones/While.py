@@ -36,10 +36,11 @@ class While(NodoAST):
         inicio="L"+str(traductor.getGotos())
         traductor.IncrementarGotos(1)
         traductor.addCodigo(inicio+":\n")
-        op = self.condicion.traducir(traductor, entorno)
+        nuevoentorno = Entorno("WHILE", entorno)
+        op = self.condicion.traducir(traductor, entorno)#NO SE SI ES EL ENTORNO NORMAL O EL NUEVO
         traductor.addCodigo(op[0]+":\n")
-        for i in self.instrucciones:#TENGO QUE CAMBIAR ENTORNO OJO
-            i.traducir(traductor, entorno)
+        for i in self.instrucciones:
+            i.traducir(traductor, nuevoentorno)
         traductor.addCodigo("goto "+inicio+";\n")
         traductor.addCodigo(op[1]+":\n")
         return

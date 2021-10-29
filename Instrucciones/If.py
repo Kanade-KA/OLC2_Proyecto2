@@ -60,14 +60,14 @@ class If(NodoAST):
             cadena = "goto L"+str(goto)+";\n"
             cadena += str(condicional[1])+": \n"
             traductor.addCodigo(cadena)
-            if self.elseIf != None:
-                self.elseIf.traducir(traductor, entorno)
+            cadena = "L"+str(goto)+": \n"
             if self.instruccionesElse != None:
                 nuevoentorno2 = Entorno("ELSE", entorno)
                 for i in self.instruccionesElse:
                     i.traducir(traductor, nuevoentorno2)
-            cadena = "L"+str(goto)+": \n"
-            cadena += "fmt.Printf(\"%c\",10);\n"
+                    
+            if self.elseIf != None:
+                self.elseIf.traducir(traductor, entorno)
             traductor.addCodigo(cadena)
             traductor.IncrementarGotos(1)   
         return 
