@@ -9,4 +9,4 @@ class Break(NodoAST):
         return self
 
     def traducir(self, traductor, entorno):
-        return "Break"
+        return "isbreak"

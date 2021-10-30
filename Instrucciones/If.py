@@ -56,7 +56,11 @@ class If(NodoAST):
             if self.instruccionesIf != None:
                 nuevoentorno = Entorno("IF", entorno)
                 for i in self.instruccionesIf:
-                    i.traducir(traductor, nuevoentorno)
+                    x = i.traducir(traductor, nuevoentorno)
+                    if x == "isbreak":
+                        traductor.addCodigo("goto L"+str(traductor.getGotos())+";\n")
+                        traductor.setBreak(traductor.getGotos())
+                        traductor.IncrementarGotos(1)
             cadena = "goto L"+str(goto)+";\n"
             cadena += str(condicional[1])+": \n"
             traductor.addCodigo(cadena)
@@ -64,7 +68,11 @@ class If(NodoAST):
             if self.instruccionesElse != None:
                 nuevoentorno2 = Entorno("ELSE", entorno)
                 for i in self.instruccionesElse:
-                    i.traducir(traductor, nuevoentorno2)
+                    x = i.traducir(traductor, nuevoentorno2)
+                    if x == "isbreak":
+                        traductor.addCodigo("goto L"+str(traductor.getGotos())+";\n")
+                        traductor.setBreak(traductor.getGotos())
+                        traductor.IncrementarGotos(1)
                     
             if self.elseIf != None:
                 self.elseIf.traducir(traductor, entorno)

@@ -260,7 +260,7 @@ class Relacional(NodoAST):
         return "error"
         
     def VerificarTipo(self, opi, opd):
-        if opi == TipoObjeto.ENTERO or opi == TipoObjeto.DECIMAL:
+        '''if opi == TipoObjeto.ENTERO or opi == TipoObjeto.DECIMAL:
             if opd == TipoObjeto.ENTERO or opd == TipoObjeto.DECIMAL:
                 return True
             return False
@@ -269,8 +269,8 @@ class Relacional(NodoAST):
         if opi == TipoObjeto.BOOLEANO and opd == TipoObjeto.BOOLEANO:
             return True
         if type(opi) is str and type(opd) is str:
-            return None
-        return False
+            return None'''
+        return True
 
     def getEtiqueta(self, traductor):
         rechaza=""

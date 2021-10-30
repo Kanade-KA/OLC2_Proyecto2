@@ -46,4 +46,5 @@ class AsignacionFuncion(NodoAST):
         cadena += "\n}\n\n"
         traductor.addFuncion(cadena)
         traductor.DesactivarFuncion()
+        traductor.LimpiarFuncion()
         return

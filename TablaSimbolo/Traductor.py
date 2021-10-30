@@ -36,6 +36,7 @@ class Traductor:
         self.goto = 0#Este contador me va a servir para contar los Estados que se creen en el main.
         self.cambio = "L"
         self.logica = 0
+        self.isbreak = ""
 
         self.esFuncion = False
 
@@ -117,6 +118,15 @@ class Traductor:
 
     def getTmpFuncion(self):
         return self.functmp
+    
+    def getBreak(self):
+        return self.isbreak
+
+    def setBreak(self,  goto):
+        self.isbreak = "L"+str(goto)
+    
+    def resetBreak(self):
+        self.isbreak = ""
 #--------------------PARA TRAER UNA ETIQUETA---------
     def HayCambio(self):
         if self.cambio == "L":

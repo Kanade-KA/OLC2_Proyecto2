@@ -43,4 +43,7 @@ class While(NodoAST):
             i.traducir(traductor, nuevoentorno)
         traductor.addCodigo("goto "+inicio+";\n")
         traductor.addCodigo(op[1]+":\n")
+
+        traductor.addCodigo(traductor.getBreak()+":\n")
+        traductor.resetBreak()
         return
