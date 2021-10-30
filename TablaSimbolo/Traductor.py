@@ -37,6 +37,7 @@ class Traductor:
         self.cambio = "L"
         self.logica = 0
         self.isbreak = ""
+        self.iscontinue = ""
 
         self.esFuncion = False
 
@@ -127,6 +128,12 @@ class Traductor:
     
     def resetBreak(self):
         self.isbreak = ""
+    
+    def setContinue(self, goto):
+        self.iscontinue = str(goto)
+
+    def getContinue(self):
+        return self.iscontinue
 #--------------------PARA TRAER UNA ETIQUETA---------
     def HayCambio(self):
         if self.cambio == "L":

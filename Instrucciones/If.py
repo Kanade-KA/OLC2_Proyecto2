@@ -49,10 +49,11 @@ class If(NodoAST):
         traductor.addCodigo("//**************************IF**************************\n")
         condicional = self.condicion.traducir(traductor, entorno)
         if condicional != "error":#para evitar errores
-            goto = traductor.getGotos()
+            #ETIQUETA PARA SALIR DEL IF
+            salida = "L" + str(traductor.getGotos())
             traductor.IncrementarGotos(1)
-            cadena =  str(condicional[0])+":\n"
-            traductor.addCodigo(cadena)
+            #ETIQUETA DE ACEPTACION
+            traductor.addCodigo(str(condicional[0])+":\n")
             if self.instruccionesIf != None:
                 nuevoentorno = Entorno("IF", entorno)
                 for i in self.instruccionesIf:
@@ -61,10 +62,12 @@ class If(NodoAST):
                         traductor.addCodigo("goto L"+str(traductor.getGotos())+";\n")
                         traductor.setBreak(traductor.getGotos())
                         traductor.IncrementarGotos(1)
-            cadena = "goto L"+str(goto)+";\n"
-            cadena += str(condicional[1])+": \n"
-            traductor.addCodigo(cadena)
-            cadena = "L"+str(goto)+": \n"
+                    if x == "iscontinue":
+                        traductor.addCodigo("goto "+traductor.getContinue()+";\n")
+            traductor.addCodigo("goto "+salida+";\n")#PARA QUE YA NO HAGA EL ELSE O ELSEIF
+            #ETIQUETA DE RECHAZO
+            traductor.addCodigo(str(condicional[1])+": \n")
+            
             if self.instruccionesElse != None:
                 nuevoentorno2 = Entorno("ELSE", entorno)
                 for i in self.instruccionesElse:
@@ -73,9 +76,10 @@ class If(NodoAST):
                         traductor.addCodigo("goto L"+str(traductor.getGotos())+";\n")
                         traductor.setBreak(traductor.getGotos())
                         traductor.IncrementarGotos(1)
-                    
+                    if x == "iscontinue":
+                        traductor.addCodigo("goto "+traductor.getContinue()+";\n")
             if self.elseIf != None:
                 self.elseIf.traducir(traductor, entorno)
-            traductor.addCodigo(cadena)
-            traductor.IncrementarGotos(1)   
+            #ETIQUETA DE SALIDA
+            traductor.addCodigo(salida+": \n") 
         return 

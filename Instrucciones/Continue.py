@@ -9,4 +9,4 @@ class Continue(NodoAST):
         return self
     
     def traducir(self, traductor, entorno):
-        return "Continue"
+        return "iscontinue"
