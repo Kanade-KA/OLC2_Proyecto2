@@ -29,4 +29,11 @@ class Funcion(NodoAST):
         return self.parametros
 
     def traducir(self, traductor, entorno):
-        return "Funciones"
+        traductor.addCodigo(str(self.nombre) + "();\n")
+        return
+
+    def getInstrucciones(self):
+        return self.instrucciones
+
+    def getNombre(self):
+        return self.nombre

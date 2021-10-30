@@ -1,4 +1,7 @@
 from Abstract.NodoAST import NodoAST
+from Abstract.Objeto import TipoObjeto
+from Instrucciones.Funciones import Funcion
+from TablaSimbolo.Entorno import Entorno
 from TablaSimbolo.Simbolo import Simbolo
 class AsignacionFuncion(NodoAST):
     def __init__(self, identificador, expresion, tipo, fila, columna):
@@ -14,5 +17,33 @@ class AsignacionFuncion(NodoAST):
         entorno.addSimbolo(simbolo)
         return
     
-    def traducir(self, traductor, entorno):
-        return "Asignacion Funcion"
+    def traducir(self, traductor, entorno):#Debo cambiar entorno
+        funcion = self.expresion
+        tam = 0
+        if isinstance(funcion, Funcion):
+            tam = funcion.getParametros()
+            if tam != None:
+                tam = len(tam)
+        simbolo = Simbolo(entorno.getNombre(), self.identificador, funcion, TipoObjeto.ANY, "void", tam, self.fila, self.columna)
+        traductor.addSimbolo(simbolo)
+        entorno.addSimbolo(simbolo)
+
+        traductor.ActivarFuncion()
+        newentorno = Entorno(str(self.identificador), entorno)
+        lista = funcion.getInstrucciones()
+        cont = 1;
+        cadena = "func "+self.identificador+"(){\n"
+        if tam>0:#quiere decir que si hay funcioens
+            for parametro in funcion.getParametros():
+                simbolo = Simbolo(newentorno.getNombre(), parametro.getIdentificador(), None, TipoObjeto.ANY, "Parametro", "S + "+str(cont), self.fila, self.columna)
+                traductor.IncrementarStack()
+                traductor.addSimbolo(simbolo)
+                newentorno.addSimbolo(simbolo)
+                cont = cont +1
+        for ins in lista:
+            ins.traducir(traductor, newentorno)
+        cadena += traductor.getTmpFuncion()
+        cadena += "\n}\n\n"
+        traductor.addFuncion(cadena)
+        traductor.DesactivarFuncion()
+        return

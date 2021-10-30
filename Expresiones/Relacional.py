@@ -88,9 +88,13 @@ class Relacional(NodoAST):
         if isinstance(self.OperacionIzq, Identificador):
             tipo = self.OperacionIzq.getTipo(traductor, entorno)
             resultado = ""
+            parametro = False
+            busqueda = entorno.retornarSimbolo(self.OperacionIzq.getIdentificador())
+            if busqueda.getRol() == "Parametro":
+                parametro = True
             if tipo != "error":
                 if tipo != TipoObjeto.CADENA:
-                    resultado = traductor.ExtraerVariable(opi)
+                    resultado = traductor.ExtraerVariable(opi, parametro)
                     opi=[resultado, tipo]
                 else:
                     resultado = self.OperacionIzq.getValor(traductor, entorno)
@@ -101,9 +105,13 @@ class Relacional(NodoAST):
         if isinstance(self.OperacionDer, Identificador):
             tipo = self.OperacionDer.getTipo(traductor, entorno)
             resultadod = ""
+            parametro = False
+            busqueda = entorno.retornarSimbolo(self.OperacionDer.getIdentificador())
+            if busqueda.getRol() == "Parametro":
+                parametro = True
             if tipo != "error":
                 if tipo != TipoObjeto.CADENA:
-                    resultadod = traductor.ExtraerVariable(opd)
+                    resultadod = traductor.ExtraerVariable(opd, parametro)
                     opd=[resultadod, tipo]
                 else:
                     resultadod = self.OperacionDer.getValor(entorno)

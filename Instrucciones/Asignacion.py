@@ -49,8 +49,12 @@ class Asignacion(NodoAST):
             if isinstance(self.expresion, Identificador):
                 tipo = self.expresion.getTipo(traductor, entorno)
                 resultado = ""
+                parametro = False
+                busqueda = entorno.retornarSimbolo(self.expresion.getIdentificador())
+                if busqueda.getRol() == "Parametro":
+                    parametro = True
                 if tipo != "error":
-                    resultado = traductor.ExtraerVariable(value)
+                    resultado = traductor.ExtraerVariable(value, parametro)
                     self.tipo = "variable"
                 else:
                     return "error"

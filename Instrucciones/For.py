@@ -126,12 +126,20 @@ class For(NodoAST):
             fin = self.fin.traducir(traductor, entorno)
             #VER SI ES ID...
             if isinstance(self.inicio, Identificador):
+                parametro = False
+                busqueda = entorno.retornarSimbolo(self.inicio.getIdentificador())
+                if busqueda.getRol() == "Parametro":
+                    parametro = True
                 tipo = self.inicio.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(inicio)
+                resultado = traductor.ExtraerVariable(inicio, parametro)
                 inicio = [resultado, tipo]
             if isinstance(self.fin, Identificador):
+                parametro = False
+                busqueda = entorno.retornarSimbolo(self.fin.getIdentificador())
+                if busqueda.getRol() == "Parametro":
+                    parametro = True
                 tipo = self.fin.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(fin)
+                resultado = traductor.ExtraerVariable(fin, parametro)
                 fin = [resultado, tipo]
 
             if self.verificarTipo(inicio[1], fin[1]):
@@ -175,8 +183,12 @@ class For(NodoAST):
             inicio = self.inicio.traducir(traductor, entorno)
             #VER SI ES ID...
             if isinstance(self.inicio, Identificador):
+                parametro = False
+                busqueda = entorno.retornarSimbolo(self.inicio.getIdentificador())
+                if busqueda.getRol() == "Parametro":
+                    parametro = True
                 tipo = self.inicio.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(inicio)
+                resultado = traductor.ExtraerVariable(inicio, parametro)
                 inicio = [resultado, tipo]
                 
             tmpCadena = "t"+str(traductor.getContador())

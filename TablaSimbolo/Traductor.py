@@ -13,6 +13,7 @@ class Traductor:
         self.cadena = ""
         self.error = ""
         self.libmath = ""
+        self.functmp = ""
         self.libfmt = "import (\"fmt\");\n"
         self.encabezado = "//------------------------HEADER-----------------------------\npackage main;\n"+self.libmath+self.libfmt+"var stack [19121997]float64;\nvar heap [19121997]float64;\nvar S, H float64;\n"
         self.heap = 0
@@ -35,6 +36,8 @@ class Traductor:
         self.goto = 0#Este contador me va a servir para contar los Estados que se creen en el main.
         self.cambio = "L"
         self.logica = 0
+
+        self.esFuncion = False
 
 #---------------------BANDERAS PARA SABER SI HAY QUE AGREGAR ALGUNO DE ESTOS CÓDIGOS--------------------------------
     def hayPrint(self):
@@ -99,6 +102,21 @@ class Traductor:
 
     def hayTrunc(self):
         return self.trunc
+
+    def ActivarFuncion(self):
+        self.esFuncion = True
+
+    def DesactivarFuncion(self):
+        self.esFuncion = False
+    
+    def EsFuncion(self):
+        return self.esFuncion
+
+    def LimpiarFuncion(self):
+        self.functmp = ""
+
+    def getTmpFuncion(self):
+        return self.functmp
 #--------------------PARA TRAER UNA ETIQUETA---------
     def HayCambio(self):
         if self.cambio == "L":
@@ -183,9 +201,12 @@ class Traductor:
         self.IncrementarContador()
         return apuntastack
 #--------------------------------------JALAR VARIABLE-------------------------------------
-    def ExtraerVariable(self, stack):
+    def ExtraerVariable(self, stack, parametro):
         self.addCodigo("//*************EXTRAYENDO DEL STACK***************\n")
-        cadena = "t"+str(self.getContador()) +" = S + "+str(stack)+";\n"
+        if parametro:
+            cadena = "t"+str(self.getContador()) +" = "+str(stack)+";\n"
+        else:
+            cadena = "t"+str(self.getContador()) +" = S + "+str(stack)+";\n"
         self.IncrementarContador()
         valor = "t"+str(self.getContador())
         cadena += valor +" = stack[int(t"+str(self.getContador()-1)+")];\n"
@@ -221,7 +242,10 @@ class Traductor:
         return self.c3d
     
     def addCodigo(self, cadena):
-        self.c3d += cadena
+        if self.EsFuncion():
+            self.functmp += cadena
+        else:    
+            self.c3d += cadena
 
     def getEncabezado(self):
         return self.encabezado

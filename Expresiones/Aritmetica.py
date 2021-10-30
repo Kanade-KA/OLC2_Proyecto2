@@ -64,19 +64,27 @@ class Aritmetica(NodoAST):
        #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
        #Operador Izquierdo
         if isinstance(self.OperacionIzq, Identificador):
+            parametro = False
+            busqueda = entorno.retornarSimbolo(self.OperacionIzq.getIdentificador())
+            if busqueda.getRol() == "Parametro":
+                parametro = True
             tipo = self.OperacionIzq.getTipo(traductor, entorno)
             resultado = ""
             if tipo != "error":
-                resultado = traductor.ExtraerVariable(opi)
+                resultado = traductor.ExtraerVariable(opi, parametro)
                 opi=[resultado, tipo]
             else:
                 return "error"
         #Operador Derecho
         if isinstance(self.OperacionDer, Identificador):
+            parametro = False
+            busqueda = entorno.retornarSimbolo(self.OperacionDer.getIdentificador())
+            if busqueda.getRol() == "Parametro":
+                parametro = True
             tipo = self.OperacionDer.getTipo(traductor, entorno)
             resultadod = ""
             if tipo != "error":
-                resultadod = traductor.ExtraerVariable(opd)
+                resultadod = traductor.ExtraerVariable(opd, parametro)
                 opd=[resultadod, tipo]
             else:
                 return "error"

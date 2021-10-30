@@ -49,7 +49,6 @@ class Imprimir(NodoAST):
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//**************************IMPRIMIR**************************\n")
         for ins in self.expresion:
-            print(type(ins))
             if isinstance(ins, Constante):
                 constante = ins.traducir(traductor, entorno)
                 if constante != "error":
@@ -65,23 +64,27 @@ class Imprimir(NodoAST):
                     else:#Es por que es string
                         self.ImprimirString(traductor, constante[0])
             if isinstance(ins, Identificador):
+                parametro = False
+                busqueda = entorno.retornarSimbolo(ins.getIdentificador())
+                if busqueda.getRol() == "Parametro":
+                    parametro = True
                 tipo = ins.getTipo(traductor, entorno)
                 if tipo != "error":
                     if tipo == TipoObjeto.ENTERO:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
-                        valor = traductor.ExtraerVariable(puntero)
+                        valor = traductor.ExtraerVariable(puntero, parametro)
                         self.ImprimirInt(traductor, valor)
                     elif tipo == TipoObjeto.DECIMAL:
                         puntero = ins.traducir(traductor, entorno)#Nos da el puntero del Identificador
-                        valor = traductor.ExtraerVariable(puntero)
+                        valor = traductor.ExtraerVariable(puntero, parametro)
                         self.ImprimirDoble(traductor, valor)
                     elif tipo == TipoObjeto.BOOLEANO:
                         puntero = ins.traducir(traductor, entorno)
-                        valor = traductor.ExtraerVariable(puntero)
+                        valor = traductor.ExtraerVariable(puntero, parametro)
                         self.ImprimirBooleano(traductor, valor)
                     else:
                         puntero = ins.traducir(traductor, entorno)
-                        valor = traductor.ExtraerVariable(puntero)
+                        valor = traductor.ExtraerVariable(puntero, parametro)
                         self.ImprimirString(traductor, valor)
             if isinstance(ins, Aritmetica):
                 resultado = ins.traducir(traductor, entorno)

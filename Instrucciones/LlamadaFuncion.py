@@ -53,4 +53,41 @@ class LlamadaFuncion(NodoAST):
         return
 
     def traducir(self, traductor, entorno):
-        return "Llamada a Funcion"
+        traductor.addCodigo("//----------------LLAMANDO FUNCION---------------------\n")
+        simbolo = entorno.retornarSimbolo(self.nombre.lower())
+        cadena = ""
+        contador = "t"+str(traductor.getContador())
+        cont = 1
+        traductor.IncrementarContador()
+        if isinstance(simbolo, Simbolo):
+            func = simbolo.getValor()
+            if isinstance(func, Funcion):
+                tamfunc = len(func.getParametros())
+                if self.parametros != None:
+                    tampar = len(self.parametros)
+                else:
+                    tampar = 0
+                    
+                if tamfunc == tampar:
+                    if tamfunc!=0:
+                        cadena = "S = S +"+str(traductor.getStack())+";\n"
+                        for param in self.parametros:
+                            p = param.traducir(traductor, entorno)
+                            cadena +=  contador +" = S + " +str(cont)+";\n"
+                            cadena += "stack[int("+str(contador)+")] = "+str(p[0])+";\n"
+                            traductor.IncrementarContador()   
+                            cont = cont +1
+                    traductor.addCodigo(cadena)
+                    func.traducir(traductor, entorno)
+                    retorna = "t"+str(traductor.getContador())
+                    traductor.IncrementarContador()
+                    cadena = retorna +" = stack[int(S)];\n"
+                    cadena += "S = S - "+str(traductor.getStack())
+                    traductor.addCodigo(cadena)
+                    return retorna
+                else:
+                    traductor.addExcepcion(Error("Semantico", "Los parametros añadidos no coinciden con los de la funcion", self.fila, self.columna))
+                
+            else:
+                traductor.addExcepcion(Error("Semantico", "No es una función", self.fila, self.columna))
+        return

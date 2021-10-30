@@ -51,8 +51,12 @@ class Nativas(NodoAST):
         if isinstance(self.operando, Identificador):
             tipo = self.operando.getTipo(traductor, entorno)
             resultado = ""
+            parametro = False
+            busqueda = entorno.retornarSimbolo(self.Operando.getIdentificador())
+            if busqueda.getRol() == "Parametro":
+                parametro = True
             if tipo != "error":
-                resultado = traductor.ExtraerVariable(op)
+                resultado = traductor.ExtraerVariable(op, parametro)
                 op=[resultado, tipo]
             else:
                 return "error"
