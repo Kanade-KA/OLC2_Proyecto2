@@ -24,7 +24,7 @@ class AsignacionFuncion(NodoAST):
             tam = funcion.getParametros()
             if tam != None:
                 tam = len(tam)
-        simbolo = Simbolo(entorno.getNombre(), self.identificador, funcion, TipoObjeto.ANY, "void", tam, self.fila, self.columna)
+        simbolo = Simbolo(entorno.getNombre(), self.identificador, funcion, "", "Void", tam, self.fila, self.columna)
         traductor.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
 

@@ -12,4 +12,7 @@ class Return(NodoAST):
         return retorna
 
     def traducir(self, traductor, entorno):
-        return "Retornar"
+        retorno = self.expresion.traducir(traductor, entorno)
+        traductor.addCodigo("stack[int(S)] = "+retorno[0]+";\n")
+        traductor.setReturn(retorno)
+        return 

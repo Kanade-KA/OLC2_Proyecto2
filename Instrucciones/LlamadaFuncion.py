@@ -70,7 +70,7 @@ class LlamadaFuncion(NodoAST):
                     
                 if tamfunc == tampar:
                     if tamfunc!=0:
-                        cadena = "S = S +"+str(traductor.getStack())+";\n"
+                        cadena = "S = S + "+str(traductor.getStack())+";\n"
                         for param in self.parametros:
                             p = param.traducir(traductor, entorno)
                             cadena +=  contador +" = S + " +str(cont)+";\n"
@@ -79,12 +79,9 @@ class LlamadaFuncion(NodoAST):
                             cont = cont +1
                     traductor.addCodigo(cadena)
                     func.traducir(traductor, entorno)
-                    retorna = "t"+str(traductor.getContador())
-                    traductor.IncrementarContador()
-                    cadena = retorna +" = stack[int(S)];\n"
-                    cadena += "S = S - "+str(traductor.getStack())
+                    cadena += "S = S - "+str(traductor.getStack())+";\n"
                     traductor.addCodigo(cadena)
-                    return retorna
+                    return 
                 else:
                     traductor.addExcepcion(Error("Semantico", "Los parametros añadidos no coinciden con los de la funcion", self.fila, self.columna))
                 

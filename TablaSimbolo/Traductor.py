@@ -38,7 +38,8 @@ class Traductor:
         self.logica = 0
         self.isbreak = ""
         self.iscontinue = ""
-
+        self.hayreturn = False
+        self.simboloretornado = ""
         self.esFuncion = False
 
 #---------------------BANDERAS PARA SABER SI HAY QUE AGREGAR ALGUNO DE ESTOS CÓDIGOS--------------------------------
@@ -134,6 +135,15 @@ class Traductor:
 
     def getContinue(self):
         return self.iscontinue
+
+    def getReturn(self):
+        return self.simboloretornado
+    
+    def setReturn(self, simbolo):
+        self.simboloretornado = simbolo
+
+    def resetReturn(self):
+        self.simboloretornado = ""
 #--------------------PARA TRAER UNA ETIQUETA---------
     def HayCambio(self):
         if self.cambio == "L":

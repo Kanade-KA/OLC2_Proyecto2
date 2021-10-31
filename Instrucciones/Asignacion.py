@@ -2,6 +2,8 @@ from Abstract.Objeto import TipoObjeto
 from Expresiones.Aritmetica import Aritmetica
 from Abstract.NodoAST import NodoAST
 from Expresiones.Identificador import Identificador
+from Instrucciones.Funciones import Funcion
+from Instrucciones.Retonar import Retornar
 from TablaSimbolo.Simbolo import Simbolo
 from TablaSimbolo.Error import Error
 from Expresiones.Relacional import Relacional
@@ -99,6 +101,9 @@ class Asignacion(NodoAST):
             entorno.addSimbolo(simbolo)
             traductor.addSimbolo(simbolo)
             return
+        elif isinstance(self.expresion, Retornar):
+            self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
+            return
         else:
             if value != "error":
                 self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
@@ -115,7 +120,10 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
-                cadena = "t"+str(traductor.getContador()) +" = S + "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                if existe.getRol() == "Parametro":
+                    cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";\n"
+                else:
+                    cadena = "t"+str(traductor.getContador()) +" = S + "+str(existe.getPosicion())+";\n"
                 cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()
@@ -127,7 +135,10 @@ class Asignacion(NodoAST):
                 traductor.addSimbolo(simbolo)
                 entorno.addSimbolo(simbolo)
             else:
-                cadena = "t"+str(traductor.getContador()) +" = S +"+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                if existe.getRol() == "Parametro":
+                    cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";\n"
+                else:
+                    cadena = "t"+str(traductor.getContador()) +" = S + "+str(existe.getPosicion())+";\n"
                 cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(valor)+";//Meto el nuevo puntero del heap\n"
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()
@@ -139,7 +150,10 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
-                cadena = "t"+str(traductor.getContador()) +" = S + "+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                if existe.getRol() == "Parametro":
+                    cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";\n"
+                else:
+                    cadena = "t"+str(traductor.getContador()) +" = S + "+str(existe.getPosicion())+";\n"
                 cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()
@@ -151,7 +165,10 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
-                cadena = "t"+str(traductor.getContador()) +" = S +"+str(existe.getPosicion())+";//traigo el apuntador del id\n"
+                if existe.getRol() == "Parametro":
+                    cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";\n"
+                else:
+                    cadena = "t"+str(traductor.getContador()) +" = S + "+str(existe.getPosicion())+";\n"
                 cadena += "stack[int(t"+str(traductor.getContador())+")] = "+ str(valor)+";\n";
                 traductor.addCodigo(cadena)
                 traductor.IncrementarContador()
