@@ -12,7 +12,7 @@ class AsignacionFuncion(NodoAST):
         self.columna = columna
 
     def interpretar(self, arbol, entorno):
-        simbolo = Simbolo(entorno.getNombre(), self.identificador, self.expresion, "", self.tipo, 0, self.fila, self.columna)
+        simbolo = Simbolo(entorno.getNombre(), self.identificador.lower(), self.expresion, "", self.tipo, 0, self.fila, self.columna)
         arbol.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
         return
@@ -24,7 +24,7 @@ class AsignacionFuncion(NodoAST):
             tam = funcion.getParametros()
             if tam != None:
                 tam = len(tam)
-        simbolo = Simbolo(entorno.getNombre(), self.identificador, funcion, "", "Void", tam, self.fila, self.columna)
+        simbolo = Simbolo(entorno.getNombre(), self.identificador.lower(), funcion, "", "Void", tam, self.fila, self.columna)
         traductor.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
 
@@ -32,11 +32,10 @@ class AsignacionFuncion(NodoAST):
         newentorno = Entorno(str(self.identificador), entorno)
         lista = funcion.getInstrucciones()
         cont = 1;
-        cadena = "func "+self.identificador+"(){\n"
+        cadena = "func "+self.identificador.lower()+"(){\n"
         if tam>0:#quiere decir que si hay funcioens
             for parametro in funcion.getParametros():
-                simbolo = Simbolo(newentorno.getNombre(), parametro.getIdentificador(), None, TipoObjeto.ANY, "Parametro", "S + "+str(cont), self.fila, self.columna)
-                traductor.IncrementarStack()
+                simbolo = Simbolo(newentorno.getNombre(), parametro.getIdentificador(), None, TipoObjeto.ENTERO, "Parametro", "S + "+str(cont), self.fila, self.columna)
                 traductor.addSimbolo(simbolo)
                 newentorno.addSimbolo(simbolo)
                 cont = cont +1

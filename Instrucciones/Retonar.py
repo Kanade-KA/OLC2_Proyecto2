@@ -91,5 +91,6 @@ class Retornar(NodoAST):
                 cadena = valorRetornado +" = stack[int(S)];\n"
                 cadena += "S = S - "+str(traductor.getStack())+";\n"
                 traductor.addCodigo(cadena)
+                #return ["h", "p"]
                 return [valorRetornado, retorna[1]]
         return "Retornar"

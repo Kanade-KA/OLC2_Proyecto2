@@ -1,3 +1,4 @@
+from Expresiones.Arreglo import Arreglo
 from Instrucciones.LlamaMatriz import LlamaMatriz
 from Instrucciones.Return import Return
 from Abstract.NodoAST import NodoAST
@@ -19,4 +20,20 @@ class AsignacionArreglo(NodoAST):
         return
 
     def traducir(self, traductor, entorno):
+        arreglo = self.expresion
+        if isinstance(arreglo, Arreglo):
+            traductor.addCodigo("//******************ASIGNACION MATRIZ*********************\n")
+            datos = arreglo.getDatos()
+            tam = len(datos)
+            stacklibre = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            heap = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+
+            cadena = heap +" = H;\n"
+            cadena += "heap[int(H)] = "+str(tam)+";\n"
+            cadena += "H = H + 1;\n"
+            traductor.IncrementarHeap()
+            #Agregando datos al stack
+            
         return "Asignacion Arreglos"

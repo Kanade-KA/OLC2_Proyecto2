@@ -66,27 +66,35 @@ class Aritmetica(NodoAST):
         if isinstance(self.OperacionIzq, Identificador):
             parametro = False
             busqueda = entorno.retornarSimbolo(self.OperacionIzq.getIdentificador())
-            if busqueda.getRol() == "Parametro":
-                parametro = True
-            tipo = self.OperacionIzq.getTipo(traductor, entorno)
-            resultado = ""
-            if tipo != "error":
-                resultado = traductor.ExtraerVariable(opi, parametro)
-                opi=[resultado, tipo]
+            if busqueda != None:
+                if busqueda.getRol() == "Parametro":
+                    parametro = True
+                tipo = self.OperacionIzq.getTipo(traductor, entorno)
+                resultado = ""
+                if tipo != "error":
+                    resultado = traductor.ExtraerVariable(opi, parametro)
+                    opi=[resultado, tipo]
+                else:
+                    return "error"
             else:
+                #traductor.addExcepcion(Error("Semantico", "No existe la variable", self.fila, self.columna))
                 return "error"
         #Operador Derecho
         if isinstance(self.OperacionDer, Identificador):
             parametro = False
-            busqueda = entorno.retornarSimbolo(self.OperacionDer.getIdentificador())
-            if busqueda.getRol() == "Parametro":
-                parametro = True
-            tipo = self.OperacionDer.getTipo(traductor, entorno)
-            resultadod = ""
-            if tipo != "error":
-                resultadod = traductor.ExtraerVariable(opd, parametro)
-                opd=[resultadod, tipo]
+            busqueda = entorno.retornarSimbolo(self.OperacionDer.getIdentificador().lower())
+            if busqueda != None:
+                if busqueda.getRol() == "Parametro":
+                    parametro = True
+                tipo = self.OperacionDer.getTipo(traductor, entorno)
+                resultadod = ""
+                if tipo != "error":
+                    resultadod = traductor.ExtraerVariable(opd, parametro)
+                    opd=[resultadod, tipo]
+                else:
+                    return "error"
             else:
+                #traductor.addExcepcion(Error("Semantico", "No existe la variable", self.fila, self.columna))
                 return "error"
         #----------------------------------------------------------------------------------------------------
         if opi != None and opd != None:

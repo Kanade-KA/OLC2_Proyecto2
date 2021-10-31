@@ -52,7 +52,7 @@ class Asignacion(NodoAST):
                 tipo = self.expresion.getTipo(traductor, entorno)
                 resultado = ""
                 parametro = False
-                busqueda = entorno.retornarSimbolo(self.expresion.getIdentificador())
+                busqueda = entorno.retornarSimbolo(self.expresion.getIdentificador().lower())
                 if busqueda.getRol() == "Parametro":
                     parametro = True
                 if tipo != "error":
@@ -78,8 +78,13 @@ class Asignacion(NodoAST):
                 traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
         if self.tipo.lower() == "variable":
-            self.Asignar(tipo, resultado, self.identificador, entorno, traductor)
-            return
+            if parametro:
+                print("SI ENTRÓ A PARAMETRO")
+                print(busqueda.getTipo())
+                self.Asignar(busqueda.getTipo(), resultado, self.identificador, entorno, traductor)
+            else:    
+                self.Asignar(tipo, resultado, self.identificador, entorno, traductor)
+                return
         if isinstance(self.expresion, Aritmetica):
             if value != "error":
                 self.Asignar(value[1], value[0], self.identificador, entorno, traductor)
