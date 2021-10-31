@@ -164,7 +164,7 @@ class Imprimir(NodoAST):
         return
 
     def ImprimirDoble(self, traductor, valor):
-        cadena = "fmt.Printf(\"%f\", "+str(valor)+");\n"
+        cadena = "fmt.Printf(\"%.2f\", "+str(valor)+");\n"
         traductor.addCodigo(cadena)
         return
 

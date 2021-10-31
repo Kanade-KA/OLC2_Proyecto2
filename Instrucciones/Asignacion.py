@@ -120,6 +120,7 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
+                existe.setTipo(tipo)
                 if existe.getRol() == "Parametro":
                     cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";\n"
                 else:
@@ -135,6 +136,7 @@ class Asignacion(NodoAST):
                 traductor.addSimbolo(simbolo)
                 entorno.addSimbolo(simbolo)
             else:
+                existe.setTipo(tipo)
                 if existe.getRol() == "Parametro":
                     cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";\n"
                 else:
@@ -150,6 +152,7 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
+                existe.setTipo(tipo)
                 if existe.getRol() == "Parametro":
                     cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";\n"
                 else:
@@ -165,6 +168,7 @@ class Asignacion(NodoAST):
                 entorno.addSimbolo(simbolo)
                 traductor.addSimbolo(simbolo)
             else:
+                existe.setTipo(tipo)
                 if existe.getRol() == "Parametro":
                     cadena = "t"+str(traductor.getContador()) +" = "+str(existe.getPosicion())+";\n"
                 else:
