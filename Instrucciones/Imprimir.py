@@ -11,6 +11,7 @@ from Expresiones.Arreglo import Arreglo
 from Abstract.Objeto import TipoObjeto
 from Abstract.NodoAST import NodoAST
 from Expresiones.Aritmetica import Aritmetica
+from Instrucciones.Retonar import Retornar
 from TablaSimbolo.Traductor import Traductor
 
 class Imprimir(NodoAST):
@@ -115,6 +116,16 @@ class Imprimir(NodoAST):
             if isinstance(ins, Logica):
                 res = ins.traducir(traductor, entorno)
                 self.Condiciones(traductor, res[0], res[1])
+            if isinstance(ins, Retornar):
+                res = ins.traducir(traductor, entorno)
+                if res[1] == TipoObjeto.DECIMAL:
+                    self.ImprimirDoble(traductor, res[0])
+                elif res[1] == TipoObjeto.ENTERO:
+                    self.ImprimirInt(traductor, res[0])
+                elif res[1] == TipoObjeto.BOOLEANO:
+                    self.ImprimirBooleano(traductor, res[0])
+                else:
+                    self.ImprimirString(traductor, res[0])
         if self.essalto != 'F':
             traductor.addCodigo("fmt.Printf(\"%c\", 10);\n")
         return
