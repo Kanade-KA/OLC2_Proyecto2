@@ -35,7 +35,7 @@ class AsignacionFuncion(NodoAST):
         lista = funcion.getInstrucciones()
         cont = 1;
         cadena = "func "+self.identificador.lower()+"(){\n"
-        if tam>0:#quiere decir que si hay funcioens
+        if tam>0:#quiere decir que si hay parametros
             for parametro in funcion.getParametros():
                 simbolo = Simbolo(newentorno.getNombre(), parametro.getIdentificador(), None, TipoObjeto.ENTERO, "Parametro", "S + "+str(cont), self.fila, self.columna)
                 traductor.addSimbolo(simbolo)

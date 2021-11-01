@@ -69,18 +69,13 @@ class LlamadaFuncion(NodoAST):
                 if tamfunc != tampar:
                     traductor.addExcepcion(Error("Semantico", "Los parametros añadidos no coinciden con los de la funcion", self.fila, self.columna))
                 else:
-                    #VEO EL TAMAÑO DE LA FUNCION                    
-                    traductor.setTamanioFunc(simbolo.getPosicion())
                     traductor.cambioEntorno(self.parametros, entorno)
-                    #SE LO SUMO PARA QUE EMPIECE DESDE AHÍ (NO SE SI ESTO ESTÁ BIEN )
                     traductor.addCodigo("//CAMBIO DE ENTORNO DEL STACK\n")
                     traductor.addCodigo("S = S + "+str(traductor.getStack() + traductor.getTamanioFunc())+";\n")
                     func.traducir(traductor, entorno)
                     retorna = traductor.getReturn()
                     traductor.resetReturn()
                     traductor.addCodigo("S = S - "+str(traductor.getStack() + traductor.getTamanioFunc())+";\n")
-                    #RESETEO EL TAMAÑO POR SI LO USO EN OTRA FUNCION
-                    traductor.resetTamanioFunc()
             else:
                 traductor.addExcepcion(Error("Semantico", "No es una función", self.fila, self.columna))
         return

@@ -198,6 +198,7 @@ class Imprimir(NodoAST):
         traductor.IncrementarGotos(1)
 
     def ImprimirString(self, traductor, valor):
+        traductor.addCodigo("//----------SETEANDO ENTORNO PARA IMPRIMIR STRING----------\n")
         stack = "t"+str(traductor.getContador())
         traductor.IncrementarContador()
         contador = "t"+str(traductor.getContador())
