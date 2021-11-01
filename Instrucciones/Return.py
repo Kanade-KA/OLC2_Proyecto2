@@ -18,7 +18,6 @@ class Return(NodoAST):
         idinicio = traductor.EsIdentificador(self.expresion, retorno, entorno, self.fila, self.columna)
         if idinicio[0]:
             retorno = [idinicio[1], idinicio[2]]
-  
         traductor.addCodigo("stack[int(S)] = "+str(retorno[0])+";\n")
         traductor.setReturn(retorno)
         return 

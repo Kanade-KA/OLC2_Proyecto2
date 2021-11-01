@@ -43,6 +43,7 @@ class Traductor:
         self.hayreturn = False
         self.simboloretornado = ""
         self.esFuncion = False
+        self.tamaniofuncion = 0
 
 #---------------------------------BANDERAS--------------------------------------------------
     def hayPrint(self):
@@ -146,6 +147,15 @@ class Traductor:
 
     def resetReturn(self):
         self.simboloretornado = ""
+
+    def getTamanioFunc(self):
+        return self.tamaniofuncion
+
+    def setTamanioFunc(self, tam):
+        self.tamaniofuncion = tam
+
+    def resetTamanioFunc(self):
+        self.tamaniofuncion = 0
 #---------------------------------PARA TRAER UNA ETIQUETA-----------------------------------
     def HayCambio(self):
         if self.cambio == "L":
@@ -180,7 +190,7 @@ class Traductor:
             contador = "t"+str(self.getContador())
             self.IncrementarContador()
 
-            cadena = stack + " = S + "+str(self.getStack())+";\n"
+            cadena = stack + " = S + "+str(self.getStack() + self.tamaniofuncion)+";\n"
             cont = 1
             for param in parametros:
                 p = param.traducir(self, entorno)
@@ -191,7 +201,6 @@ class Traductor:
                 cadena += "stack[int("+str(contador)+")] = "+str(p[0])+";\n"  
                 cont = cont + 1
             self.addCodigo(cadena)
-
 #---------------------------------REVISAR IDENTIFICADOR-------------------------------------
     def EsIdentificador(self, operador, resultado, entorno, fila, columna):
         if isinstance(operador, Identificador):
@@ -206,7 +215,6 @@ class Traductor:
             else:
                 self.addExcepcion(Error("Semantico", "No existe la variable", fila, columna))
         return [False, "", ""]
-
 #---------------------------------PARA METER UN BOOLEANO AL STACK---------------------------
     def putBooleanStack(self, valor):
         self.addCodigo("//*************AGREGANDO BOOLEANO***************\n")

@@ -1,3 +1,4 @@
+from Abstract.Objeto import TipoObjeto
 from Expresiones.Arreglo import Arreglo
 from Expresiones.Identificador import Identificador
 from TablaSimbolo.Simbolo import Simbolo
@@ -78,7 +79,10 @@ class LlamadaFuncion(NodoAST):
                     cadena = valorRetornado +" = stack[int(S)];\n"
                     cadena += "S = S - "+str(traductor.getStack())+";\n"
                     traductor.addCodigo(cadena)
-                    return [valorRetornado, retorna[1]]
+                    if retorna != "":
+                        return [valorRetornado, retorna[1]]
+                    else:
+                        return[valorRetornado, TipoObjeto.ENTERO]
             else:
                 traductor.addExcepcion(Error("Semantico", "No es una función", self.fila, self.columna))
         return

@@ -1,3 +1,4 @@
+from Abstract.Objeto import TipoObjeto
 from Expresiones.Struct import Struct
 from TablaSimbolo.Simbolo import Simbolo
 from Instrucciones.Funciones import Funcion
@@ -70,17 +71,25 @@ class Retornar(NodoAST):
                 if tamfunc != tampar:
                     traductor.addExcepcion(Error("Semantico", "Los parametros añadidos no coinciden con los de la funcion", self.fila, self.columna))
                 else:
+                    #VEO EL TAMAÑO DE LA FUNCION                    
+                    traductor.setTamanioFunc(simbolo.getPosicion())
                     traductor.cambioEntorno(self.parametros, entorno)
-                    traductor.addCodigo("S = S + "+str(traductor.getStack())+";\n")
+                    #SE LO SUMO PARA QUE EMPIECE DESDE AHÍ (NO SE SI ESTO ESTÁ BIEN )
+                    traductor.addCodigo("S = S + "+str(traductor.getStack() + traductor.getTamanioFunc())+";\n")
                     func.traducir(traductor, entorno)
                     retorna = traductor.getReturn()
                     traductor.resetReturn()
                     valorRetornado = "t"+str(traductor.getContador())
                     traductor.IncrementarContador()
                     cadena = valorRetornado +" = stack[int(S)];\n"
-                    cadena += "S = S - "+str(traductor.getStack())+";\n"
+                    cadena += "S = S - "+str(traductor.getStack() + traductor.getTamanioFunc())+";\n"
                     traductor.addCodigo(cadena)
-                    return [valorRetornado, retorna[1]]
+                    #RESETEO EL TAMAÑO POR SI LO USO EN OTRA FUNCION
+                    traductor.resetTamanioFunc()
+                    if retorna != "":
+                        return [valorRetornado, retorna[1]]
+                    else:
+                        return[valorRetornado, TipoObjeto.ENTERO]
             else:
                 traductor.addExcepcion(Error("Semantico", "No es una función", self.fila, self.columna))
         return
