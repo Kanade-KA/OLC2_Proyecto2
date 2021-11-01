@@ -75,6 +75,7 @@ class Retornar(NodoAST):
                     traductor.setTamanioFunc(simbolo.getPosicion())
                     traductor.cambioEntorno(self.parametros, entorno)
                     #SE LO SUMO PARA QUE EMPIECE DESDE AHÍ (NO SE SI ESTO ESTÁ BIEN )
+                    traductor.addCodigo("//CAMBIO DE ENTORNO DEL STACK\n")
                     traductor.addCodigo("S = S + "+str(traductor.getStack() + traductor.getTamanioFunc())+";\n")
                     func.traducir(traductor, entorno)
                     retorna = traductor.getReturn()
