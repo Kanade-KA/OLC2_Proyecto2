@@ -1,11 +1,9 @@
 from Expresiones.Struct import Struct
-from Expresiones.Identificador import Identificador
 from TablaSimbolo.Simbolo import Simbolo
 from Instrucciones.Funciones import Funcion
 from Abstract.NodoAST import NodoAST
 from TablaSimbolo.Error import Error
 from TablaSimbolo.Entorno import Entorno
-from Instrucciones.Break import Break
 
 
 class Retornar(NodoAST):
@@ -58,10 +56,8 @@ class Retornar(NodoAST):
             return
 
     def traducir(self, traductor, entorno):
-        cont = 1
+        traductor.addCodigo("//----------------LLAMANDA FUNCION---------------------\n")
         cadena = ""
-        contador = "t"+str(traductor.getContador())
-        traductor.IncrementarContador()
         simbolo = entorno.retornarSimbolo(self.nombre.lower())
         if isinstance(simbolo, Simbolo):
             func = simbolo.getValor()
@@ -71,26 +67,20 @@ class Retornar(NodoAST):
                     tampar = len(self.parametros)
                 else:
                     tampar = 0
-            if tamfunc != tampar:
-                traductor.addExcepcion(Error("Semantico", "Los parametros añadidos no coinciden con los de la funcion", self.fila, self.columna))
+                if tamfunc != tampar:
+                    traductor.addExcepcion(Error("Semantico", "Los parametros añadidos no coinciden con los de la funcion", self.fila, self.columna))
+                else:
+                    traductor.cambioEntorno(self.parametros, entorno)
+                    traductor.addCodigo("S = S + "+str(traductor.getStack())+";\n")
+                    func.traducir(traductor, entorno)
+                    retorna = traductor.getReturn()
+                    traductor.resetReturn()
+                    valorRetornado = "t"+str(traductor.getContador())
+                    traductor.IncrementarContador()
+                    cadena = valorRetornado +" = stack[int(S)];\n"
+                    cadena += "S = S - "+str(traductor.getStack())+";\n"
+                    traductor.addCodigo(cadena)
+                    return [valorRetornado, retorna[1]]
             else:
-                if tamfunc!=0:
-                    cadena = "S = S + "+str(traductor.getStack())+";\n"
-                    for param in self.parametros:
-                        p = param.traducir(traductor, entorno)
-                        cadena +=  contador +" = S + " +str(cont)+";\n"
-                        cadena += "stack[int("+str(contador)+")] = "+str(p[0])+";\n"
-                        traductor.IncrementarContador()   
-                        cont = cont +1
-                traductor.addCodigo(cadena)
-                func.traducir(traductor, entorno)
-                retorna = traductor.getReturn()
-                traductor.resetReturn()
-                valorRetornado = "t"+str(traductor.getContador())
-                traductor.IncrementarContador()
-                cadena = valorRetornado +" = stack[int(S)];\n"
-                cadena += "S = S - "+str(traductor.getStack())+";\n"
-                traductor.addCodigo(cadena)
-                #return ["h", "p"]
-                return [valorRetornado, retorna[1]]
-        return "Retornar"
+                traductor.addExcepcion(Error("Semantico", "No es una función", self.fila, self.columna))
+        return

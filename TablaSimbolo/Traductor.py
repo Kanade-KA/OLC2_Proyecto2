@@ -2,6 +2,9 @@ from Abstract.Objeto import TipoObjeto
 from Expresiones.Arreglo import Arreglo
 from Expresiones.Arreglo2D import Arreglo2D
 from Expresiones.Arreglo3D import Arreglo3D
+from Expresiones.Identificador import Identificador
+from Instrucciones.Return import Return
+from TablaSimbolo.Error import Error
 
 class Traductor:
     def __init__(self):
@@ -21,7 +24,6 @@ class Traductor:
         self.contador = 0#Este me sirve para el contador de temporales
         self.c3d = ""
         self.main = "func main (){\n//-------------Inicializando Punteros------------\nH = 0; \nS = 0;\n"
-        #Banderas para no repetir metodos
         self.print = False
         self.potencia = False
         self.haygotos = False
@@ -42,7 +44,7 @@ class Traductor:
         self.simboloretornado = ""
         self.esFuncion = False
 
-#---------------------BANDERAS PARA SABER SI HAY QUE AGREGAR ALGUNO DE ESTOS CÓDIGOS--------------------------------
+#---------------------------------BANDERAS--------------------------------------------------
     def hayPrint(self):
         return self.print
 
@@ -144,7 +146,7 @@ class Traductor:
 
     def resetReturn(self):
         self.simboloretornado = ""
-#--------------------PARA TRAER UNA ETIQUETA---------
+#---------------------------------PARA TRAER UNA ETIQUETA-----------------------------------
     def HayCambio(self):
         if self.cambio == "L":
             return False
@@ -168,7 +170,44 @@ class Traductor:
     def IncrementarGotos(self, numero):
         self.haygotos = True
         self.goto = self.goto + numero
-#---------------------------------PARA METER UN BOOLEANO AL STACK-----------------------------------
+#---------------------------------CAMBIO DE ENTORNO-----------------------------------------
+    def cambioEntorno(self, parametros, entorno):
+        self.addCodigo("//******************CAMBIO DE ENTORNO********************\n")
+        if parametros != None and parametros != 0:
+            stack = "t"+str(self.getContador())
+            self.IncrementarContador()
+
+            contador = "t"+str(self.getContador())
+            self.IncrementarContador()
+
+            cadena = stack + " = S + "+str(self.getStack())+";\n"
+            cont = 1
+            for param in parametros:
+                p = param.traducir(self, entorno)
+                iden = self.EsIdentificador(param, p, entorno, 0, 0)
+                if iden[0]:
+                    p = [iden[1], iden[2]]
+                cadena +=  contador +" = "+stack+" + " +str(cont)+";\n"#Este tenía S + 
+                cadena += "stack[int("+str(contador)+")] = "+str(p[0])+";\n"  
+                cont = cont + 1
+            self.addCodigo(cadena)
+
+#---------------------------------REVISAR IDENTIFICADOR-------------------------------------
+    def EsIdentificador(self, operador, resultado, entorno, fila, columna):
+        if isinstance(operador, Identificador):
+            parametro = False
+            busqueda = entorno.retornarSimbolo(operador.getIdentificador().lower())
+            if busqueda != None:
+                if busqueda.getRol() == "Parametro":
+                    parametro = True
+                tipo = busqueda.getTipo()
+                result = self.ExtraerVariable(resultado, parametro)
+                return [True, result, tipo]
+            else:
+                self.addExcepcion(Error("Semantico", "No existe la variable", fila, columna))
+        return [False, "", ""]
+
+#---------------------------------PARA METER UN BOOLEANO AL STACK---------------------------
     def putBooleanStack(self, valor):
         self.addCodigo("//*************AGREGANDO BOOLEANO***************\n")
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
@@ -180,7 +219,7 @@ class Traductor:
         self.IncrementarStack()
         self.addCodigo(cadena)
         return temporal
-#------------------------------------PARA METER UN STRING AL HEAP-------------------------------------------
+#---------------------------------PARA METER UN STRING AL HEAP------------------------------
     def putStringHeap(self, valor):
         self.addCodigo("//*************AGREGANDO STRING EN HEAP***************\n")
         temporal = "t"+str(self.getContador())
@@ -195,7 +234,7 @@ class Traductor:
         self.IncrementarContador()
         self.addCodigo(cadena)
         return temporal
-#---------------------------------AGREGAR UN NUMERO ENTERO AL STACK-------------------------------------
+#---------------------------------AGREGAR UN NUMERO ENTERO AL STACK-------------------------
     def putIntStack(self, numero):
         self.addCodigo("//*************AGREGANDO ENTERO***************\n")
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ ";\n"
@@ -205,7 +244,7 @@ class Traductor:
         self.IncrementarStack()
         self.IncrementarContador()
         return temporal
-#------------------------------AGREGAR UN NUMERO DOBLE AL STACK---------------------------------------
+#---------------------------------AGREGAR UN NUMERO DOBLE AL STACK--------------------------
     def putDoubleStack(self, numero):
         self.addCodigo("//*************AGREGANDO DOBLE***************\n")
         cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ ";\n"
@@ -215,7 +254,7 @@ class Traductor:
         self.IncrementarStack()
         self.IncrementarContador()
         return temporal
-#-----------------------------AGREGAR EL PUNTERO DEL HEAP AL STACK----------------------------------
+#---------------------------------AGREGAR EL PUNTERO DEL HEAP AL STACK----------------------
     def putStringHStack(self, heap):
         self.addCodigo("//*************AGREGANDO HEAP A STACK***************\n")
         cadena = "t"+ str(self.getContador())+ " = S + "+str(self.getStack())+";\n"
@@ -227,7 +266,7 @@ class Traductor:
         self.IncrementarStack()#Incrementamos el stack para que agarre el nuevo
         self.IncrementarContador()
         return apuntastack
-#--------------------------------------JALAR VARIABLE-------------------------------------
+#---------------------------------JALAR VARIABLE DEL STACK----------------------------------
     def ExtraerVariable(self, stack, parametro):
         self.addCodigo("//*************EXTRAYENDO DEL STACK***************\n")
         if parametro:
@@ -240,10 +279,10 @@ class Traductor:
         self.addCodigo(cadena)
         self.IncrementarContador()
         return valor
-#--------------------------------------------CONVERTIR UNA LETRA A ASCII----------------------------------------
+#---------------------------------CONVERTIR UNA LETRA A ASCII-------------------------------
     def getAscii(self, cadena):
         return str(ord(cadena))
-#-----------------------------------------AREA DE TEMPORALES PARA C3D------------------------------------
+#---------------------------------AREA DE TEMPORALES PARA C3D-------------------------------
     def temporales(self):
         if self.contador==0:
             return ""
@@ -254,14 +293,13 @@ class Traductor:
             else:
                 temp += "t"+str(i)+", "
         return temp
-#------------------------------------------PARA AGREGAR CODIGO FUERA DEL MAIN------------------------------
+#---------------------------------PARA AGREGAR CODIGO FUERA DEL MAIN------------------------
     def addFuncion(self, funcion):
         self.funciones +=  funcion
 
     def getFuncion(self):
-        return self.funciones
-        
-#-------------------------------------LOS ENCABEZADOS DEL C3D----------------------------------------------
+        return self.funciones     
+#---------------------------------ENCABEZADOS DEL C3D---------------------------------------
     def getMain(self):
         return self.main
     
@@ -276,7 +314,7 @@ class Traductor:
 
     def getEncabezado(self):
         return self.encabezado
-#----------------------------------CONTADORES, HEAP Y STACK-------------------------------
+#---------------------------------CONTADORES, HEAP Y STACK----------------------------------
     def IncrementarHeap(self):
         self.heap = self.heap + 1
     
@@ -295,7 +333,7 @@ class Traductor:
     
     def getContador(self):
         return self.contador
-#-------------------------------PARA LA TABLA DE SIMBOLOS---------------------------------
+#---------------------------------PARA LA TABLA DE SIMBOLOS---------------------------------
     def getSimbolos(self):
         return self.simbolos
 
@@ -309,26 +347,26 @@ class Traductor:
             if s.getID() == simbolo and s.getFila() == fila:
                     return True
         return False
-#-----------------------------------------------EXCEPCIONES-----------------------------------
+#---------------------------------EXCEPCIONES-----------------------------------------------
     def getExcepciones(self):
         return self.excepciones
 
     def addExcepcion(self, excepciones):
         self.excepciones.append(excepciones)
         return "Error"
-#-----------------------------------CONSOLA--------------------------------------------
+#---------------------------------CONSOLA---------------------------------------------------
     def getConsola(self):
         return self.consola
 
     def AgregaraConsola(self,cadena):
         self.consola += str(cadena)
-#--------------------------------GRAFICA AST---------------------------------------
+#---------------------------------GRAFICA AST-----------------------------------------------
     def AgregarGrafica(self, grafo):
         self.grafica += str(grafo) + "\n"
 
     def getGrafica(self):
         self.grafica
-#--------------------------------TIPO DE SIMBOLO-----------------------------------
+#---------------------------------TIPO DE SIMBOLO-------------------------------------------
     def getTipo(self, tipo):
         if isinstance(tipo, bool):
             return TipoObjeto.BOOLEANO
@@ -345,7 +383,7 @@ class Traductor:
         if isinstance(tipo, Arreglo3D):
             return TipoObjeto.ARREGLO
         return TipoObjeto.ANY
-#-----------------------------------PARA GENERAR EL STRING DEL TIPO----------------------------
+#---------------------------------PARA GENERAR EL STRING DEL TIPO---------------------------
     def tipoToString(self, tipo):
         if tipo == TipoObjeto.ENTERO:
             return "int"
@@ -358,7 +396,7 @@ class Traductor:
         if tipo == TipoObjeto.ARREGLO:
             return "arreglo"
         return "nothing"
-#---------------------------------PARA GENERAR LA TABLA DE SIMBOLOS---------------------------
+#---------------------------------PARA GENERAR LA TABLA DE SIMBOLOS-------------------------
     def generateTable(self):
         self.cadena +="<table class=\"table\">"
         self.cadena +="<tr>"
@@ -399,8 +437,7 @@ class Traductor:
             self.cadena += str(sim.getColumna())
             self.cadena += "</td>"
             self.cadena += "</tr>"
-
-#--------------------------------PARA GENERAR LA TABLA DE ERRORES----------------------
+#---------------------------------PARA GENERAR LA TABLA DE ERRORES--------------------------
     def generateErrors(self):
         self.error +="<table class=\"table\">"
         self.error +="<tr>"

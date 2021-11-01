@@ -3,7 +3,7 @@ from TablaSimbolo.Error import Error
 from Abstract.NodoAST import NodoAST
 from TablaSimbolo.Tipo import OperadorAritmetico
 from Expresiones.Identificador import Identificador
-
+from Instrucciones.Retonar import Retornar
 
 class Aritmetica(NodoAST):
     def __init__(self, operador, OperacionIzq, OperacionDer, fila, columna):
@@ -63,39 +63,13 @@ class Aritmetica(NodoAST):
         opd = self.OperacionDer.traducir(traductor, entorno)
        #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
        #Operador Izquierdo
-        if isinstance(self.OperacionIzq, Identificador):
-            parametro = False
-            busqueda = entorno.retornarSimbolo(self.OperacionIzq.getIdentificador())
-            if busqueda != None:
-                if busqueda.getRol() == "Parametro":
-                    parametro = True
-                tipo = self.OperacionIzq.getTipo(traductor, entorno)
-                resultado = ""
-                if tipo != "error":
-                    resultado = traductor.ExtraerVariable(opi, parametro)
-                    opi=[resultado, tipo]
-                else:
-                    return "error"
-            else:
-                #traductor.addExcepcion(Error("Semantico", "No existe la variable", self.fila, self.columna))
-                return "error"
+        idizq = traductor.EsIdentificador( self.OperacionIzq, opi, entorno, self.fila, self.columna)
+        if idizq[0]:
+            opi = [idizq[1], idizq[2]]
         #Operador Derecho
-        if isinstance(self.OperacionDer, Identificador):
-            parametro = False
-            busqueda = entorno.retornarSimbolo(self.OperacionDer.getIdentificador().lower())
-            if busqueda != None:
-                if busqueda.getRol() == "Parametro":
-                    parametro = True
-                tipo = self.OperacionDer.getTipo(traductor, entorno)
-                resultadod = ""
-                if tipo != "error":
-                    resultadod = traductor.ExtraerVariable(opd, parametro)
-                    opd=[resultadod, tipo]
-                else:
-                    return "error"
-            else:
-                #traductor.addExcepcion(Error("Semantico", "No existe la variable", self.fila, self.columna))
-                return "error"
+        idder = traductor.EsIdentificador( self.OperacionDer, opd, entorno, self.fila, self.columna)
+        if idder[0]:
+            opd = [idder[1], idder[2]]
         #----------------------------------------------------------------------------------------------------
         if opi != None and opd != None:
             if (self.operador==OperadorAritmetico.MAS):

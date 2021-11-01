@@ -48,18 +48,11 @@ class Nativas(NodoAST):
 
     def traducir(self, traductor, entorno):
         op = self.operando.traducir(traductor, entorno)
-        if isinstance(self.operando, Identificador):
-            tipo = self.operando.getTipo(traductor, entorno)
-            resultado = ""
-            parametro = False
-            busqueda = entorno.retornarSimbolo(self.Operando.getIdentificador())
-            if busqueda.getRol() == "Parametro":
-                parametro = True
-            if tipo != "error":
-                resultado = traductor.ExtraerVariable(op, parametro)
-                op=[resultado, tipo]
-            else:
-                return "error"
+        #VIENDO SI NO ES UN IDENTIFICADOR
+        idder = traductor.EsIdentificador(self.operando, op, entorno, self.fila, self.columna)
+        if idder[0]:
+            op = [idder[1], idder[2]]
+
         if self.operador == OperadorNativo.LOWERCASE:
             if op[1] != TipoObjeto.CADENA:
                 traductor.addExcepcion(Error("Semantico", "Lowercase acepta solo Cadenas", self.fila, self.columna))

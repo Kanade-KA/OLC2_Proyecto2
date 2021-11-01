@@ -1,7 +1,4 @@
 from TablaSimbolo.Error import Error
-from Abstract.NodoAST import NodoAST
-from Expresiones.Constante import Constante
-from Expresiones.Aritmetica import Aritmetica
 
 
 class Struct():

@@ -14,22 +14,11 @@ class Return(NodoAST):
 
     def traducir(self, traductor, entorno):
         retorno = self.expresion.traducir(traductor, entorno)
-        if isinstance(self.expresion, Identificador):
-            parametro = False
-            busqueda = entorno.retornarSimbolo(self.expresion.getIdentificador())
-            if busqueda != None:
-                if busqueda.getRol() == "Parametro":
-                    parametro = True
-                tipo = self.expresion.getTipo(traductor, entorno)
-                resultado = ""
-                if tipo != "error":
-                    resultado = traductor.ExtraerVariable(retorno, parametro)
-                    retorno=[resultado, tipo]
-                else:
-                    return "error"
-            else:
-                #traductor.addExcepcion(Error("Semantico", "No existe la variable", self.fila, self.columna))
-                return "error"
+        #VER SI ES ID...
+        idinicio = traductor.EsIdentificador(self.expresion, retorno, entorno, self.fila, self.columna)
+        if idinicio[0]:
+            retorno = [idinicio[1], idinicio[2]]
+  
         traductor.addCodigo("stack[int(S)] = "+str(retorno[0])+";\n")
         traductor.setReturn(retorno)
         return 

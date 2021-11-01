@@ -125,22 +125,13 @@ class For(NodoAST):
             inicio = self.inicio.traducir(traductor, entorno)
             fin = self.fin.traducir(traductor, entorno)
             #VER SI ES ID...
-            if isinstance(self.inicio, Identificador):
-                parametro = False
-                busqueda = entorno.retornarSimbolo(self.inicio.getIdentificador())
-                if busqueda.getRol() == "Parametro":
-                    parametro = True
-                tipo = self.inicio.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(inicio, parametro)
-                inicio = [resultado, tipo]
-            if isinstance(self.fin, Identificador):
-                parametro = False
-                busqueda = entorno.retornarSimbolo(self.fin.getIdentificador())
-                if busqueda.getRol() == "Parametro":
-                    parametro = True
-                tipo = self.fin.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(fin, parametro)
-                fin = [resultado, tipo]
+            idinicio = traductor.EsIdentificador(self.inicio, inicio, entorno, self.fila, self.columna)
+            if idinicio[0]:
+                inicio = [idinicio[1], idinicio[2]]
+            
+            idfin = traductor.EsIdentificador(self.fin, fin, entorno, self.fila, self.columna)
+            if idfin[0]:
+                fin = [idfin[1], idfin[2]]
 
             if self.verificarTipo(inicio[1], fin[1]):
                 #Agregando el indice
@@ -182,14 +173,9 @@ class For(NodoAST):
 
             inicio = self.inicio.traducir(traductor, entorno)
             #VER SI ES ID...
-            if isinstance(self.inicio, Identificador):
-                parametro = False
-                busqueda = entorno.retornarSimbolo(self.inicio.getIdentificador())
-                if busqueda.getRol() == "Parametro":
-                    parametro = True
-                tipo = self.inicio.getTipo(traductor, entorno)
-                resultado = traductor.ExtraerVariable(inicio, parametro)
-                inicio = [resultado, tipo]
+            idinicio = traductor.EsIdentificador(self.inicio, inicio, entorno, self.fila, self.columna)
+            if idinicio[0]:
+                inicio = [idinicio[1], idinicio[2]]
                 
             tmpCadena = "t"+str(traductor.getContador())
             traductor.IncrementarContador()

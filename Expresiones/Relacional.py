@@ -56,6 +56,11 @@ class Relacional(NodoAST):
         valortmp = ""
         valortmp2 = ""
         opi = self.OperacionIzq.traducir(traductor, entorno)
+        #VIENDO SI NO ES UN IDENTIFICADOR
+        idizq = traductor.EsIdentificador(self.OperacionIzq, opi, entorno, self.fila, self.columna)
+        if idizq[0]:
+            opi = [idizq[1], idizq[2]]
+        #VIENDO SI NO ES OTRA RELACIONAL
         if isinstance(self.OperacionIzq, Relacional):
             cadena = opi[0]+":\n"
             valortmp = "t"+str(traductor.getContador())
@@ -70,6 +75,11 @@ class Relacional(NodoAST):
             traductor.addCodigo(cadena)
 
         opd = self.OperacionDer.traducir(traductor, entorno)
+        #VIENDO SI NO ES UN IDENTIFICADOR
+        idder = traductor.EsIdentificador(self.OperacionDer, opd, entorno, self.fila, self.columna)
+        if idder[0]:
+            opd = [idder[1], idder[2]]
+        #VIENDO SI ES OTRA RELACIONAL
         if isinstance(self.OperacionDer, Relacional):
             cadena = opd[0]+":\n"
             valortmp2 = "t"+str(traductor.getContador())
@@ -83,42 +93,7 @@ class Relacional(NodoAST):
             traductor.IncrementarContador()
             traductor.addCodigo(cadena)
             sonRelacionales = True
-        #------------------------------TENGO QUE VER SI MIS OPERAOORES SON ID---------------------------------
-        #Operador Izquierdo
-        if isinstance(self.OperacionIzq, Identificador):
-            tipo = self.OperacionIzq.getTipo(traductor, entorno)
-            resultado = ""
-            parametro = False
-            busqueda = entorno.retornarSimbolo(self.OperacionIzq.getIdentificador())
-            if busqueda.getRol() == "Parametro":
-                parametro = True
-            if tipo != "error":
-                if tipo != TipoObjeto.CADENA:
-                    resultado = traductor.ExtraerVariable(opi, parametro)
-                    opi=[resultado, tipo]
-                else:
-                    resultado = self.OperacionIzq.getValor(traductor, entorno)
-                opi=[resultado, tipo]
-            else:
-                return "error"
-        #Operador Derecho
-        if isinstance(self.OperacionDer, Identificador):
-            tipo = self.OperacionDer.getTipo(traductor, entorno)
-            resultadod = ""
-            parametro = False
-            busqueda = entorno.retornarSimbolo(self.OperacionDer.getIdentificador())
-            if busqueda.getRol() == "Parametro":
-                parametro = True
-            if tipo != "error":
-                if tipo != TipoObjeto.CADENA:
-                    resultadod = traductor.ExtraerVariable(opd, parametro)
-                    opd=[resultadod, tipo]
-                else:
-                    resultadod = self.OperacionDer.getValor(entorno)
-                opd = [resultadod, tipo]
-            else:
-                return "error"
-        #print(self.operador)
+
         if self.operador == OperadorRelacional.MAYORQUE:
 
             if self.VerificarTipo(opi[1], opd[1]):

@@ -48,18 +48,11 @@ class Asignacion(NodoAST):
         value = None
         if not self.expresion == None:
             value = self.expresion.traducir(traductor, entorno)
-            if isinstance(self.expresion, Identificador):
-                tipo = self.expresion.getTipo(traductor, entorno)
-                resultado = ""
-                parametro = False
-                busqueda = entorno.retornarSimbolo(self.expresion.getIdentificador().lower())
-                if busqueda.getRol() == "Parametro":
-                    parametro = True
-                if tipo != "error":
-                    resultado = traductor.ExtraerVariable(value, parametro)
-                    self.tipo = "variable"
-                else:
-                    return "error"
+            idizq = traductor.EsIdentificador(self.expresion, value, entorno, self.fila, self.columna)
+            if idizq[0]:
+                tipo = idizq[2]
+                resultado = idizq[1]
+                self.tipo = "variable"
         #----------------------------SI SE DECLARA CON TIPO-----------------------------------------------------
         if self.tipo.lower() == "int64":
             if not isinstance(value[0], int):
@@ -77,12 +70,7 @@ class Asignacion(NodoAST):
             if not isinstance(value[0], bool):
                 traductor.addExcepcion(Error("Semántico","La variable "+self.identificador+", no es de tipo string", self.fila, self.columna))
                 return
-        if self.tipo.lower() == "variable":
-            if parametro:
-                print("SI ENTRÓ A PARAMETRO")
-                print(busqueda.getTipo())
-                self.Asignar(busqueda.getTipo(), resultado, self.identificador, entorno, traductor)
-            else:    
+        if self.tipo.lower() == "variable":   
                 self.Asignar(tipo, resultado, self.identificador, entorno, traductor)
                 return
         if isinstance(self.expresion, Aritmetica):
