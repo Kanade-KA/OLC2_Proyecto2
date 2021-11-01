@@ -29,6 +29,8 @@ class AsignacionFuncion(NodoAST):
         entorno.addSimbolo(simbolo)
 
         traductor.ActivarFuncion()
+
+        traductor.setTamanioFunc(tam + 1)
         newentorno = Entorno(str(self.identificador), entorno)
         lista = funcion.getInstrucciones()
         cont = 1;
@@ -46,4 +48,5 @@ class AsignacionFuncion(NodoAST):
         traductor.addFuncion(cadena)
         traductor.DesactivarFuncion()
         traductor.LimpiarFuncion()
+        traductor.resetTamanioFunc()
         return

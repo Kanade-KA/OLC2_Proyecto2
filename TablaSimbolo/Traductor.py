@@ -197,7 +197,7 @@ class Traductor:
                 iden = self.EsIdentificador(param, p, entorno, 0, 0)
                 if iden[0]:
                     p = [iden[1], iden[2]]
-                cadena +=  contador +" = "+stack+" + " +str(cont)+";\n"#Este tenía S + 
+                cadena +=  contador +" = "+stack+" + " +str(cont)+";\n"
                 cadena += "stack[int("+str(contador)+")] = "+str(p[0])+";\n"  
                 cont = cont + 1
             self.addCodigo(cadena)
@@ -218,7 +218,7 @@ class Traductor:
 #---------------------------------PARA METER UN BOOLEANO AL STACK---------------------------
     def putBooleanStack(self, valor):
         self.addCodigo("//*************AGREGANDO BOOLEANO***************\n")
-        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ "; //Ver posición Vacía\n"
+        cadena = "t"+str(self.getContador()) +" = S + "+str(self.getStack())+ ";\n"
         temporal = self.getStack()
         if valor == True:
             cadena += "stack[int(t"+str(self.getContador())+")] = 1;\n"

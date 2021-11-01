@@ -198,12 +198,17 @@ class Imprimir(NodoAST):
         traductor.IncrementarGotos(1)
 
     def ImprimirString(self, traductor, valor):
-        cadena = "t"+str(traductor.getContador())+" = S + "+str(traductor.getStack())+";//Ve un espacio libre en el stack\n"
-        cadena += "t"+str(traductor.getContador())+" = t"+str(traductor.getContador()) +" + 1;//Para enviar el parametro\n"
-        cadena += "stack[int(t"+str(traductor.getContador())+")] = "+str(valor)+";//Guarda el puntero del heap\n"
-        cadena += "S = S + "+str(traductor.getStack())+";//Para llevar hasta ahí el puntero para que imprima\n"
-        cadena += "imprimir();\n"
-        cadena += "S = S - "+str(traductor.getStack())+";//Volvemos a posicionarnos en el stack donde se debe\n"
+        stack = "t"+str(traductor.getContador())
         traductor.IncrementarContador()
+        contador = "t"+str(traductor.getContador())
+        traductor.IncrementarContador()
+        traductor.setTamanioFunc(traductor.getTamanioFunc()+1)  
+        cadena = stack + " = S + "+str(traductor.getStack() + traductor.getTamanioFunc())+";\n"
+        cadena +=  contador +" = "+stack+" + 1;\n"
+        cadena += "stack[int("+str(contador)+")] = "+str(valor)+";\n"  
+        cadena += "S = S + "+str(traductor.getStack()+ traductor.getTamanioFunc())+";\n"
+        cadena += "imprimir();\n"
+        cadena += "S = S - "+str(traductor.getStack()+traductor.getTamanioFunc())+";\n"
         traductor.addCodigo(cadena)
+        traductor.setTamanioFunc(traductor.getTamanioFunc()-1)  
         self.AgregarMetodoImprimir(traductor)
