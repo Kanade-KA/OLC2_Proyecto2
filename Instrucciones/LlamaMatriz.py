@@ -30,7 +30,7 @@ class LlamaMatriz(NodoAST):
         return
     
     def traducir(self, traductor, entorno):
-        print("-----------LLAMA A MATRIZ DE UNA DIMENSION--------------")
+        traductor.addCodigo("//----LLAMANDO ELEMENTO DE MATRIZ-------\n")
         indice = self.expresion.traducir(traductor, entorno)
         simbolo = entorno.retornarSimbolo(self.identificador.lower())
         if isinstance(simbolo, Simbolo):

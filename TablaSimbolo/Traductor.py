@@ -430,7 +430,7 @@ class Traductor:
             self.cadena += str(sim.getID())
             self.cadena += "</td>"
             self.cadena += "<td>"
-            self.cadena += str(sim.getTipo())
+            self.cadena += self.getString(sim.getTipo())
             self.cadena += "</td>"
             self.cadena += "<td>"
             self.cadena += str(sim.getRol())
@@ -445,6 +445,19 @@ class Traductor:
             self.cadena += str(sim.getColumna())
             self.cadena += "</td>"
             self.cadena += "</tr>"
+
+    def getString(self, tipo):
+        if tipo == TipoObjeto.ENTERO:
+            return "Integer"
+        if tipo == TipoObjeto.DECIMAL:
+            return "Double"
+        if tipo == TipoObjeto.CADENA:
+            return "String"
+        if tipo == TipoObjeto.BOOLEANO:
+            return "Boolean"
+        if tipo == TipoObjeto.ANY:
+            return ""
+        return tipo
 #---------------------------------PARA GENERAR LA TABLA DE ERRORES--------------------------
     def generateErrors(self):
         self.error +="<table class=\"table\">"
