@@ -126,8 +126,21 @@ class Aritmetica(NodoAST):
                     return [heap, TipoObjeto.CADENA]
             if (self.operador == OperadorAritmetico.DIV):
                 if self.sinString(opi[1], opd[1]):
-                    div = "t"+ str(traductor.getContador()) + "= "+ str(opi[0]) + "/"+ str(opd[0])
-                    traductor.addCodigo(div+";\n")
+                    if opd[0] == 0:
+                        traductor.addExcepcion(Error("Semantico", "No se puede dividir entre cero", self.fila, self.columna))
+                        return "error"
+                    rechaza = "L"+str(traductor.getGotos())
+                    salida = "L"+str(traductor.getGotos()+1)
+                    traductor.IncrementarGotos(2)
+
+                    palabra = "if "+opd[0]+" == 0 { goto "+rechaza+"; }\n"
+                    palabra += "t"+ str(traductor.getContador()) + "= "+ str(opi[0]) + "/"+ str(opd[0])+";\n"
+                    palabra += "goto "+salida+";\n"
+                    palabra += rechaza+":\n"
+                    palabra += "fmt.Printf(\"%s\", \"No se puede dividir en cero\");\n"
+                    palabra += "t"+ str(traductor.getContador()) + "= -1;\n"
+                    palabra += salida+":\n"
+                    traductor.addCodigo(palabra)
                     traductor.IncrementarContador()
                     return ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
             if (self.operador == OperadorAritmetico.POW):

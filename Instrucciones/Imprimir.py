@@ -11,6 +11,7 @@ from Expresiones.Arreglo import Arreglo
 from Abstract.Objeto import TipoObjeto
 from Abstract.NodoAST import NodoAST
 from Expresiones.Aritmetica import Aritmetica
+from Instrucciones.LlamaMatriz import LlamaMatriz
 from Instrucciones.Retonar import Retornar
 from TablaSimbolo.Traductor import Traductor
 
@@ -126,6 +127,9 @@ class Imprimir(NodoAST):
                     self.ImprimirBooleano(traductor, res[0])
                 else:
                     self.ImprimirString(traductor, res[0])
+            if isinstance(ins, LlamaMatriz):
+                x = ins.traducir(traductor, entorno)
+                self.ImprimirInt(traductor, x[0])
         if self.essalto != 'F':
             traductor.addCodigo("fmt.Printf(\"%c\", 10);\n")
         return

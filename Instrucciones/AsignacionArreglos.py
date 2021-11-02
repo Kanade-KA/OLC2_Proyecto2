@@ -25,15 +25,24 @@ class AsignacionArreglo(NodoAST):
             traductor.addCodigo("//******************ASIGNACION MATRIZ*********************\n")
             datos = arreglo.getDatos()
             tam = len(datos)
-            stacklibre = "t"+str(traductor.getContador())
-            traductor.IncrementarContador()
             heap = "t"+str(traductor.getContador())
             traductor.IncrementarContador()
+            
+            simbolo = Simbolo(entorno.getNombre(), self.identificador, self.expresion, self.tipo, "Arreglo", traductor.getStack(), self.fila, self.columna)
+            traductor.addSimbolo(simbolo)
+            entorno.addSimbolo(simbolo)
 
             cadena = heap +" = H;\n"
             cadena += "heap[int(H)] = "+str(tam)+";\n"
             cadena += "H = H + 1;\n"
             traductor.IncrementarHeap()
             #Agregando datos al stack
+            for dato in arreglo.getDatos():
+                operado = dato.traducir(traductor, entorno)
+                cadena += "heap[int(H)] = "+str(operado[0])+";\n"
+                cadena += "H = H + 1;\n"
             
-        return "Asignacion Arreglos"
+            cadena += "stack[int("+str(traductor.getStack())+")] = "+heap + ";\n"
+            traductor.IncrementarStack()
+            traductor.addCodigo(cadena)
+        return
