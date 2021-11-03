@@ -133,7 +133,7 @@ class Aritmetica(NodoAST):
                     salida = "L"+str(traductor.getGotos()+1)
                     traductor.IncrementarGotos(2)
 
-                    palabra = "if "+opd[0]+" == 0 { goto "+rechaza+"; }\n"
+                    palabra = "if "+str(opd[0])+" == 0 { goto "+rechaza+"; }\n"
                     palabra += "t"+ str(traductor.getContador()) + "= "+ str(opi[0]) + "/"+ str(opd[0])+";\n"
                     palabra += "goto "+salida+";\n"
                     palabra += rechaza+":\n"

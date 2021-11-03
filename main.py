@@ -3,6 +3,7 @@ from gramatica import parse as gram
 from flask import Flask, redirect, url_for, render_template, request
 from gramgraf import parse as grafica
 from gramatica import parsetrad as traductor
+from gramaticaC3D import parseopt as optimizacion
 app = Flask(__name__)
 tmp_val=''
 
@@ -27,6 +28,12 @@ def home():
             tmp_val3=inpt
             result=traductor(tmp_val3)
             return render_template('index.html', resultado=result[0], entry=tmp_val3, graf = "", tabla=result[1], error=result[2])
+        if request.form['submit_button']=='mirilla':
+            inptres = request.form["salida"]
+            global tmp_val4
+            tmp_val4=inptres
+            result=optimizacion(tmp_val4)
+            return render_template('index.html', resultado=tmp_val4, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
         else:
             return render_template('index.html', entry ="", graf="")
     else:
