@@ -208,12 +208,12 @@ class Imprimir(NodoAST):
         contador = "t"+str(traductor.getContador())
         traductor.IncrementarContador()
         traductor.setTamanioFunc(traductor.getTamanioFunc()+1)  
-        cadena = stack + " = S + "+str(traductor.getStack() + traductor.getTamanioFunc())+";\n"
+        cadena = stack + " = S + "+str(traductor.getStack() + traductor.getTamanioFunc() + 1)+";\n"
         cadena +=  contador +" = "+stack+" + 1;\n"
         cadena += "stack[int("+str(contador)+")] = "+str(valor)+";\n"  
-        cadena += "S = S + "+str(traductor.getStack()+ traductor.getTamanioFunc())+";\n"
+        cadena += "S = S + "+str(traductor.getStack()+ traductor.getTamanioFunc() +1)+";\n"
         cadena += "imprimir();\n"
-        cadena += "S = S - "+str(traductor.getStack()+traductor.getTamanioFunc())+";\n"
+        cadena += "S = S - "+str(traductor.getStack()+traductor.getTamanioFunc()+1)+";\n"
         traductor.addCodigo(cadena)
         traductor.setTamanioFunc(traductor.getTamanioFunc()-1)  
         self.AgregarMetodoImprimir(traductor)

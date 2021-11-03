@@ -44,4 +44,47 @@ class AsignaMatriz(NodoAST):
         return
 
     def traducir(self, traductor, entorno):
-        return "Asignacion Matriz 1D"
+        traductor.addCodigo("//----LLAMANDO ELEMENTO DE MATRIZ-------\n")
+        indice = self.indice.traducir(traductor, entorno)
+        simbolo = entorno.retornarSimbolo(self.id.lower())
+        valor = self.expresion.traducir(traductor, entorno)
+        if isinstance(simbolo, Simbolo):
+            arreglo = simbolo.getValor()
+            if isinstance(arreglo, Arreglo):
+                tamanio = "t"+str(traductor.getContador())
+                traductor.IncrementarContador()
+                stack = "t"+str(traductor.getContador())
+                traductor.IncrementarContador()
+                ind = "t"+str(traductor.getContador())
+                traductor.IncrementarContador()
+                val = "t"+str(traductor.getContador())
+                traductor.IncrementarContador()
+                res = "t"+str(traductor.getContador())
+                traductor.IncrementarContador()
+                pos = "t"+str(traductor.getContador())
+                traductor.IncrementarContador()
+                tmp = "t"+str(traductor.getContador())
+                traductor.IncrementarContador()
+                rechaza = "L"+str(traductor.getGotos())
+                salida = "L"+str(traductor.getGotos()+1)
+                traductor.IncrementarGotos(2)
+
+                cadena = tmp +" = S + "+str(simbolo.getPosicion())+";\n"
+                cadena += stack + " = stack[int("+tmp+")];\n"
+                cadena += tamanio + " = heap[int("+stack+")];\n"
+                cadena += ind + " = "+str(indice[0])+";\n"
+                cadena += "if "+ind+" > "+tamanio+" { goto "+rechaza+"; }\n"
+                cadena += pos +" = "+ stack + " + "+ ind+ ";\n"
+                cadena += res +" = "+str(valor[0])+";\n"
+                cadena += "heap[int("+pos+")] = "+res+";\n"
+                cadena += "goto "+salida+";\n"
+                cadena += rechaza+":\n"
+                cadena += "fmt.Printf(\"%s\", \"Se ha excedido el limite de la matriz\");\n"
+                cadena += val +"= -1;\n"
+                cadena += salida+":\n"
+
+                traductor.addCodigo(cadena)
+                #return [val, TipoObjeto.ENTERO]                
+            else:
+                traductor.addExcepcion(Error("Semantico", "El identificador no es de tipo Matriz", self.fila, self.columna))
+        return 
