@@ -1,7 +1,7 @@
 import re
 from gramatica import parse as gram
 from flask import Flask, redirect, url_for, render_template, request
-from gramgraf import parse as grafica
+#from gramgraf import parse as grafica
 from gramatica import parsetrad as traductor
 from gramaticaC3D import parseopt as optimizacion
 app = Flask(__name__)
@@ -20,8 +20,8 @@ def home():
             inpt = request.form["entrada"]
             global tmp
             tmp=inpt
-            dot = grafica(tmp)
-            return render_template('index.html', resultado="", entry=tmp, graf = dot)
+            #dot = grafica(tmp)
+            return render_template('index.html', resultado="", entry=tmp, graf = "dot")
         if request.form['submit_button']=='traductor':
             inpt = request.form["entrada"]
             global tmp_val3

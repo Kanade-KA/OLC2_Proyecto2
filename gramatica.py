@@ -72,8 +72,7 @@ reservadas = {
     'float64'   : 'rfloat', 
     'float'     : 'rrfloat',
     'true'      : 'rtrue',
-    'false'     : 'rfalse',
-    'dot'         : 'rdot'
+    'false'     : 'rfalse'
 }
 
 tokens = [

@@ -150,14 +150,15 @@ def p_asignacion4(t):#stack[int(t1)] = 10;
 def p_etiqueta(t):#L0:
     '''ETIQUETA : id dosp'''
 
-def p_fmt(t):#fmt.Printf("%.2f", t20);
-    '''FMT : id dot id apar cadena coma OPERANDO cpar pcoma'''
-
-def p_fmt2(t):#fmt.Printf("%s", "No se puede dividir en cero");
-    '''FMT : id dot id apar cadena coma cadena cpar pcoma'''
 
 def p_fmt(t):#fmt.Printf("%.2f", int(bla));
     '''FMT : id dot id apar cadena coma id apar OPERANDO cpar cpar pcoma'''
+
+def p_fmt2(t):#fmt.Printf("%.2f", t20);
+    '''FMT : id dot id apar cadena coma OPERANDO cpar pcoma'''
+
+def p_fmt3(t):#fmt.Printf("%s", "No se puede dividir en cero");
+    '''FMT : id dot id apar cadena coma cadena cpar pcoma'''
 
 def p_if(t):#if 5 == 0 { goto L6; }
     '''IF : id CONDICION alla GOTO clla'''
