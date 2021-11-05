@@ -6,9 +6,9 @@ _tabversion = '3.10'
 
 _lr_method = 'LALR'
 
-_lr_signature = 'acor alla apar cadena ccor clla coma cpar diferente div dosp dot float id igual igualigual int mas mayor mayori menor menori menos pcoma por puntoinit            : id id pcoma INSTRUCCIONESINSTRUCCIONES : INSTRUCCIONES INSTRUCCIONINSTRUCCIONES : INSTRUCCIONINSTRUCCION :  ASIGNACIONOPERACION\n                    | ASIGNACIONUNICA\n                    | ASIGNACIONARREGLO\n                    | ASIGNACIONFUNCION\n                    | ARREGLOASIGNACION\n                    | ETIQUETA\n                    | LLAMADAFUNCION\n                    | FMT\n                    | IF\n                    | GOTO\n                    | RETURN\n                    | IMPORTS\n                    | STACK\n                    | DECLARACION\n                    \n    IMPORTS : id apar cadena cpar pcomaSTACK : id id acor int ccor id pcomaDECLARACION : id LDEC id pcomaLDEC : LDEC coma idLDEC : idASIGNACIONOPERACION : id igual OPERACION pcomaASIGNACIONUNICA : id igual OPERANDO pcomaASIGNACIONARREGLO : id igual id acor id apar id cpar ccor pcomaARREGLOASIGNACION : id acor id apar id cpar ccor igual OPERANDO pcomaETIQUETA : id dospFMT : id dot id apar cadena coma id apar OPERANDO cpar cpar pcomaFMT : id dot id apar cadena coma OPERANDO cpar pcomaFMT : id dot id apar cadena coma cadena cpar pcomaIF : id CONDICION alla GOTO cllaCONDICION : OPERANDO mayor OPERANDO\n                 | OPERANDO mayori OPERANDO\n                 | OPERANDO menor OPERANDO\n                 | OPERANDO menori OPERANDO\n                 | OPERANDO igualigual OPERANDO\n                 | OPERANDO diferente OPERANDO\n    GOTO : id id pcomaRETURN : id pcomaLLAMADAFUNCION : id apar cpar pcomaOPERACION : OPERANDO mas OPERANDO\n                 | OPERANDO menos OPERANDO\n                 | OPERANDO por OPERANDO\n                 | OPERANDO div OPERANDO\n    ASIGNACIONFUNCION : id id apar cpar alla INSTRUCCIONES cllaOPERANDO : idOPERANDO : intOPERANDO : floatOPERANDO : id dot id apar OPERANDO coma OPERANDO cpar'
+_lr_signature = 'acor alla apar cadena ccor clla coma cpar diferente div dosp dot float id igual igualigual int mas mayor mayori menor menori menos pcoma por rfloat rfmt rfunc rgoto rif rimport rint rmain rpackage rprintf rreturn rvarinit            : BLOQUESBLOQUES : BLOQUES BLOQUEBLOQUES : BLOQUEBLOQUE : rpackage rmain pcomaBLOQUE : rimport apar cadena cpar pcomaBLOQUE : rvar id acor int ccor rfloat pcomaBLOQUE : rvar IDS rfloat pcomaBLOQUE : rfunc id apar cpar alla INSTRUCCIONES cllaBLOQUE : rfunc rmain apar cpar alla INSTRUCCIONES cllaIDS : IDS coma idIDS : idINSTRUCCIONES : INSTRUCCIONES INSTRUCCIONINSTRUCCIONES : INSTRUCCIONINSTRUCCION : id igual OPERANDO OPERACION OPERANDO pcomaINSTRUCCION : id igual OPERANDO pcomaINSTRUCCION : id igual id acor rint apar id cpar ccor pcomaINSTRUCCION : id acor rint apar id cpar ccor igual OPERANDO pcomaINSTRUCCION : id dospINSTRUCCION : rfmt dot rprintf apar cadena coma rint apar OPERANDO cpar cpar pcomaINSTRUCCION : rfmt dot rprintf apar cadena coma OPERANDO cpar pcomaINSTRUCCION : rfmt dot rprintf apar cadena coma cadena cpar pcomaINSTRUCCION : rif OPERANDO CONDICION OPERANDO alla rgoto id pcoma cllaINSTRUCCION : rgoto id pcomaINSTRUCCION : rreturn pcomaINSTRUCCION : id apar cpar pcomaCONDICION : mayor\n                 | mayori\n                 | menor\n                 | menori\n                 | igualigual\n                 | diferente\n    OPERACION :  mas\n                 |  menos\n                 |  por\n                 |  div\n    OPERANDO : idOPERANDO : intOPERANDO : floatOPERANDO : id dot id apar OPERANDO coma OPERANDO cpar'
     
-_lr_action_items = {'id':([0,2,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26,28,29,32,34,36,38,42,43,44,45,46,47,52,54,58,59,60,61,62,63,64,72,73,76,78,79,80,81,82,89,92,93,96,98,99,100,101,109,110,117,118,119,120,123,],[2,3,5,22,5,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-16,-17,-22,39,-39,48,-27,51,53,-2,-38,57,66,66,66,66,66,66,76,79,83,-23,-24,66,66,66,66,88,-40,91,-20,-21,5,94,66,-18,-31,5,102,104,-45,-19,66,66,66,-30,-29,-25,-26,-28,]),'$end':([1,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,24,28,34,36,59,60,73,78,89,92,99,100,117,118,119,120,123,],[0,-1,-3,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-16,-17,-39,-27,-2,-38,-23,-24,-40,-20,-18,-31,-45,-19,-30,-29,-25,-26,-28,]),'pcoma':([3,5,22,31,33,39,40,41,49,53,66,74,84,85,86,87,91,94,111,112,113,114,115,122,],[4,24,36,-47,-48,-46,59,60,73,78,-46,89,-41,-42,-43,-44,36,100,117,118,-49,119,120,123,]),'igual':([5,103,],[23,109,]),'acor':([5,22,39,],[26,37,58,]),'dosp':([5,],[28,]),'apar':([5,22,48,51,57,83,104,],[27,35,72,75,82,96,110,]),'dot':([5,22,39,66,104,],[29,38,38,38,38,]),'int':([5,23,37,42,43,44,45,46,47,61,62,63,64,82,98,101,109,110,],[31,31,56,31,31,31,31,31,31,31,31,31,31,31,31,31,31,31,]),'float':([5,23,42,43,44,45,46,47,61,62,63,64,82,98,101,109,110,],[33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,33,]),'clla':([7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,24,28,34,36,59,60,73,77,78,89,92,93,99,100,117,118,119,120,123,],[-3,-4,-5,-6,-7,-8,-9,-10,-11,-12,-13,-14,-15,-16,-17,-39,-27,-2,-38,-23,-24,-40,92,-20,-18,-31,99,-45,-19,-30,-29,-25,-26,-28,]),'coma':([22,31,32,33,66,79,90,95,113,],[-22,-47,54,-48,-46,-21,98,101,-49,]),'mayor':([22,25,31,33,113,],[-46,42,-47,-48,-49,]),'mayori':([22,25,31,33,113,],[-46,43,-47,-48,-49,]),'menor':([22,25,31,33,113,],[-46,44,-47,-48,-49,]),'menori':([22,25,31,33,113,],[-46,45,-47,-48,-49,]),'igualigual':([22,25,31,33,113,],[-46,46,-47,-48,-49,]),'diferente':([22,25,31,33,113,],[-46,47,-47,-48,-49,]),'cpar':([27,31,33,35,50,66,88,102,104,105,106,107,113,116,121,],[49,-47,-48,55,74,-46,97,108,-46,111,112,113,-49,121,122,]),'cadena':([27,75,98,],[50,90,105,]),'alla':([30,31,33,55,65,66,67,68,69,70,71,113,],[52,-47,-48,80,-32,-46,-33,-34,-35,-36,-37,-49,]),'mas':([31,33,39,41,113,],[-47,-48,-46,61,-49,]),'menos':([31,33,39,41,113,],[-47,-48,-46,62,-49,]),'por':([31,33,39,41,113,],[-47,-48,-46,63,-49,]),'div':([31,33,39,41,113,],[-47,-48,-46,64,-49,]),'ccor':([56,97,108,],[81,103,114,]),}
+_lr_action_items = {'rpackage':([0,2,3,8,15,24,28,41,46,55,],[4,4,-3,-2,-4,-7,-5,-6,-8,-9,]),'rimport':([0,2,3,8,15,24,28,41,46,55,],[5,5,-3,-2,-4,-7,-5,-6,-8,-9,]),'rvar':([0,2,3,8,15,24,28,41,46,55,],[6,6,-3,-2,-4,-7,-5,-6,-8,-9,]),'rfunc':([0,2,3,8,15,24,28,41,46,55,],[7,7,-3,-2,-4,-7,-5,-6,-8,-9,]),'$end':([1,2,3,8,15,24,28,41,46,55,],[0,-1,-3,-2,-4,-7,-5,-6,-8,-9,]),'rmain':([4,7,],[9,14,]),'apar':([5,13,14,33,58,60,81,82,97,],[10,20,21,44,77,79,87,88,104,]),'id':([6,7,19,30,31,34,35,37,38,40,42,45,47,54,61,62,63,64,65,66,67,68,69,71,72,73,74,75,76,77,78,87,88,89,91,92,100,102,104,110,112,113,115,116,119,],[11,13,25,33,33,33,-13,50,53,33,56,-18,-12,-24,50,-26,-27,-28,-29,-30,-31,81,-23,50,-15,-32,-33,-34,-35,84,-25,50,94,-14,50,99,50,50,50,-21,-20,-22,-16,-17,-19,]),'pcoma':([9,18,22,32,39,50,51,52,53,56,57,59,83,99,103,105,108,109,114,118,],[15,24,28,41,54,-36,-37,-38,69,-36,72,78,89,106,110,112,115,116,-39,119,]),'cadena':([10,79,91,],[16,85,96,]),'acor':([11,33,56,],[17,43,70,]),'rfloat':([11,12,25,29,],[-11,18,-10,32,]),'coma':([11,12,25,50,51,52,85,93,114,],[-11,19,-10,-36,-37,-38,91,100,-39,]),'cpar':([16,20,21,44,50,51,52,84,94,96,98,107,111,114,117,],[22,26,27,59,-36,-37,-38,90,101,103,105,114,117,-39,118,]),'int':([17,37,42,61,62,63,64,65,66,67,71,73,74,75,76,87,91,100,102,104,],[23,51,51,51,-26,-27,-28,-29,-30,-31,51,-32,-33,-34,-35,51,51,51,51,51,]),'ccor':([23,90,101,],[29,95,108,]),'alla':([26,27,50,51,52,80,114,],[30,31,-36,-37,-38,86,-39,]),'rfmt':([30,31,34,35,40,45,47,54,69,72,78,89,110,112,113,115,116,119,],[36,36,36,-13,36,-18,-12,-24,-23,-15,-25,-14,-21,-20,-22,-16,-17,-19,]),'rif':([30,31,34,35,40,45,47,54,69,72,78,89,110,112,113,115,116,119,],[37,37,37,-13,37,-18,-12,-24,-23,-15,-25,-14,-21,-20,-22,-16,-17,-19,]),'rgoto':([30,31,34,35,40,45,47,54,69,72,78,86,89,110,112,113,115,116,119,],[38,38,38,-13,38,-18,-12,-24,-23,-15,-25,92,-14,-21,-20,-22,-16,-17,-19,]),'rreturn':([30,31,34,35,40,45,47,54,69,72,78,89,110,112,113,115,116,119,],[39,39,39,-13,39,-18,-12,-24,-23,-15,-25,-14,-21,-20,-22,-16,-17,-19,]),'igual':([33,95,],[42,102,]),'dosp':([33,],[45,]),'clla':([34,35,40,45,47,54,69,72,78,89,106,110,112,113,115,116,119,],[46,-13,55,-18,-12,-24,-23,-15,-25,-14,113,-21,-20,-22,-16,-17,-19,]),'dot':([36,50,56,],[48,68,68,]),'float':([37,42,61,62,63,64,65,66,67,71,73,74,75,76,87,91,100,102,104,],[52,52,52,-26,-27,-28,-29,-30,-31,52,-32,-33,-34,-35,52,52,52,52,52,]),'rint':([43,70,91,],[58,82,97,]),'rprintf':([48,],[60,]),'mayor':([49,50,51,52,114,],[62,-36,-37,-38,-39,]),'mayori':([49,50,51,52,114,],[63,-36,-37,-38,-39,]),'menor':([49,50,51,52,114,],[64,-36,-37,-38,-39,]),'menori':([49,50,51,52,114,],[65,-36,-37,-38,-39,]),'igualigual':([49,50,51,52,114,],[66,-36,-37,-38,-39,]),'diferente':([49,50,51,52,114,],[67,-36,-37,-38,-39,]),'mas':([51,52,56,57,114,],[-37,-38,-36,73,-39,]),'menos':([51,52,56,57,114,],[-37,-38,-36,74,-39,]),'por':([51,52,56,57,114,],[-37,-38,-36,75,-39,]),'div':([51,52,56,57,114,],[-37,-38,-36,76,-39,]),}
 
 _lr_action = {}
 for _k, _v in _lr_action_items.items():
@@ -17,7 +17,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'init':([0,],[1,]),'INSTRUCCIONES':([4,80,],[6,93,]),'INSTRUCCION':([4,6,80,93,],[7,34,7,34,]),'ASIGNACIONOPERACION':([4,6,80,93,],[8,8,8,8,]),'ASIGNACIONUNICA':([4,6,80,93,],[9,9,9,9,]),'ASIGNACIONARREGLO':([4,6,80,93,],[10,10,10,10,]),'ASIGNACIONFUNCION':([4,6,80,93,],[11,11,11,11,]),'ARREGLOASIGNACION':([4,6,80,93,],[12,12,12,12,]),'ETIQUETA':([4,6,80,93,],[13,13,13,13,]),'LLAMADAFUNCION':([4,6,80,93,],[14,14,14,14,]),'FMT':([4,6,80,93,],[15,15,15,15,]),'IF':([4,6,80,93,],[16,16,16,16,]),'GOTO':([4,6,52,80,93,],[17,17,77,17,17,]),'RETURN':([4,6,80,93,],[18,18,18,18,]),'IMPORTS':([4,6,80,93,],[19,19,19,19,]),'STACK':([4,6,80,93,],[20,20,20,20,]),'DECLARACION':([4,6,80,93,],[21,21,21,21,]),'OPERANDO':([5,23,42,43,44,45,46,47,61,62,63,64,82,98,101,109,110,],[25,41,65,67,68,69,70,71,84,85,86,87,95,106,107,115,116,]),'CONDICION':([5,],[30,]),'LDEC':([5,],[32,]),'OPERACION':([23,],[40,]),}
+_lr_goto_items = {'init':([0,],[1,]),'BLOQUES':([0,],[2,]),'BLOQUE':([0,2,],[3,8,]),'IDS':([6,],[12,]),'INSTRUCCIONES':([30,31,],[34,40,]),'INSTRUCCION':([30,31,34,40,],[35,35,47,47,]),'OPERANDO':([37,42,61,71,87,91,100,102,104,],[49,57,80,83,93,98,107,109,111,]),'CONDICION':([49,],[61,]),'OPERACION':([57,],[71,]),}
 
 _lr_goto = {}
 for _k, _v in _lr_goto_items.items():
@@ -27,53 +27,43 @@ for _k, _v in _lr_goto_items.items():
 del _lr_goto_items
 _lr_productions = [
   ("S' -> init","S'",1,None,None,None),
-  ('init -> id id pcoma INSTRUCCIONES','init',4,'p_init','gramaticaC3D.py',88),
-  ('INSTRUCCIONES -> INSTRUCCIONES INSTRUCCION','INSTRUCCIONES',2,'p_instrucciones_lista','gramaticaC3D.py',92),
-  ('INSTRUCCIONES -> INSTRUCCION','INSTRUCCIONES',1,'p_instrucciones_final','gramaticaC3D.py',98),
-  ('INSTRUCCION -> ASIGNACIONOPERACION','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',105),
-  ('INSTRUCCION -> ASIGNACIONUNICA','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',106),
-  ('INSTRUCCION -> ASIGNACIONARREGLO','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',107),
-  ('INSTRUCCION -> ASIGNACIONFUNCION','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',108),
-  ('INSTRUCCION -> ARREGLOASIGNACION','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',109),
-  ('INSTRUCCION -> ETIQUETA','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',110),
-  ('INSTRUCCION -> LLAMADAFUNCION','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',111),
-  ('INSTRUCCION -> FMT','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',112),
-  ('INSTRUCCION -> IF','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',113),
-  ('INSTRUCCION -> GOTO','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',114),
-  ('INSTRUCCION -> RETURN','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',115),
-  ('INSTRUCCION -> IMPORTS','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',116),
-  ('INSTRUCCION -> STACK','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',117),
-  ('INSTRUCCION -> DECLARACION','INSTRUCCION',1,'p_instruccion','gramaticaC3D.py',118),
-  ('IMPORTS -> id apar cadena cpar pcoma','IMPORTS',5,'p_imports','gramaticaC3D.py',124),
-  ('STACK -> id id acor int ccor id pcoma','STACK',7,'p_decstack','gramaticaC3D.py',127),
-  ('DECLARACION -> id LDEC id pcoma','DECLARACION',4,'p_declara','gramaticaC3D.py',130),
-  ('LDEC -> LDEC coma id','LDEC',3,'p_lista_dec','gramaticaC3D.py',133),
-  ('LDEC -> id','LDEC',1,'p_lista_dec2','gramaticaC3D.py',136),
-  ('ASIGNACIONOPERACION -> id igual OPERACION pcoma','ASIGNACIONOPERACION',4,'p_asignacion1','gramaticaC3D.py',139),
-  ('ASIGNACIONUNICA -> id igual OPERANDO pcoma','ASIGNACIONUNICA',4,'p_asignacion2','gramaticaC3D.py',142),
-  ('ASIGNACIONARREGLO -> id igual id acor id apar id cpar ccor pcoma','ASIGNACIONARREGLO',10,'p_asignacion3','gramaticaC3D.py',145),
-  ('ARREGLOASIGNACION -> id acor id apar id cpar ccor igual OPERANDO pcoma','ARREGLOASIGNACION',10,'p_asignacion4','gramaticaC3D.py',148),
-  ('ETIQUETA -> id dosp','ETIQUETA',2,'p_etiqueta','gramaticaC3D.py',151),
-  ('FMT -> id dot id apar cadena coma id apar OPERANDO cpar cpar pcoma','FMT',12,'p_fmt','gramaticaC3D.py',155),
-  ('FMT -> id dot id apar cadena coma OPERANDO cpar pcoma','FMT',9,'p_fmt2','gramaticaC3D.py',158),
-  ('FMT -> id dot id apar cadena coma cadena cpar pcoma','FMT',9,'p_fmt3','gramaticaC3D.py',161),
-  ('IF -> id CONDICION alla GOTO clla','IF',5,'p_if','gramaticaC3D.py',164),
-  ('CONDICION -> OPERANDO mayor OPERANDO','CONDICION',3,'p_condicion','gramaticaC3D.py',167),
-  ('CONDICION -> OPERANDO mayori OPERANDO','CONDICION',3,'p_condicion','gramaticaC3D.py',168),
-  ('CONDICION -> OPERANDO menor OPERANDO','CONDICION',3,'p_condicion','gramaticaC3D.py',169),
-  ('CONDICION -> OPERANDO menori OPERANDO','CONDICION',3,'p_condicion','gramaticaC3D.py',170),
-  ('CONDICION -> OPERANDO igualigual OPERANDO','CONDICION',3,'p_condicion','gramaticaC3D.py',171),
-  ('CONDICION -> OPERANDO diferente OPERANDO','CONDICION',3,'p_condicion','gramaticaC3D.py',172),
-  ('GOTO -> id id pcoma','GOTO',3,'p_goto','gramaticaC3D.py',175),
-  ('RETURN -> id pcoma','RETURN',2,'p_return','gramaticaC3D.py',178),
-  ('LLAMADAFUNCION -> id apar cpar pcoma','LLAMADAFUNCION',4,'p_llamadafn','gramaticaC3D.py',181),
-  ('OPERACION -> OPERANDO mas OPERANDO','OPERACION',3,'p_operacion','gramaticaC3D.py',184),
-  ('OPERACION -> OPERANDO menos OPERANDO','OPERACION',3,'p_operacion','gramaticaC3D.py',185),
-  ('OPERACION -> OPERANDO por OPERANDO','OPERACION',3,'p_operacion','gramaticaC3D.py',186),
-  ('OPERACION -> OPERANDO div OPERANDO','OPERACION',3,'p_operacion','gramaticaC3D.py',187),
-  ('ASIGNACIONFUNCION -> id id apar cpar alla INSTRUCCIONES clla','ASIGNACIONFUNCION',7,'p_asingnacionfunc','gramaticaC3D.py',191),
-  ('OPERANDO -> id','OPERANDO',1,'p_operando','gramaticaC3D.py',194),
-  ('OPERANDO -> int','OPERANDO',1,'p_operando2','gramaticaC3D.py',197),
-  ('OPERANDO -> float','OPERANDO',1,'p_operando3','gramaticaC3D.py',200),
-  ('OPERANDO -> id dot id apar OPERANDO coma OPERANDO cpar','OPERANDO',8,'p_operando4','gramaticaC3D.py',203),
+  ('init -> BLOQUES','init',1,'p_init','gramaticaC3D.py',109),
+  ('BLOQUES -> BLOQUES BLOQUE','BLOQUES',2,'p_bloques_lista','gramaticaC3D.py',113),
+  ('BLOQUES -> BLOQUE','BLOQUES',1,'p_bloques_final','gramaticaC3D.py',119),
+  ('BLOQUE -> rpackage rmain pcoma','BLOQUE',3,'p_instruccion_package','gramaticaC3D.py',126),
+  ('BLOQUE -> rimport apar cadena cpar pcoma','BLOQUE',5,'p_instruccion_import','gramaticaC3D.py',130),
+  ('BLOQUE -> rvar id acor int ccor rfloat pcoma','BLOQUE',7,'p_declaraheapstack','gramaticaC3D.py',136),
+  ('BLOQUE -> rvar IDS rfloat pcoma','BLOQUE',4,'p_declaraciontemporales','gramaticaC3D.py',141),
+  ('BLOQUE -> rfunc id apar cpar alla INSTRUCCIONES clla','BLOQUE',7,'p_voids','gramaticaC3D.py',145),
+  ('BLOQUE -> rfunc rmain apar cpar alla INSTRUCCIONES clla','BLOQUE',7,'p_main','gramaticaC3D.py',150),
+  ('IDS -> IDS coma id','IDS',3,'p_lista_ids','gramaticaC3D.py',155),
+  ('IDS -> id','IDS',1,'p_lista_ids2','gramaticaC3D.py',161),
+  ('INSTRUCCIONES -> INSTRUCCIONES INSTRUCCION','INSTRUCCIONES',2,'p_instrucciones_lista','gramaticaC3D.py',169),
+  ('INSTRUCCIONES -> INSTRUCCION','INSTRUCCIONES',1,'p_instrucciones_final','gramaticaC3D.py',175),
+  ('INSTRUCCION -> id igual OPERANDO OPERACION OPERANDO pcoma','INSTRUCCION',6,'p_asignacion1','gramaticaC3D.py',182),
+  ('INSTRUCCION -> id igual OPERANDO pcoma','INSTRUCCION',4,'p_asignacion2','gramaticaC3D.py',187),
+  ('INSTRUCCION -> id igual id acor rint apar id cpar ccor pcoma','INSTRUCCION',10,'p_asignacion3','gramaticaC3D.py',192),
+  ('INSTRUCCION -> id acor rint apar id cpar ccor igual OPERANDO pcoma','INSTRUCCION',10,'p_asignacion4','gramaticaC3D.py',197),
+  ('INSTRUCCION -> id dosp','INSTRUCCION',2,'p_etiqueta','gramaticaC3D.py',202),
+  ('INSTRUCCION -> rfmt dot rprintf apar cadena coma rint apar OPERANDO cpar cpar pcoma','INSTRUCCION',12,'p_fmt','gramaticaC3D.py',207),
+  ('INSTRUCCION -> rfmt dot rprintf apar cadena coma OPERANDO cpar pcoma','INSTRUCCION',9,'p_fmt2','gramaticaC3D.py',212),
+  ('INSTRUCCION -> rfmt dot rprintf apar cadena coma cadena cpar pcoma','INSTRUCCION',9,'p_fmt3','gramaticaC3D.py',217),
+  ('INSTRUCCION -> rif OPERANDO CONDICION OPERANDO alla rgoto id pcoma clla','INSTRUCCION',9,'p_if','gramaticaC3D.py',222),
+  ('INSTRUCCION -> rgoto id pcoma','INSTRUCCION',3,'p_goto','gramaticaC3D.py',227),
+  ('INSTRUCCION -> rreturn pcoma','INSTRUCCION',2,'p_return','gramaticaC3D.py',232),
+  ('INSTRUCCION -> id apar cpar pcoma','INSTRUCCION',4,'p_llamadafn','gramaticaC3D.py',237),
+  ('CONDICION -> mayor','CONDICION',1,'p_condicion','gramaticaC3D.py',243),
+  ('CONDICION -> mayori','CONDICION',1,'p_condicion','gramaticaC3D.py',244),
+  ('CONDICION -> menor','CONDICION',1,'p_condicion','gramaticaC3D.py',245),
+  ('CONDICION -> menori','CONDICION',1,'p_condicion','gramaticaC3D.py',246),
+  ('CONDICION -> igualigual','CONDICION',1,'p_condicion','gramaticaC3D.py',247),
+  ('CONDICION -> diferente','CONDICION',1,'p_condicion','gramaticaC3D.py',248),
+  ('OPERACION -> mas','OPERACION',1,'p_operacion','gramaticaC3D.py',253),
+  ('OPERACION -> menos','OPERACION',1,'p_operacion','gramaticaC3D.py',254),
+  ('OPERACION -> por','OPERACION',1,'p_operacion','gramaticaC3D.py',255),
+  ('OPERACION -> div','OPERACION',1,'p_operacion','gramaticaC3D.py',256),
+  ('OPERANDO -> id','OPERANDO',1,'p_operando','gramaticaC3D.py',261),
+  ('OPERANDO -> int','OPERANDO',1,'p_operando2','gramaticaC3D.py',265),
+  ('OPERANDO -> float','OPERANDO',1,'p_operando3','gramaticaC3D.py',269),
+  ('OPERANDO -> id dot id apar OPERANDO coma OPERANDO cpar','OPERANDO',8,'p_operando4','gramaticaC3D.py',273),
 ]

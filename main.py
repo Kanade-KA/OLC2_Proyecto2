@@ -29,6 +29,9 @@ def home():
             result=traductor(tmp_val3)
             return render_template('index.html', resultado=result[0], entry=tmp_val3, graf = "", tabla=result[1], error=result[2])
         if request.form['submit_button']=='mirilla':
+            inpt = request.form["entrada"]
+            tmp_val=inpt
+
             inptres = request.form["salida"]
             global tmp_val4
             tmp_val4=inptres
