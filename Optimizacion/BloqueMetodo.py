@@ -13,5 +13,17 @@ class BloqueMetodo:
     def getInstrucciones(self):
         return self.instrucciones
 
+    def setInstrucciones(self, instrucciones):
+        self.instrucciones = instrucciones
+
     def getTipo(self):
         return self.tipo
+
+    def getFila(self):
+        return self.fila
+
+    def getColumna(self):
+        return self.columna
+
+    def getC3D(self):
+        return self.codigo

@@ -1,7 +1,3 @@
-from Abstract import Objeto
-from TablaSimbolo import Tipo
-
-
 class Error():
     def __init__(self, tipo, descripcion, fila, columna):
         self.tipoError = tipo

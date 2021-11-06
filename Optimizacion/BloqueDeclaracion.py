@@ -9,5 +9,14 @@ class BloqueDeclaracion:
     def getids(self):
         return self.ids
 
-    def getcodigo(self):
+    def getC3D(self):
         return self.codigo
+
+    def getFila(self):
+        return self.fila
+
+    def getColumna(self):
+        return self.columna
+
+    def getTipo(self):
+        return self.tipo

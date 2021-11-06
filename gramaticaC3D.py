@@ -3,6 +3,7 @@ import sys
 from Optimizacion.BloqueDeclaracion import BloqueDeclaracion
 from Optimizacion.BloqueMetodo import BloqueMetodo
 from Optimizacion.BloqueNormal import BloqueNormal
+from Optimizacion.Optimizar import Optimizar
 #-----------------------IMPORTACION CLASES DE OPTIMIZACION------------
 from Optimizacion.TipoCodigo import TipoBloque
 from Optimizacion.TipoCodigo import TipoInstruccion
@@ -185,7 +186,7 @@ def p_asignacion1(t):#t0 = S + 0;
 
 def p_asignacion2(t):#H = 0; 
     '''INSTRUCCION : id igual OPERANDO pcoma'''
-    codigo = str(t[0])+" = "+ str(t[3]) + ";"
+    codigo = str(t[1])+" = "+ str(t[3]) + ";"
     t[0] = AsignacionSimple(t[1], t[3], t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.ASIGNACIONSIMPLE)
 
 def p_asignacion3(t):#t10 = stack[int(t9)];
@@ -287,14 +288,26 @@ def parseopt(imput):
     global parser
     global salida
     global raiz
-    errores = []
+    reglas = []
     lexer = lex.lex()
     parser = yacc.yacc()
     global input
     input = imput
+    
     instrucciones=parser.parse(imput)
-    x = ""
+    c3d = ""
+    reporte = ""
+    optimizador = Optimizar(instrucciones, reglas)
+    optimizador.Ejecutar()
+    reporte = optimizador.ReporteOptimizacion(reglas)
+
     for ins in instrucciones:
-        
-        x+= str(ins)+"\n"
-    return [x, "", ""]
+        c3d += ins.getC3D()+"\n"
+        if ins.getTipo() == TipoBloque.MAIN or ins.getTipo()== TipoBloque.VOID:
+            for bloque in ins.getInstrucciones():
+                c3d += bloque.getC3D()+"\n"
+            c3d+="}\n"
+
+    return [c3d, "", reporte]
+
+ 

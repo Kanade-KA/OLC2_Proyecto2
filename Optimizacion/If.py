@@ -8,4 +8,27 @@ class If:
         self.columna = columna
         self.codigo = codigo
         self.tipo = tipo
-    
+
+    def getOperador1(self):
+        return self.opi
+
+    def getOperador2(self):
+        return self.opd
+
+    def getOperador(self):
+        return self.operador
+
+    def getGoto(self):
+        return self.goto
+
+    def getTipo(self):
+        return self.tipo
+
+    def getFila(self):
+        return self.fila
+
+    def getColumna(self):
+        return self.columna
+
+    def getC3D(self):
+        return self.codigo
