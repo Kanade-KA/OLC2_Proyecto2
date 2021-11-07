@@ -206,17 +206,17 @@ def p_etiqueta(t):#L0:
 
 def p_fmt(t):#fmt.Printf("%.2f", int(bla));
     '''INSTRUCCION : rfmt dot rprintf apar cadena coma rint apar OPERANDO cpar cpar pcoma'''
-    codigo = "fmt.printf("+str(t[5])+", int("+str(t[9])+"));"
+    codigo = "fmt.Printf(\""+str(t[5])+"\", int("+str(t[9])+"));"
     t[0] = Print(t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.FMT)
 
 def p_fmt2(t):#fmt.Printf("%.2f", t20);
     '''INSTRUCCION : rfmt dot rprintf apar cadena coma OPERANDO cpar pcoma'''
-    codigo = "fmt.printf("+str(t[5])+", "+str(t[7])+");"
+    codigo = "fmt.Printf(\""+str(t[5])+"\", "+str(t[7])+");"
     t[0] = Print(t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.FMT)
 
 def p_fmt3(t):#fmt.Printf("%s", "No se puede dividir en cero");
     '''INSTRUCCION : rfmt dot rprintf apar cadena coma cadena cpar pcoma'''
-    codigo = "fmt.printf("+str(t[5])+", "+str(t[7])+");"
+    codigo = "fmt.Printf(\""+str(t[5])+"\", "+str(t[7])+");"
     t[0] = Print(t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.FMT)
 
 def p_if(t):#if 5 == 0 { goto L6; }
