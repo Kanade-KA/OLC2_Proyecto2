@@ -8,6 +8,9 @@ class Goto:
     
     def getEtiqueta(self):
         return self.etiqueta
+
+    def setEtiqueta(self, etiqueta):
+        self.etiqueta = etiqueta
         
     def getFila(self):
         return self.fila
@@ -15,8 +18,11 @@ class Goto:
     def getColumna(self):
         return self.columna
 
-    def getC3D(self):
+    def getCodigoAnterior(self):
         return self.codigo
+
+    def getC3D(self):
+        return "goto "+self.etiqueta+";"
 
     def getTipo(self):
         return self.tipo

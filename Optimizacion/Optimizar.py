@@ -12,6 +12,7 @@ class Optimizar():
         self.Regla1()
         self.Regla2()
         self.Regla3()
+        self.Regla4()
 
     def IncrementarIteracion(self):
         self.iteracion = self.iteracion +1 
@@ -93,7 +94,6 @@ class Optimizar():
                                     break
 
                             j += 1
-
                         #ver si encontró la etiqueta (obvio la encuentra)
                         if encontrado:
                             hayEtiquetas = False
@@ -143,6 +143,78 @@ class Optimizar():
                                 break
                             j+=1
                         self.reglas.append(Optimizacion("Mirilla", "Regla 3", "Se encontró if", codigoant, bloque.getInstrucciones()[i].getC3D(), linea))
+                    i+=1
+
+    def Regla4(self):
+        '''
+        goto L1         |goto L2
+        <instrucciones> |<instrucciones>
+        L1:             |L1:
+        goto L2         |goto L2
+        '''
+        for bloque in self.bloques:
+            linea = ""
+            if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
+                i=0
+                posprimergoto=0
+                while i<len(bloque.getInstrucciones()):
+                    if bloque.getInstrucciones()[i].getTipo()== TipoInstruccion.GOTO:
+                        #DEBEMOS BUSCAR LA ETIQUETA
+                        etiqueta = bloque.getInstrucciones()[i].getEtiqueta()
+                        posprimergoto = i
+                        segundogoto = ""
+                        secumple = False
+                        j = i+1
+                        while j<len(bloque.getInstrucciones()):
+                            if bloque.getInstrucciones()[j].getTipo() == TipoInstruccion.ETIQUETA:
+                                #SI ENCUENTRA LA ETIQUETA... PREGUNTA SI SON IGUALES
+                                if bloque.getInstrucciones()[j].getEtiqueta() == etiqueta:
+                                    posterior = j +1
+                                    if bloque.getInstrucciones()[posterior].getTipo()== TipoInstruccion.GOTO:
+                                        segundogoto = bloque.getInstrucciones()[posterior].getEtiqueta()
+                                        secumple = True
+                                        break
+                            j+=1
+                        if secumple:
+                            bloque.getInstrucciones()[posprimergoto].setEtiqueta(segundogoto)
+                            linea = bloque.getInstrucciones()[posprimergoto].getFila()
+                            self.reglas.append(Optimizacion("Mirilla", "Regla 4", "Se encontro una Etiqueta redundante", bloque.getInstrucciones()[posprimergoto].getCodigoAnterior(), bloque.getInstrucciones()[posprimergoto].getC3D(), linea))
+                    i+=1
+
+    def Regla5(self):
+        '''
+        if a < b {goto L1}  |if a < b {goto L2}
+        <instrucciones>     |<instrucciones>
+        L1:                 |L1:
+        goto L2             |goto L2
+        '''
+        for bloque in self.bloques:
+            linea = ""
+            if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
+                i=0
+                posprimergoto=0
+                while i<len(bloque.getInstrucciones()):
+                    if bloque.getInstrucciones()[i].getTipo()== TipoInstruccion.IF:
+                        #DEBEMOS BUSCAR LA ETIQUETA
+                        etiqueta = bloque.getInstrucciones()[i].getGoto()
+                        posprimergoto = i
+                        segundogoto = ""
+                        secumple = False
+                        j = i+1
+                        while j<len(bloque.getInstrucciones()):
+                            if bloque.getInstrucciones()[j].getTipo() == TipoInstruccion.ETIQUETA:
+                                #SI ENCUENTRA LA ETIQUETA... PREGUNTA SI SON IGUALES
+                                if bloque.getInstrucciones()[j].getEtiqueta() == etiqueta:
+                                    posterior = j +1
+                                    if bloque.getInstrucciones()[posterior].getTipo()== TipoInstruccion.GOTO:
+                                        segundogoto = bloque.getInstrucciones()[posterior].getEtiqueta()
+                                        secumple = True
+                                        break
+                            j+=1
+                        if secumple:
+                            bloque.getInstrucciones()[posprimergoto].setGoto(segundogoto)
+                            linea = bloque.getInstrucciones()[posprimergoto].getFila()
+                            self.reglas.append(Optimizacion("Mirilla", "Regla 5", "Se encontro una If con Etiqueta redundante", bloque.getInstrucciones()[posprimergoto].getCodigoAnterior(), bloque.getInstrucciones()[posprimergoto].getC3D(), linea))
                     i+=1
 
     def CambiarCondicion(self, condicion):
