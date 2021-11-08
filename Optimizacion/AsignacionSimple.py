@@ -19,7 +19,7 @@ class AsignacionSimple:
     def getColumna(self):
         return self.columna
 
-    def getCodigoOriginal(self):
+    def getCodigoAnterior(self):
         return self.codigo
         
     def getC3D(self):

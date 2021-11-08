@@ -21,5 +21,5 @@ class AsignacionArreglo:
     def getTipo(self):
         return self.tipo
 
-    def getCodigoOriginal(self):
+    def getCodigoAnterior(self):
         return self.codigo
