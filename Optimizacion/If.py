@@ -17,10 +17,19 @@ class If:
 
     def getOperador(self):
         return self.operador
+    
+    def setOperador(self, operador):
+        self.operador = operador
 
     def getGoto(self):
         return self.goto
+        
+    def setGoto(self, goto):
+        self.goto = goto
 
+    def getCodigoAnterior(self):
+        return self.codigo
+    
     def getTipo(self):
         return self.tipo
 
@@ -31,4 +40,4 @@ class If:
         return self.columna
 
     def getC3D(self):
-        return self.codigo
+        return "if "+str(self.getOperador1())+" "+str(self.getOperador())+" "+str(self.getOperador2())+" { goto "+self.getGoto()+"; }"

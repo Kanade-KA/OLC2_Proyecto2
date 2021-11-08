@@ -222,7 +222,7 @@ def p_fmt3(t):#fmt.Printf("%s", "No se puede dividir en cero");
 def p_if(t):#if 5 == 0 { goto L6; }
     '''INSTRUCCION : rif OPERANDO CONDICION OPERANDO alla rgoto id pcoma clla'''
     codigo = "if "+str(t[2])+" "+ str(t[3])+" "+ str(t[4]) + "{ goto "+ str(t[7])+ "; };"
-    t[0] = If(t[2], t[4], t[3], t[6], t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.IF)
+    t[0] = If(t[2], t[4], t[3], t[7], t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.IF)
 
 def p_goto(t):#goto L6;
     '''INSTRUCCION : rgoto id pcoma'''

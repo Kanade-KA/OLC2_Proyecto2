@@ -9,8 +9,9 @@ class Optimizar():
         self.iteracion = 1
 
     def Ejecutar(self):
-        #self.Regla1()
+        self.Regla1()
         self.Regla2()
+        self.Regla3()
 
     def IncrementarIteracion(self):
         self.iteracion = self.iteracion +1 
@@ -77,22 +78,87 @@ class Optimizar():
                 i = 0
                 while i<len(bloque.getInstrucciones()):
                     if bloque.getInstrucciones()[i].getTipo() == TipoInstruccion.GOTO:
-                        print(bloque.getInstrucciones()[i].getC3D())
-                        codigo = bloque.getInstrucciones()[i].getC3D() + "..instrucciones.."
+                        etiqueta = bloque.getInstrucciones()[i].getEtiqueta()
+                        codigo = bloque.getInstrucciones()[i].getC3D() + "..instrucciones.. "+etiqueta+":"
+                        linea = bloque.getInstrucciones()[i].getFila()
                         j = i+1
+                        encontrado = False
+                        k = 0
+                        l = i+1
                         while j < len(bloque.getInstrucciones()):
                             if bloque.getInstrucciones()[j].getTipo() == TipoInstruccion.ETIQUETA:
-                                codigo += bloque.getInstrucciones()[j].getC3D()
-                                linea = bloque.getInstrucciones()[j].getFila()
-                                #bloque.getInstrucciones().pop(j)
-                                break
-                            bloque.getInstrucciones().pop(j)
-                        self.reglas.append(Optimizacion("Mirilla", "Regla 2", "Se encontró codigo inalcanzable", codigo, bloque.getInstrucciones()[i].getC3D(), linea))
-                        j += 1
+                                if bloque.getInstrucciones()[j].getEtiqueta() == etiqueta:
+                                    encontrado = True
+                                    k = j-1
+                                    break
+
+                            j += 1
+
+                        #ver si encontró la etiqueta (obvio la encuentra)
+                        if encontrado:
+                            hayEtiquetas = False
+                            t = l
+                            while l < k:
+                                if bloque.getInstrucciones()[l].getTipo() == TipoInstruccion.ETIQUETA:
+                                    hayEtiquetas = True
+                                l += 1
+                            
+                            if not hayEtiquetas:
+                                while t<k:
+                                    bloque.getInstrucciones().pop(t)
+                                    t+=1
+                                self.reglas.append(Optimizacion("Mirilla", "Regla 2", "Se encontró codigo inalcanzable", codigo, bloque.getInstrucciones()[i].getC3D(), linea))
                     i += 1
                             
-    #def Regla3(self):
+    def Regla3(self):
+        '''
+        f a == 10 {goto L1} |if a != 10 {goto L2}
+        goto L2             |<instrucciones1>
+        L1:                 |L2:
+        <instrucciones1>    |
+        L2:                 |
+        '''
+        for bloque in self.bloques:
+            linea = ""
+            if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
+                i=0
+                while i<len(bloque.getInstrucciones()):
+                    if bloque.getInstrucciones()[i].getTipo() == TipoInstruccion.IF and bloque.getInstrucciones()[i+1].getTipo() == TipoInstruccion.GOTO:
+                        codigoant = bloque.getInstrucciones()[i].getCodigoAnterior() + " "+bloque.getInstrucciones()[i+1].getC3D()
+                        negacion = bloque.getInstrucciones()[i+1].getEtiqueta()
+                        aceptacion = bloque.getInstrucciones()[i].getGoto()
+                        linea = bloque.getInstrucciones()[i].getFila()
+                        cambio = self.CambiarCondicion(bloque.getInstrucciones()[i].getOperador())
+                        bloque.getInstrucciones()[i].setOperador(cambio)
+                        bloque.getInstrucciones()[i].setGoto(negacion)
+                        bloque.getInstrucciones().pop(i+1)
+                        #TENGO QUE ELIMINAR LA ETIQUETA ACEPTACION
+                        j = i
+                        while j <len(bloque.getInstrucciones()):
+                            if bloque.getInstrucciones()[j].getTipo() == TipoInstruccion.ETIQUETA:
+                                etiquetatmp = bloque.getInstrucciones()[j].getEtiqueta()
+                                if etiquetatmp == aceptacion:
+                                    bloque.getInstrucciones().pop(j)
+                                    i+=1
+                                break
+                            j+=1
+                        self.reglas.append(Optimizacion("Mirilla", "Regla 3", "Se encontró if", codigoant, bloque.getInstrucciones()[i].getC3D(), linea))
+                    i+=1
 
+    def CambiarCondicion(self, condicion):
+        print("CONDICION: ", condicion)
+        if condicion == "==":
+            return "!="
+        if condicion == "!=":
+            return "=="
+        if condicion == "<=":
+            return ">="
+        if condicion == ">=":
+            return "<="
+        if condicion == "<":
+            return ">"
+        if condicion == ">":
+            return "<"
 
     def IsNumber(self, operador):
         if type(operador) is int:
