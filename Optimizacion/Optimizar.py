@@ -15,6 +15,7 @@ class Optimizar():
         self.Regla4()
         self.Regla5()
         self.Regla6()
+        self.Regla7()
 
     def IncrementarIteracion(self):
         self.iteracion = self.iteracion +1 
@@ -252,6 +253,41 @@ class Optimizar():
                                         self.reglas.append(Optimizacion("Mirilla", "Regla 6", "Se encontró mult/div con cero", anterior, "Se elimina", linea))
                                         bloque.getInstrucciones().pop(i)
                                         i = i - 1;
+                        i+=1
+
+    def Regla7(self):
+        '''
+        x = y + 0   | X = Y
+        x = y - 0   |
+        x = y * 1   |
+        x = y / 1   |
+        '''
+        for bloque in self.bloques:
+            if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
+                    i=0
+                    while i<len(bloque.getInstrucciones()):
+                        if bloque.getInstrucciones()[i].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
+                            if bloque.getInstrucciones()[i].getOperador1() != bloque.getInstrucciones()[i].getTemporal():
+                                #SI ES SUMA HAY QUE VER QUE SEA 0
+                                print("OPERADOR: ", bloque.getInstrucciones()[i].getOperador())
+                                if bloque.getInstrucciones()[i].getOperador()=="+" or bloque.getInstrucciones()[i].getOperador()=="-":
+                                    if bloque.getInstrucciones()[i].getOperador2() == 0:
+                                        anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
+                                        linea = bloque.getInstrucciones()[i].getFila()
+                                        bloque.getInstrucciones()[i].setOperador2("")
+                                        bloque.getInstrucciones()[i].setOperador("")
+                                        bloque.getInstrucciones()[i].setTipo(TipoInstruccion.ASIGNACIONSIMPLE)
+                                        nuevo = bloque.getInstrucciones()[i].getC3D()
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 7", "Se encontró suma/resta con cero", anterior, nuevo, linea))
+                                elif bloque.getInstrucciones()[i].getOperador()=="*" or bloque.getInstrucciones()[i].getOperador()=="/":
+                                    if bloque.getInstrucciones()[i].getOperador2() == 1:
+                                        anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
+                                        linea = bloque.getInstrucciones()[i].getFila()
+                                        bloque.getInstrucciones()[i].setOperador2("")
+                                        bloque.getInstrucciones()[i].setOperador("")
+                                        bloque.getInstrucciones()[i].setTipo(TipoInstruccion.ASIGNACIONSIMPLE)
+                                        nuevo = bloque.getInstrucciones()[i].getC3D()
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 7", "Se encontró mult/div con cero", anterior, nuevo, linea))
                         i+=1
 
     def CambiarCondicion(self, condicion):
