@@ -13,6 +13,8 @@ class Optimizar():
         self.Regla2()
         self.Regla3()
         self.Regla4()
+        self.Regla5()
+        self.Regla6()
 
     def IncrementarIteracion(self):
         self.iteracion = self.iteracion +1 
@@ -220,6 +222,37 @@ class Optimizar():
                             linea = bloque.getInstrucciones()[posprimergoto].getFila()
                             self.reglas.append(Optimizacion("Mirilla", "Regla 5", "Se encontro una If con Etiqueta redundante", bloque.getInstrucciones()[posprimergoto].getCodigoAnterior(), bloque.getInstrucciones()[posprimergoto].getC3D(), linea))
                     i+=1
+
+    def Regla6(self):
+        '''
+        x = x + 0   |SE ELIMINAN
+        x = x - 0   |
+        x = x * 1   |
+        x = x / 1   |
+        '''
+        for bloque in self.bloques:
+            if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
+                    i=0
+                    while i<len(bloque.getInstrucciones()):
+                        if bloque.getInstrucciones()[i].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
+                            if bloque.getInstrucciones()[i].getOperador1() == bloque.getInstrucciones()[i].getTemporal():
+                                #SI ES SUMA HAY QUE VER QUE SEA 0
+                                print("OPERADOR: ", bloque.getInstrucciones()[i].getOperador())
+                                if bloque.getInstrucciones()[i].getOperador()=="+" or bloque.getInstrucciones()[i].getOperador()=="-":
+                                    if bloque.getInstrucciones()[i].getOperador2() == 0:
+                                        anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
+                                        linea = bloque.getInstrucciones()[i].getFila()
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 6", "Se encontró suma/resta con cero", anterior, "Se elimina", linea))
+                                        bloque.getInstrucciones().pop(i)
+                                        i = i - 1;
+                                elif bloque.getInstrucciones()[i].getOperador()=="*" or bloque.getInstrucciones()[i].getOperador()=="/":
+                                    if bloque.getInstrucciones()[i].getOperador2() == 1:
+                                        anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
+                                        linea = bloque.getInstrucciones()[i].getFila()
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 6", "Se encontró mult/div con cero", anterior, "Se elimina", linea))
+                                        bloque.getInstrucciones().pop(i)
+                                        i = i - 1;
+                        i+=1
 
     def CambiarCondicion(self, condicion):
         print("CONDICION: ", condicion)
