@@ -3,10 +3,10 @@ from Optimizacion.TipoCodigo import TipoBloque, TipoInstruccion
 
 
 class Optimizar():
-    def __init__(self, bloques, reglas):
+    def __init__(self, bloques, reglas, iteracion):
         self.bloques = bloques
         self.reglas = reglas
-        self.iteracion = 1
+        self.iteracion = iteracion
 
     def Ejecutar(self):
         self.Regla1()
@@ -17,9 +17,6 @@ class Optimizar():
         self.Regla6()
         self.Regla7()
         self.Regla8()
-
-    def IncrementarIteracion(self):
-        self.iteracion = self.iteracion +1 
 
     def Regla1(self):
         '''
@@ -59,7 +56,7 @@ class Optimizar():
                                             #SI ES ASÍ TENGO QUE VER QUE NO HALLA CAMBIO
                                             if not hayCambio:
                                                 bloque.getInstrucciones().pop(j)
-                                                self.reglas.append(Optimizacion("Mirilla", "Regla 1", "Se eliminó variable redundante", codigo, " - ", linea))
+                                                self.reglas.append(Optimizacion("Mirilla", "Regla 1", "Se eliminó variable redundante", codigo, " - ", linea, self.iteracion))
                                                 j += -1
                                                 i += -1
                                         else:
@@ -111,7 +108,7 @@ class Optimizar():
                                 while t<k:
                                     bloque.getInstrucciones().pop(t)
                                     t+=1
-                                self.reglas.append(Optimizacion("Mirilla", "Regla 2", "Se encontró codigo inalcanzable", codigo, bloque.getInstrucciones()[i].getC3D(), linea))
+                                self.reglas.append(Optimizacion("Mirilla", "Regla 2", "Se encontró codigo inalcanzable", codigo, bloque.getInstrucciones()[i].getC3D(), linea, self.iteracion))
                     i += 1
                             
     def Regla3(self):
@@ -146,7 +143,8 @@ class Optimizar():
                                     i+=1
                                 break
                             j+=1
-                        self.reglas.append(Optimizacion("Mirilla", "Regla 3", "Se encontró if", codigoant, bloque.getInstrucciones()[i].getC3D(), linea))
+                        print("ITERACION NUMERO: ", self.iteracion)
+                        self.reglas.append(Optimizacion("Mirilla", "Regla 3", "Se encontró if", codigoant, bloque.getInstrucciones()[i].getC3D(), linea, self.iteracion))
                     i+=1
 
     def Regla4(self):
@@ -188,7 +186,7 @@ class Optimizar():
                         if secumple:
                             bloque.getInstrucciones()[posprimergoto].setEtiqueta(segundogoto)
                             linea = bloque.getInstrucciones()[posprimergoto].getFila()
-                            self.reglas.append(Optimizacion("Mirilla", "Regla 4", "Se encontro una Etiqueta redundante", bloque.getInstrucciones()[posprimergoto].getCodigoAnterior(), bloque.getInstrucciones()[posprimergoto].getC3D(), linea))
+                            self.reglas.append(Optimizacion("Mirilla", "Regla 4", "Se encontro una Etiqueta redundante", bloque.getInstrucciones()[posprimergoto].getCodigoAnterior(), bloque.getInstrucciones()[posprimergoto].getC3D(), linea, self.iteracion))
                     i+=1
 
     def Regla5(self):
@@ -226,7 +224,7 @@ class Optimizar():
                         if secumple:
                             bloque.getInstrucciones()[posprimergoto].setGoto(segundogoto)
                             linea = bloque.getInstrucciones()[posprimergoto].getFila()
-                            self.reglas.append(Optimizacion("Mirilla", "Regla 5", "Se encontro una If con Etiqueta redundante", bloque.getInstrucciones()[posprimergoto].getCodigoAnterior(), bloque.getInstrucciones()[posprimergoto].getC3D(), linea))
+                            self.reglas.append(Optimizacion("Mirilla", "Regla 5", "Se encontro una If con Etiqueta redundante", bloque.getInstrucciones()[posprimergoto].getCodigoAnterior(), bloque.getInstrucciones()[posprimergoto].getC3D(), linea, self.iteracion))
                     i+=1
 
     def Regla6(self):
@@ -243,19 +241,18 @@ class Optimizar():
                         if bloque.getInstrucciones()[i].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
                             if bloque.getInstrucciones()[i].getOperador1() == bloque.getInstrucciones()[i].getTemporal():
                                 #SI ES SUMA HAY QUE VER QUE SEA 0
-                                print("OPERADOR: ", bloque.getInstrucciones()[i].getOperador())
                                 if bloque.getInstrucciones()[i].getOperador()=="+" or bloque.getInstrucciones()[i].getOperador()=="-":
                                     if bloque.getInstrucciones()[i].getOperador2() == 0:
                                         anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
                                         linea = bloque.getInstrucciones()[i].getFila()
-                                        self.reglas.append(Optimizacion("Mirilla", "Regla 6", "Se encontró suma/resta con cero", anterior, "Se elimina", linea))
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 6", "Se encontró suma/resta con cero", anterior, "Se elimina", linea, self.iteracion))
                                         bloque.getInstrucciones().pop(i)
                                         i = i - 1;
                                 elif bloque.getInstrucciones()[i].getOperador()=="*" or bloque.getInstrucciones()[i].getOperador()=="/":
                                     if bloque.getInstrucciones()[i].getOperador2() == 1:
                                         anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
                                         linea = bloque.getInstrucciones()[i].getFila()
-                                        self.reglas.append(Optimizacion("Mirilla", "Regla 6", "Se encontró mult/div con cero", anterior, "Se elimina", linea))
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 6", "Se encontró mult/div con cero", anterior, "Se elimina", linea, self.iteracion))
                                         bloque.getInstrucciones().pop(i)
                                         i = i - 1;
                         i+=1
@@ -282,7 +279,7 @@ class Optimizar():
                                         bloque.getInstrucciones()[i].setOperador("")
                                         bloque.getInstrucciones()[i].setTipo(TipoInstruccion.ASIGNACIONSIMPLE)
                                         nuevo = bloque.getInstrucciones()[i].getC3D()
-                                        self.reglas.append(Optimizacion("Mirilla", "Regla 7", "Se encontró suma/resta con cero", anterior, nuevo, linea))
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 7", "Se encontró suma/resta con cero", anterior, nuevo, linea, self.iteracion))
                                 elif bloque.getInstrucciones()[i].getOperador()=="*" or bloque.getInstrucciones()[i].getOperador()=="/":
                                     if bloque.getInstrucciones()[i].getOperador2() == 1:
                                         anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
@@ -291,7 +288,7 @@ class Optimizar():
                                         bloque.getInstrucciones()[i].setOperador("")
                                         bloque.getInstrucciones()[i].setTipo(TipoInstruccion.ASIGNACIONSIMPLE)
                                         nuevo = bloque.getInstrucciones()[i].getC3D()
-                                        self.reglas.append(Optimizacion("Mirilla", "Regla 7", "Se encontró mult/div con cero", anterior, nuevo, linea))
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 7", "Se encontró mult/div con cero", anterior, nuevo, linea, self.iteracion))
                         i+=1
 
     def Regla8(self):
@@ -304,7 +301,6 @@ class Optimizar():
             if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
                     i=0
                     while i<len(bloque.getInstrucciones()):
-                        print("ENTRO ALV")
                         if bloque.getInstrucciones()[i].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
                             if bloque.getInstrucciones()[i].getOperador1() != bloque.getInstrucciones()[i].getTemporal():
                                 #SI ES SUMA HAY QUE VER QUE SEA 0
@@ -316,7 +312,7 @@ class Optimizar():
                                         bloque.getInstrucciones()[i].setOperador("+")
                                         bloque.getInstrucciones()[i].setTipo(TipoInstruccion.ASIGNACIONSIMPLE)
                                         nuevo = bloque.getInstrucciones()[i].getC3D()
-                                        self.reglas.append(Optimizacion("Mirilla", "Regla 8", "Se encontró multiplicacion de dos", anterior, nuevo, linea))
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 8", "Se encontró multiplicacion de dos", anterior, nuevo, linea, self.iteracion))
                                     if bloque.getInstrucciones()[i].getOperador2() == 0:
                                         anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
                                         linea = bloque.getInstrucciones()[i].getFila()
@@ -325,7 +321,7 @@ class Optimizar():
                                         bloque.getInstrucciones()[i].setOperador("")
                                         bloque.getInstrucciones()[i].setTipo(TipoInstruccion.ASIGNACIONSIMPLE)
                                         nuevo = bloque.getInstrucciones()[i].getC3D()
-                                        self.reglas.append(Optimizacion("Mirilla", "Regla 8", "Se encontró multiplicacion de cero", anterior, nuevo, linea))
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 8", "Se encontró multiplicacion de cero", anterior, nuevo, linea, self.iteracion))
                                 elif bloque.getInstrucciones()[i].getOperador()=="/":
                                     if bloque.getInstrucciones()[i].getOperador1() == 0:
                                         anterior = bloque.getInstrucciones()[i].getCodigoAnterior()
@@ -335,11 +331,10 @@ class Optimizar():
                                         bloque.getInstrucciones()[i].setOperador("")
                                         bloque.getInstrucciones()[i].setTipo(TipoInstruccion.ASIGNACIONSIMPLE)
                                         nuevo = bloque.getInstrucciones()[i].getC3D()
-                                        self.reglas.append(Optimizacion("Mirilla", "Regla 8", "Se encontró division con cero", anterior, nuevo, linea))
+                                        self.reglas.append(Optimizacion("Mirilla", "Regla 8", "Se encontró division con cero", anterior, nuevo, linea, self.iteracion))
                         i+=1
 
     def CambiarCondicion(self, condicion):
-        print("CONDICION: ", condicion)
         if condicion == "==":
             return "!="
         if condicion == "!=":
@@ -395,7 +390,7 @@ class Optimizar():
             cadena += str(item.getFila())
             cadena += "</td>"
             cadena += "<td>"
-            cadena += str(self.iteracion)
+            cadena += str(item.getIteracion())
             cadena += "</td>"
             cadena += "</tr>"
         cadena +="</table>"

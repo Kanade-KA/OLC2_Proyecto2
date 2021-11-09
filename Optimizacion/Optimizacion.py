@@ -1,11 +1,12 @@
 class Optimizacion():
-    def __init__(self, tipo, regla, descripcion, original, optimizada, fila):
+    def __init__(self, tipo, regla, descripcion, original, optimizada, fila, iteracion):
         self.tipo = tipo
         self.regla = regla
         self.descripcion = descripcion
         self.original = original
         self.optimizada = optimizada
         self.fila = fila
+        self.iteracion = iteracion
 
     
     def getTipo(self):
@@ -25,3 +26,7 @@ class Optimizacion():
 
     def getFila(self):
         return str(self.fila)
+
+    def getIteracion(self):
+        print("GET ITERACION: ", self.iteracion)
+        return str(self.iteracion)

@@ -1,5 +1,6 @@
 from Expresiones.Constante import Constante
 from Expresiones.Identificador import Identificador
+from Expresiones.Length import Length
 from Expresiones.Logica import Logica
 from Expresiones.Nativas import Nativas
 from Expresiones.Parse import Parse
@@ -50,7 +51,7 @@ class Imprimir(NodoAST):
 
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//**************************IMPRIMIR**************************\n")
-        for ins in self.expresion:
+        for ins in self.expresion:  
             if isinstance(ins, Constante):
                 constante = ins.traducir(traductor, entorno)
                 if constante != "error":
@@ -106,6 +107,12 @@ class Imprimir(NodoAST):
                 if resultado[1] == TipoObjeto.DECIMAL:
                     self.ImprimirDoble(traductor, resultado[0])
             if isinstance(ins, Parse):
+                resultado = ins.traducir(traductor, entorno)
+                if resultado[1] == TipoObjeto.ENTERO:
+                    self.ImprimirInt(traductor, resultado[0])
+                elif resultado[1] == TipoObjeto.DECIMAL:
+                    self.ImprimirDoble(traductor, resultado[0])
+            if isinstance(ins, Length):
                 resultado = ins.traducir(traductor, entorno)
                 if resultado[1] == TipoObjeto.ENTERO:
                     self.ImprimirInt(traductor, resultado[0])

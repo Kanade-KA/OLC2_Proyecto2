@@ -1,3 +1,4 @@
+from Abstract.Objeto import TipoObjeto
 from Instrucciones.LlamaMatriz2D import LlamaMatriz2D
 from Expresiones.Arreglo2D import Arreglo2D
 from TablaSimbolo.Error import Error
@@ -40,5 +41,17 @@ class Length(NodoAST):
                 return "nothing"
 
     def traducir(self, traductor, entorno):
-        return "length"
+        iden = self.operando.getIdentificador()
+        simbolo = entorno.retornarSimbolo(iden)
+        array = simbolo.getValor()
+        if isinstance(array, Arreglo):
+            heap = traductor.ExtraerVariable(simbolo.getPosicion(), False)
+            temporal = "t"+str(traductor.getContador())
+            traductor.IncrementarContador()
+            cadena = temporal +" = heap[int("+heap+")];\n"
+            traductor.addCodigo(cadena)
+            return [temporal, TipoObjeto.ENTERO]
+        else:
+            traductor.addExcepcion(Error("Semantico", "Error, no es de tipo matriz", self.fila, self.columna))
+        
         
