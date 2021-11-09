@@ -302,6 +302,7 @@ def parseopt(imput):
     reporte = optimizador.ReporteOptimizacion(reglas)
 
     for ins in instrucciones:
+        print("INSTRUCCIONES: ", ins)
         c3d += ins.getC3D()+"\n"
         if ins.getTipo() == TipoBloque.MAIN or ins.getTipo()== TipoBloque.VOID:
             for bloque in ins.getInstrucciones():

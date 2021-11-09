@@ -75,36 +75,36 @@ class Aritmetica(NodoAST):
             if (self.operador==OperadorAritmetico.MAS):
                 if self.sinString(opi[1], opd[1]):
                     if  self.HayDoble(opi[1], opd[1]):
-                        suma = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "+"+ str(opd[0])
+                        suma = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + " + "+ str(opd[0])
                         traductor.addCodigo(suma+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
-                        suma = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "+"+ str(opd[0])
+                        suma = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + " + "+ str(opd[0])
                         traductor.addCodigo(suma+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
             if (self.operador==OperadorAritmetico.MENOS):
                 if self.sinString(opi[1], opd[1]):
                     if  self.HayDoble(opi[1], opd[1]):
-                        resta = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "-"+ str(opd[0])
+                        resta = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + " - "+ str(opd[0])
                         traductor.addCodigo(resta+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
-                        resta = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "-"+ str(opd[0])
+                        resta = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + " - "+ str(opd[0])
                         traductor.addCodigo(resta+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]
             if (self.operador == OperadorAritmetico.POR):
                 if self.sinString(opi[1], opd[1]):
                     if  self.HayDoble(opi[1], opd[1]):
-                        mult = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "*"+ str(opd[0])
+                        mult = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + " * "+ str(opd[0])
                         traductor.addCodigo(mult+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
                     else:
-                        mult = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + "*"+ str(opd[0])
+                        mult = "t"+ str(traductor.getContador()) + " = "+ str(opi[0]) + " * "+ str(opd[0])
                         traductor.addCodigo(mult+";\n")
                         traductor.IncrementarContador()
                         return  ["t"+str(traductor.getContador()-1), TipoObjeto.ENTERO]

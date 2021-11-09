@@ -174,11 +174,15 @@ class Optimizar():
                                 if bloque.getInstrucciones()[j].getEtiqueta() == etiqueta:
                                     posterior = j + 1
                                     #DEBEMOS VER SI BAJO ESA ETIQUETA HAY UN GOTO CON OTRA ETIQUETA
-                                    if bloque.getInstrucciones()[posterior].getTipo()== TipoInstruccion.GOTO:
-                                        segundogoto = bloque.getInstrucciones()[posterior].getEtiqueta()
-                                        #ELIMINO LA ETIQUETA PARA QUE NO HALLA CLAVO CON GOLANG
-                                        bloque.getInstrucciones().pop(j)
-                                        secumple = True
+                                    if posterior < len(bloque.getInstrucciones()):
+                                        if bloque.getInstrucciones()[posterior].getTipo()== TipoInstruccion.GOTO:
+                                            segundogoto = bloque.getInstrucciones()[posterior].getEtiqueta()
+                                            #ELIMINO LA ETIQUETA PARA QUE NO HALLA CLAVO CON GOLANG
+                                            bloque.getInstrucciones().pop(j)
+                                            secumple = True
+                                            break
+                                    else:
+                                        secumple = False
                                         break
                             j+=1
                         if secumple:

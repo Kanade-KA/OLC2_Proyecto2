@@ -10,7 +10,15 @@ class BloqueDeclaracion:
         return self.ids
 
     def getC3D(self):
-        return self.codigo
+        contador = 0
+        cadena = "var "
+        for iden in self.ids:
+            cadena += iden
+            if contador < len(self.ids)-1:
+                cadena += ","
+            contador += 1
+        cadena += " float64;"
+        return cadena
 
     def getFila(self):
         return self.fila
