@@ -11,7 +11,7 @@ class Optimizar():
     def Ejecutar(self):
         self.Regla1()
         self.Regla2()
-        #self.Regla3()
+        self.Regla3()
         self.Regla4()
 
         self.Regla5()
@@ -369,13 +369,13 @@ class Optimizar():
         if condicion == "!=":
             return "=="
         if condicion == "<=":
-            return ">="
-        if condicion == ">=":
-            return "<="
-        if condicion == "<":
             return ">"
-        if condicion == ">":
+        if condicion == ">=":
             return "<"
+        if condicion == "<":
+            return ">="
+        if condicion == ">":
+            return "<="
 
     def IsNumber(self, operador):
         if type(operador) is int:

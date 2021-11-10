@@ -200,6 +200,11 @@ def p_asignacion4(t):#stack[int(t1)] = 10;
     codigo = str(t[1])+"[int("+str(t[5])+")] = "+ str(t[9])+";"
     t[0] = ArregloAsignacion(t[1], t[5], t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.ARREGLOASIGNACION)
 
+def p_asignacion5(t):#stack[int(t1)] = 10;
+    '''INSTRUCCION : id acor rint apar int cpar ccor igual OPERANDO pcoma'''
+    codigo = str(t[1])+"[int("+str(t[5])+")] = "+ str(t[9])+";"
+    t[0] = ArregloAsignacion(t[1], t[5], t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.ARREGLOASIGNACION)
+
 def p_etiqueta(t):#L0:
     '''INSTRUCCION : id dosp'''
     codigo = str(t[1])+":"
