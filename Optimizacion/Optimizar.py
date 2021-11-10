@@ -9,15 +9,15 @@ class Optimizar():
         self.iteracion = iteracion
 
     def Ejecutar(self):
-        #self.Regla1()
-        #self.Regla2()
-        self.Regla3()
-        #self.Regla4()
+        self.Regla1()
+        self.Regla2()
+        #self.Regla3()
+        self.Regla4()
 
-        #self.Regla5()
-        #self.Regla6()
-        #self.Regla7()
-        #self.Regla8()
+        self.Regla5()
+        self.Regla6()
+        self.Regla7()
+        self.Regla8()
 
     def Regla1(self):
         '''
@@ -136,9 +136,24 @@ class Optimizar():
                                 cambio = self.CambiarCondicion(bloque.getInstrucciones()[i].getOperador())
                                 bloque.getInstrucciones()[i].setOperador(cambio)
                                 bloque.getInstrucciones()[i].setGoto(negacion)
-                                bloque.getInstrucciones().pop(i+1)#PARA ELIMINAR EL DE GOTO
-                                bloque.getInstrucciones().pop(i+1)#PARA ELIMINAR LA ETIQUETA DEL GOTO
-                                self.reglas.append(Optimizacion("Mirilla", "Regla 3", "Se encontró if", codigoant, bloque.getInstrucciones()[i].getC3D(), linea, self.iteracion))
+                                #TENGO QUE VER SI ESA ETIQUETA ES UTILIZADA EN OTRO LADO...
+                                k = 0
+                                tope = i+1
+                                siseusa = False
+                                while k < tope:
+                                    if bloque.getInstrucciones()[k].getTipo() == TipoInstruccion.IF:
+                                        if bloque.getInstrucciones()[k].getGoto() == aceptacion:
+                                            siseusa = True
+                                    if bloque.getInstrucciones()[k].getTipo() == TipoInstruccion.GOTO:
+                                        if bloque.getInstrucciones()[k].getEtiqueta() == aceptacion:
+                                            siseusa = True
+                                    k+=1
+                                
+                                if not siseusa:
+                                    bloque.getInstrucciones().pop(i+1)#PARA ELIMINAR EL DE GOTO
+                                    bloque.getInstrucciones().pop(i+1)#PARA ELIMINAR LA ETIQUETA DEL GOTO
+                                    self.reglas.append(Optimizacion("Mirilla", "Regla 3", "Se encontró if", codigoant, bloque.getInstrucciones()[i].getC3D(), linea, self.iteracion))
+                                
                     i+=1
 
     def Regla4(self):
@@ -151,27 +166,27 @@ class Optimizar():
         for bloque in self.bloques:
             if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
                 i=0
-                posprimergoto=0
-                segundogoto=""
-                secumple=False
+                posicionGoto1 = 0
+                posicionObsoleta = 0
+                etiquetaGoto1 = ""#Sera la obsoleta 
+                etiquetaGoto2 = ""#Sera la que reemplaza al goto 1
+                secumple = False
                 while i<len(bloque.getInstrucciones()):
+                    #BUSCAMOS UN GOTO...
                     if bloque.getInstrucciones()[i].getTipo()== TipoInstruccion.GOTO:
-                        #DEBEMOS BUSCAR LA ETIQUETA
-                        etiqueta = bloque.getInstrucciones()[i].getEtiqueta()
+                        posicionGoto1 = i
+                        etiquetaGoto1 = bloque.getInstrucciones()[i].getEtiqueta()
                         j = i+1
+                        #BUSCAMOS LA ETIQUETA CON ESE NOMBRE
                         while j<len(bloque.getInstrucciones()):
-                            #DEBEMOS VER SI ES ETIQUETA
                             if bloque.getInstrucciones()[j].getTipo() == TipoInstruccion.ETIQUETA:
                                 #SI ENCUENTRA LA ETIQUETA... PREGUNTA SI SON IGUALES
-                                if bloque.getInstrucciones()[j].getEtiqueta() == etiqueta:
-                                    posterior = j + 1
+                                if bloque.getInstrucciones()[j].getEtiqueta() == etiquetaGoto1:
                                     #DEBEMOS VER SI BAJO ESA ETIQUETA HAY UN GOTO CON OTRA ETIQUETA
-                                    if posterior < len(bloque.getInstrucciones()):
-                                        if bloque.getInstrucciones()[posterior].getTipo()== TipoInstruccion.GOTO:
-                                            segundogoto = bloque.getInstrucciones()[posterior].getEtiqueta()
-                                            #ELIMINO LA ETIQUETA PARA QUE NO HALLA CLAVO CON GOLANG
-                                            bloque.getInstrucciones().pop(j)
-                                            i+= -1
+                                    posicionObsoleta = j
+                                    if j+1 < len(bloque.getInstrucciones()):#ESTO PARA VER SI NO LLEGÓ A UN TOPE
+                                        if bloque.getInstrucciones()[j+1].getTipo()== TipoInstruccion.GOTO:
+                                            etiquetaGoto2 = bloque.getInstrucciones()[j+1].getEtiqueta()
                                             secumple = True
                                             break
                                     else:
@@ -179,11 +194,26 @@ class Optimizar():
                                         break
                             j+=1
                         if secumple:
-                            if bloque.getInstrucciones()[posprimergoto].getTipo() != TipoInstruccion.ASIGNACIONSIMPLE:
-                                #print("TIPO DE ETIQUETA: ", bloque.getInstrucciones()[posprimergoto].getTipo())
-                                bloque.getInstrucciones()[posprimergoto].setEtiqueta(segundogoto)
-                                linea = bloque.getInstrucciones()[posprimergoto].getFila()
-                                self.reglas.append(Optimizacion("Mirilla", "Regla 4", "Se encontro una Etiqueta redundante", bloque.getInstrucciones()[posprimergoto].getCodigoAnterior(), bloque.getInstrucciones()[posprimergoto].getC3D(), linea, self.iteracion))
+                            #ANTES DE ELIMINAR ESA ETIQUETA DEBEMOS VER QUE NO ESTÉ LLAMADA POR OTRO LADO
+                            k = 0
+                            while k < posicionObsoleta:
+                                if bloque.getInstrucciones()[k].getTipo() == TipoInstruccion.IF:
+                                    if bloque.getInstrucciones()[k].getGoto() == etiquetaGoto1:
+                                        siseusa = True
+                                if bloque.getInstrucciones()[k].getTipo() == TipoInstruccion.GOTO:
+                                    if bloque.getInstrucciones()[k].getEtiqueta() == etiquetaGoto1:
+                                        siseusa = True
+                                k+=1
+
+                            #SI NO SE USA DEBO ELIMINAR ESA ETIQUETA OBSOLETA Y CAMBIAR EL GOTO
+                            if not siseusa:
+                                linea = bloque.getInstrucciones()[i].getFila()
+                                antes = bloque.getInstrucciones()[i].getCodigoAnterior()
+                                actual = bloque.getInstrucciones()[i].getC3D()
+                                #CAMBIAMOS LA ETIQUETA
+                                bloque.getInstrucciones()[posicionGoto1].setEtiqueta(etiquetaGoto2)
+                                bloque.getInstrucciones().pop(posicionObsoleta)#PARA ELIMINAR LA ETIQUETA OBSOLETA
+                                self.reglas.append(Optimizacion("Mirilla", "Regla 4", "Se encontro una Etiqueta redundante", antes, actual, linea, self.iteracion))
                     i+=1
 
     def Regla5(self):

@@ -217,7 +217,7 @@ def p_fmt2(t):#fmt.Printf("%.2f", t20);
 
 def p_fmt3(t):#fmt.Printf("%s", "No se puede dividir en cero");
     '''INSTRUCCION : rfmt dot rprintf apar cadena coma cadena cpar pcoma'''
-    codigo = "fmt.Printf(\""+str(t[5])+"\", "+str(t[7])+");"
+    codigo = "fmt.Printf(\""+str(t[5])+"\", \""+str(t[7])+"\");"
     t[0] = Print(t.lineno(1), t.lexpos(1), codigo, TipoInstruccion.FMT)
 
 def p_if(t):#if 5 == 0 { goto L6; }
@@ -300,7 +300,7 @@ def parseopt(imput):
     reporte = ""
     
     for i in range(1,10):
-        optimizador = Optimizar(instrucciones, reglas, 1)
+        optimizador = Optimizar(instrucciones, reglas, i)
         optimizador.Ejecutar()
     
     reporte = optimizador.ReporteOptimizacion(reglas)
