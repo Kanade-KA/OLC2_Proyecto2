@@ -28,5 +28,4 @@ class Optimizacion():
         return str(self.fila)
 
     def getIteracion(self):
-        print("GET ITERACION: ", self.iteracion)
         return str(self.iteracion)

@@ -59,6 +59,7 @@ t_menor         = r'<'
 t_mayori        = r'>='
 t_menori        = r'<='
 t_igualigual    = r'=='
+t_diferente     = r'!='
 t_dosp          = r'\:'
 t_dot           = r'\.'
 
@@ -299,13 +300,14 @@ def parseopt(imput):
     reporte = ""
     
     for i in range(1,10):
-        optimizador = Optimizar(instrucciones, reglas, i)
+        optimizador = Optimizar(instrucciones, reglas, 1)
         optimizador.Ejecutar()
     
     reporte = optimizador.ReporteOptimizacion(reglas)
 
     for ins in instrucciones:
         c3d += ins.getC3D()+"\n"
+        print("INSTRUCCIONES",ins)
         if ins.getTipo() == TipoBloque.MAIN or ins.getTipo()== TipoBloque.VOID:
             for bloque in ins.getInstrucciones():
                 c3d += bloque.getC3D()+"\n"
