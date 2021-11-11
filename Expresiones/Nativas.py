@@ -123,11 +123,11 @@ class Nativas(NodoAST):
             traductor.IncrementarContador()
             cadena = valor+" = "+str(op[0])+";\n"
             cadena += heap +" = heap[int("+valor+")];\n"
-            cadena += "if "+heap+" == 0 { goto L0 }\n"
+            cadena += "if "+heap+" == 0 { goto L0; }\n"
             cadena += valor +" = "+valor+" - 1;\n"
-            cadena += "if "+valor+" == -1 { goto L1 }\n"
+            cadena += "if "+valor+" == -1 { goto L1; }\n"
             cadena += heap +" = heap[int("+valor+")];"
-            cadena += "if "+heap+" == -1 { goto L1 }\n"
+            cadena += "if "+heap+" == -1 { goto L1; }\n"
             cadena += "L0:\n"
             traductor.addCodigo(cadena)
             newheap = traductor.putStringHeap(str(op[0]))
