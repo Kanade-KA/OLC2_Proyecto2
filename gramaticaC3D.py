@@ -324,7 +324,6 @@ def parseopt(imput, tipo):
 
     for ins in instrucciones:
         c3d += ins.getC3D()+"\n"
-        print("INSTRUCCIONES",ins)
         if ins.getTipo() == TipoBloque.MAIN or ins.getTipo()== TipoBloque.VOID:
             for bloque in ins.getInstrucciones():
                 c3d += bloque.getC3D()+"\n"
