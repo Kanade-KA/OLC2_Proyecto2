@@ -288,7 +288,7 @@ parser = yacc.yacc()
 import ply.lex as lex
 lexer = lex.lex()
 
-def parseopt(imput):
+def parseopt(imput, tipo):
     global errores
     global lexer
     global parser
@@ -303,10 +303,22 @@ def parseopt(imput):
     instrucciones=parser.parse(imput)
     c3d = ""
     reporte = ""
-    
+    tamanio = 20
     for i in range(1,10):
-        optimizador = Optimizar(instrucciones, reglas, i)
-        optimizador.Ejecutar()
+        optimizador = Optimizar(instrucciones, reglas, i, tamanio)
+        
+        if tipo == 1:
+            optimizador.Ejecutar()
+        elif tipo == 2:
+            optimizador.EjecutarS3()
+
+        contador = 0
+        for x in reglas:
+            if x.getIteracion() == i:
+                contador += 1
+        if contador==0:
+            tamanio += 20
+        
     
     reporte = optimizador.ReporteOptimizacion(reglas)
 
@@ -319,5 +331,4 @@ def parseopt(imput):
             c3d+="}\n"
 
     return [c3d, "", reporte]
-
  

@@ -35,8 +35,17 @@ def home():
             inptres = request.form["salida"]
             global tmp_val4
             tmp_val4=inptres
-            result=optimizacion(tmp_val4)
+            result=optimizacion(tmp_val4, 1)
             return render_template('index.html', resultado=tmp_val4, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
+        if request.form['submit_button']=='mirillas3':
+            inpt = request.form["entrada"]
+            tmp_val=inpt
+
+            inptres = request.form["salida"]
+            global tmp_val5
+            tmp_val5=inptres
+            result=optimizacion(tmp_val5, 2)
+            return render_template('index.html', resultado=tmp_val5, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
         else:
             return render_template('index.html', entry ="", graf="")
     else:
