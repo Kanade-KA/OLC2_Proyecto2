@@ -505,9 +505,23 @@ class Optimizar():
                             if bloque.getInstrucciones()[comienzotemporal].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
                                 operacion2 = bloque.getInstrucciones()[comienzotemporal].getOperacion()
                                 if operacion1 == operacion2:
+                                    #TENGO QUE VER QUE NI OP1 Y OP2 hallan cambiado hasta este punto.
+                                    puntofinal = i
+                                    iniciofinal = comienzotemporal
+                                    haycambio = False
+                                    
+                                    while iniciofinal < puntofinal:
+                                        if bloque.getInstrucciones()[iniciofinal].getTipo() == TipoInstruccion.ASIGNACIONOPERACION or bloque.getInstrucciones()[iniciofinal].getTipo() == TipoInstruccion.ASIGNACIONSIMPLE:
+                                            temporal = bloque.getInstrucciones()[iniciofinal].getTemporal()
+                                            if  temporal == bloque.getInstrucciones()[comienzotemporal].getOperador1() or temporal == bloque.getInstrucciones()[comienzotemporal].getOperador2():
+                                                haycambio = True
+                                                break
+                                        iniciofinal += 1
+                                    if haycambio:
+                                        break
                                     #SI ES IGUAL VA A TRAER EL GET TEMPORAL DE ESTE
-                                        temporal = bloque.getInstrucciones()[comienzotemporal].getTemporal()
-                                        secumple = True
+                                    temporal = bloque.getInstrucciones()[comienzotemporal].getTemporal()
+                                    secumple = True
                             comienzotemporal+=1
 
                         if secumple:
