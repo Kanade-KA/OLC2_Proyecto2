@@ -46,6 +46,14 @@ def home():
             tmp_val5=inptres
             result=optimizacion(tmp_val5, 2)
             return render_template('index.html', resultado=tmp_val5, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
+        if request.form['submit_button']=='bloque1':
+            inpt = request.form["entrada"]
+            tmp_val=inpt
+
+            inptres = request.form["salida"]
+            tmp_val6=inptres
+            result=optimizacion(tmp_val6, 3)
+            return render_template('index.html', resultado=tmp_val6, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
         else:
             return render_template('index.html', entry ="", graf="")
     else:

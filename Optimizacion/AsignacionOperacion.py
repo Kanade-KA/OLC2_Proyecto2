@@ -47,3 +47,6 @@ class AsignacionOperacion:
 
     def getCodigoAnterior(self):
         return self.codigo
+
+    def getOperacion(self):
+        return str(self.opi)+self.operador+str(self.opd)

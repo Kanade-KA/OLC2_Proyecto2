@@ -28,6 +28,9 @@ class Optimizar():
         self.Regla7()
         self.Regla8()
 
+    def EjecutarBloqueGlobal(self):
+        self.ReglaB1()
+
 #--------------------------------------------------MIRILLA------------------------------------------
     def Regla1(self):
         '''
@@ -474,6 +477,45 @@ class Optimizar():
                         contadormirilla += 1
                         tope = self.DefinirMirilla(len(bloque.getInstrucciones()), contadormirilla)   
 
+    def ReglaB1(self):
+        '''
+        t1 = 6 / 2      | t1 = 6 / 2
+        t2 = 3 * t1     | t2 = 3 * t1
+        t3 = 4 - 2      | t3 = 4 - 2
+        t4 = t2 * t3    | t4 = t2 * t3
+        t5 = 2 + 5      | t5 = 2 + 5
+        t6 = t2 * t3    | t6 = t4
+        '''
+        i = 0
+        temporal = ""
+        secumple = False
+        for bloque in self.bloques:
+            if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
+                while i<len(bloque.getInstrucciones()):
+                    if bloque.getInstrucciones()[i].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
+                        fintemporal = i
+                        comienzotemporal  = 0
+                        operacion1 = bloque.getInstrucciones()[i].getOperacion()
+
+                        #PARA VER SI HAY UNO ARRIBA QUE SE PAREZCA
+                        while comienzotemporal<fintemporal:
+                            if bloque.getInstrucciones()[comienzotemporal].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
+                                operacion2 = bloque.getInstrucciones()[comienzotemporal].getOperacion()
+                                if operacion1 == operacion2:
+                                    #SI ES IGUAL VA A TRAER EL GET TEMPORAL DE ESTE
+                                        temporal = bloque.getInstrucciones()[comienzotemporal].getTemporal()
+                                        secumple = True
+                            comienzotemporal+=1
+
+                        if secumple:
+                            bloque.getInstrucciones()[i].setOperador1(temporal)
+                            bloque.getInstrucciones()[i].setOperador("")
+                            bloque.getInstrucciones()[i].setTipo(TipoInstruccion.ASIGNACIONSIMPLE)
+                            bloque.getInstrucciones()[i].setOperador2("")
+                            self.reglas.append(Optimizacion("Bloque", "Regla 1", "Se encontró subexpresion comun", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+                            secumple = False
+                    i+=1
+    
     def CambiarCondicion(self, condicion):
         if condicion == "==":
             return "!="

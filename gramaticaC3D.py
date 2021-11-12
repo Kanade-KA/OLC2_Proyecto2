@@ -304,20 +304,32 @@ def parseopt(imput, tipo):
     c3d = ""
     reporte = ""
     tamanio = 20
-    for i in range(1,10):
-        optimizador = Optimizar(instrucciones, reglas, i, tamanio)
-        
-        if tipo == 1:
-            optimizador.Ejecutar()
-        elif tipo == 2:
-            optimizador.EjecutarS3()
+    if tipo < 3:
+        for i in range(1,10):
+            optimizador = Optimizar(instrucciones, reglas, i, tamanio)
+            
+            if tipo == 1:
+                optimizador.Ejecutar()
+            elif tipo == 2:
+                optimizador.EjecutarS3()
 
-        contador = 0
-        for x in reglas:
-            if x.getIteracion() == i:
-                contador += 1
-        if contador==0:
-            tamanio += 20
+            contador = 0
+            for x in reglas:
+                if x.getIteracion() == i:
+                    contador += 1
+            if contador==0:
+                tamanio += 20
+    else:
+        for i in range(1,10):
+            optimizador = Optimizar(instrucciones, reglas, i, tamanio)
+            optimizador.EjecutarBloqueGlobal()
+
+            contador = 0
+            for x in reglas:
+                if x.getIteracion() == i:
+                    contador += 1
+            if contador==0:
+                tamanio += 20
         
     
     reporte = optimizador.ReporteOptimizacion(reglas)
