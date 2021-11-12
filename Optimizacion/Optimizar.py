@@ -30,6 +30,7 @@ class Optimizar():
 
     def EjecutarBloqueGlobal(self):
         self.ReglaB1()
+        self.ReglaB2()
 
 #--------------------------------------------------MIRILLA------------------------------------------
     def Regla1(self):
@@ -514,6 +515,72 @@ class Optimizar():
                             bloque.getInstrucciones()[i].setOperador2("")
                             self.reglas.append(Optimizacion("Bloque", "Regla 1", "Se encontró subexpresion comun", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
                             secumple = False
+                    i+=1
+    
+    def ReglaB2(self):
+        '''
+        t1 = 6 / 2      | t1 = 6 / 2
+        t2 = 3 * t1     | t2 = 3 * t1
+        t3 = 4 - 2      | t3 = 4 - 2
+        t4 = t2 * t3    | t4 = t2 * t3
+        t5 = 2 + 5      | t5 = 2 + 5
+        t6 = t4         | t7 = t4 * t5
+        t7 = t6 * t5    | 
+        '''
+        i = 0
+        for bloque in self.bloques:
+            if bloque.getTipo() == TipoBloque.VOID or bloque.getTipo() == TipoBloque.MAIN:
+                while i<len(bloque.getInstrucciones()):
+                    if bloque.getInstrucciones()[i].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
+                        #VER SI OP1 ES UN TEMPORAL
+                        if not self.IsNumber(bloque.getInstrucciones()[i].getOperador1()):
+                            #TENEMOS QUE BUSCAR PARAMETRO
+                            tope1 = i
+                            inicio1 = 0
+                            cumple1 = False
+                            cambio = 0
+                            temporal1 = bloque.getInstrucciones()[i].getOperador1()
+                            while inicio1 < tope1:
+                                if bloque.getInstrucciones()[inicio1].getTipo() == TipoInstruccion.ASIGNACIONSIMPLE:
+                                    #DEBO VER SI ES UN TEMPORAL
+                                    if bloque.getInstrucciones()[inicio1].getTemporal() == temporal1:
+                                        #VER QUE NO SEA UN NUMERO.
+                                        if not self.IsNumber(bloque.getInstrucciones()[inicio1].getOperador1()):
+                                            cambio = bloque.getInstrucciones()[inicio1].getOperador1()
+                                            cumple1 = True
+                                            #DE UNA QUITAMOS ESE TEMPORAL(HAY QUE VER TAMBIEN SI NO SE USA EN OTRO)
+                                            bloque.getInstrucciones().pop(inicio1)
+                                            i += -1#POR QUE VA A VER UN ESPACIO MENOS
+                                inicio1+=1
+                            
+                            if cumple1:
+                                bloque.getInstrucciones()[i].setOperador1(cambio)
+                                self.reglas.append(Optimizacion("Bloque", "Regla 2", "Se encontró codigo muerto", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+                                cumple1 = False
+                        if not self.IsNumber(bloque.getInstrucciones()[i].getOperador2()):
+                            #TENEMOS QUE BUSCAR PARAMETRO
+                            tope2 = i
+                            inicio2 = 0
+                            cumple2 = False
+                            cambio2 = 0
+                            temporal2 = bloque.getInstrucciones()[i].getOperador2()
+                            while inicio2 < tope2:
+                                if bloque.getInstrucciones()[inicio2].getTipo() == TipoInstruccion.ASIGNACIONSIMPLE:
+                                    #DEBO VER SI ES UN TEMPORAL
+                                    if bloque.getInstrucciones()[inicio2].getTemporal() == temporal2:
+                                        #VER QUE NO SEA UN NUMERO.
+                                        if not self.IsNumber(bloque.getInstrucciones()[inicio2].getOperador2()):
+                                            cambio2 = bloque.getInstrucciones()[inicio2].getOperador2()
+                                            cumple2 = True
+                                            #DE UNA QUITAMOS ESE TEMPORAL(HAY QUE VER TAMBIEN SI NO SE USA EN OTRO)
+                                            bloque.getInstrucciones().pop(inicio2)
+                                            i += -1#POR QUE VA A VER UN ESPACIO MENOS
+                                inicio2+=1
+                            
+                            if cumple2:
+                                bloque.getInstrucciones()[i].setOperador1(cambio2)
+                                self.reglas.append(Optimizacion("Bloque", "Regla 2", "Se encontró codigo muerto", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+                                cumple1 = False
                     i+=1
     
     def CambiarCondicion(self, condicion):
