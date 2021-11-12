@@ -30,8 +30,8 @@ class Optimizar():
 
     def EjecutarBloqueGlobal(self):
         self.ReglaB1()
-        self.ReglaB2()
-        self.ReglaB3()
+        self.ReglaB2_B3()
+        self.ReglaB4()
 
 #--------------------------------------------------MIRILLA------------------------------------------
     def Regla1(self):
@@ -479,6 +479,7 @@ class Optimizar():
                         contadormirilla += 1
                         tope = self.DefinirMirilla(len(bloque.getInstrucciones()), contadormirilla)   
 
+#----------------------------------------------------BLOQUE-------------------------------------------
     def ReglaB1(self):
         '''
         t1 = 6 / 2      | t1 = 6 / 2
@@ -517,8 +518,8 @@ class Optimizar():
                             self.reglas.append(Optimizacion("Bloque", "Regla 1", "Se encontró subexpresion comun", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
                             secumple = False
                     i+=1
-    
-    def ReglaB2(self):
+       
+    def ReglaB2_B3(self):
         '''
         t1 = 6 / 2      | t1 = 6 / 2
         t2 = 3 * t1     | t2 = 3 * t1
@@ -549,14 +550,16 @@ class Optimizar():
                                         if not self.IsNumber(bloque.getInstrucciones()[inicio1].getOperador1()):
                                             cambio = bloque.getInstrucciones()[inicio1].getOperador1()
                                             cumple1 = True
-                                            #DE UNA QUITAMOS ESE TEMPORAL(HAY QUE VER TAMBIEN SI NO SE USA EN OTRO)
+                                            #DE UNA QUITAMOS ESE TEMPORAL
+                                            self.reglas.append(Optimizacion("Bloque", "Regla 3", "Se encontró codigo muerto", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+
                                             bloque.getInstrucciones().pop(inicio1)
                                             i += -1#POR QUE VA A VER UN ESPACIO MENOS
                                 inicio1+=1
                             
                             if cumple1:
                                 bloque.getInstrucciones()[i].setOperador1(cambio)
-                                self.reglas.append(Optimizacion("Bloque", "Regla 2", "Se encontró codigo muerto", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+                                self.reglas.append(Optimizacion("Bloque", "Regla 2", "Se encontró operación redundante", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
                                 cumple1 = False
                         if not self.IsNumber(bloque.getInstrucciones()[i].getOperador2()):
                             #TENEMOS QUE BUSCAR PARAMETRO
@@ -580,11 +583,11 @@ class Optimizar():
                             
                             if cumple2:
                                 bloque.getInstrucciones()[i].setOperador2(cambio2)
-                                self.reglas.append(Optimizacion("Bloque", "Regla 2", "Se encontró codigo muerto", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+                                self.reglas.append(Optimizacion("Bloque", "Regla 3", "Se encontró codigo muerto", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
                                 cumple2 = False
                     i+=1
     
-    def ReglaB3(self):
+    def ReglaB4(self):
         '''
         t1 = 3.14       | t2 = 3.14 / 180
         t2 = t1 / 180   |
@@ -617,7 +620,7 @@ class Optimizar():
                             
                             if cumple1:
                                 bloque.getInstrucciones()[i].setOperador1(cambio)
-                                self.reglas.append(Optimizacion("Bloque", "Regla 3", "Se encontró una constante", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+                                self.reglas.append(Optimizacion("Bloque", "Regla 4", "Se encontró una constante", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
                                 cumple1 = False
                         if not self.IsNumber(bloque.getInstrucciones()[i].getOperador2()):
                             #TENEMOS QUE BUSCAR PARAMETRO
@@ -641,7 +644,7 @@ class Optimizar():
                             
                             if cumple2:
                                 bloque.getInstrucciones()[i].setOperador2(cambio2)
-                                self.reglas.append(Optimizacion("Bloque", "Regla 3", "Se encontró una constante", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+                                self.reglas.append(Optimizacion("Bloque", "Regla 4", "Se encontró una constante", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
                                 cumple2 = False
                     i+=1
 
