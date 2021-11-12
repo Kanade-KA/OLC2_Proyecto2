@@ -137,6 +137,7 @@ class Imprimir(NodoAST):
             if isinstance(ins, LlamaMatriz):
                 x = ins.traducir(traductor, entorno)
                 self.ImprimirInt(traductor, x[0])
+            traductor.ActivarFMT()
         if self.essalto != 'F':
             traductor.addCodigo("fmt.Printf(\"%c\", 10);\n")
         return

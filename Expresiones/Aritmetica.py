@@ -142,6 +142,7 @@ class Aritmetica(NodoAST):
                     palabra += salida+":\n"
                     traductor.addCodigo(palabra)
                     traductor.IncrementarContador()
+                    traductor.ActivarFMT()
                     return ["t"+str(traductor.getContador()-1), TipoObjeto.DECIMAL]
             if (self.operador == OperadorAritmetico.POW):
                 if self.sinString(opi[1], opd[1]):
@@ -180,6 +181,7 @@ class Aritmetica(NodoAST):
                     mod = "t" + str(traductor.getContador())+" = math.Mod("+str(opi[0]) +","+str(opd[0])+");"
                     traductor.addCodigo(mod+"\n")
                     traductor.IncrementarContador()
+                    traductor.ActivarModular()
                     return ["t"+ str(traductor.getContador()-1), TipoObjeto.ENTERO]
             traductor.addExcepcion(Error("Semantico", "Los tipos no coinciden", self.fila, self.columna))
             return "error"

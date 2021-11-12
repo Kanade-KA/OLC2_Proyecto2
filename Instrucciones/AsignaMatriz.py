@@ -82,7 +82,7 @@ class AsignaMatriz(NodoAST):
                 cadena += "fmt.Printf(\"%s\", \"Se ha excedido el limite de la matriz\");\n"
                 cadena += val +"= -1;\n"
                 cadena += salida+":\n"
-
+                traductor.ActivarFMT()
                 traductor.addCodigo(cadena)
                 #return [val, TipoObjeto.ENTERO]                
             else:

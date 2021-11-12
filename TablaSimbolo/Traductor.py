@@ -17,8 +17,8 @@ class Traductor:
         self.error = ""
         self.libmath = ""
         self.functmp = ""
-        self.libfmt = "import (\"fmt\");\n"
-        self.encabezado = "//------------------------HEADER-----------------------------\npackage main;\n"+self.libmath+self.libfmt+"var stack [19121997]float64;\nvar heap [19121997]float64;\nvar S, H float64;\n"
+        self.libfmt = ""
+        self.encabezado = "var stack [19121997]float64;\nvar heap [19121997]float64;\nvar S, H float64;\n"
         self.heap = 0
         self.stack= 0
         self.contador = 0#Este me sirve para el contador de temporales
@@ -51,6 +51,18 @@ class Traductor:
 
     def activarPrint(self):
         self.print = True
+
+    def ActivarModular(self):
+        self.libmath = "import (\"math\");\n"
+
+    def ActivarFMT(self):
+        self.libfmt = "import (\"fmt\");\n"
+
+    def getImport(self):
+        cadena = "package main;\n"
+        cadena += self.libmath
+        cadena += self.libfmt
+        return cadena
     
     def hayPotencia(self):
         return self.potencia
