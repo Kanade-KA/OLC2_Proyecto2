@@ -499,12 +499,12 @@ class Optimizar():
                         fintemporal = i
                         comienzotemporal  = 0
                         operacion1 = bloque.getInstrucciones()[i].getOperacion()
-
+                        tmpoperacion1 = bloque.getInstrucciones()[i].getTemporal()
                         #PARA VER SI HAY UNO ARRIBA QUE SE PAREZCA
                         while comienzotemporal<fintemporal:
                             if bloque.getInstrucciones()[comienzotemporal].getTipo() == TipoInstruccion.ASIGNACIONOPERACION:
                                 operacion2 = bloque.getInstrucciones()[comienzotemporal].getOperacion()
-                                if operacion1 == operacion2:
+                                if operacion1 == operacion2 and tmpoperacion1 != bloque.getInstrucciones()[comienzotemporal].getOperador1():
                                     #TENGO QUE VER QUE NI OP1 Y OP2 hallan cambiado hasta este punto.
                                     puntofinal = i
                                     iniciofinal = comienzotemporal
@@ -518,10 +518,12 @@ class Optimizar():
                                                 break
                                         iniciofinal += 1
                                     if haycambio:
+                                        secumple = False
                                         break
-                                    #SI ES IGUAL VA A TRAER EL GET TEMPORAL DE ESTE
-                                    temporal = bloque.getInstrucciones()[comienzotemporal].getTemporal()
-                                    secumple = True
+                                    else:
+                                        #SI ES IGUAL VA A TRAER EL GET TEMPORAL DE ESTE
+                                        temporal = bloque.getInstrucciones()[comienzotemporal].getTemporal()
+                                        secumple = True
                             comienzotemporal+=1
 
                         if secumple:
@@ -556,20 +558,21 @@ class Optimizar():
                             cumple1 = False
                             cambio = 0
                             temporal1 = bloque.getInstrucciones()[i].getOperador1()
-                            while inicio1 < tope1:
-                                if bloque.getInstrucciones()[inicio1].getTipo() == TipoInstruccion.ASIGNACIONSIMPLE:
-                                    #DEBO VER SI ES UN TEMPORAL
-                                    if bloque.getInstrucciones()[inicio1].getTemporal() == temporal1:
-                                        #VER QUE NO SEA UN NUMERO.
-                                        if not self.IsNumber(bloque.getInstrucciones()[inicio1].getOperador1()):
-                                            cambio = bloque.getInstrucciones()[inicio1].getOperador1()
-                                            cumple1 = True
-                                            #DE UNA QUITAMOS ESE TEMPORAL
-                                            self.reglas.append(Optimizacion("Bloque", "Regla 3", "Se encontró codigo muerto", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
+                            if temporal1 != bloque.getInstrucciones()[i].getTemporal():
+                                while inicio1 < tope1:
+                                    if bloque.getInstrucciones()[inicio1].getTipo() == TipoInstruccion.ASIGNACIONSIMPLE:
+                                        #DEBO VER SI ES UN TEMPORAL
+                                        if bloque.getInstrucciones()[inicio1].getTemporal() == temporal1:
+                                            #VER QUE NO SEA UN NUMERO.
+                                            if not self.IsNumber(bloque.getInstrucciones()[inicio1].getOperador1()):
+                                                cambio = bloque.getInstrucciones()[inicio1].getOperador1()
+                                                cumple1 = True
+                                                #DE UNA QUITAMOS ESE TEMPORAL
+                                                self.reglas.append(Optimizacion("Bloque", "Regla 3", "Se encontró codigo muerto", bloque.getInstrucciones()[i].getCodigoAnterior(), bloque.getInstrucciones()[i].getC3D(), bloque.getInstrucciones()[i].getFila(), self.iteracion))
 
-                                            bloque.getInstrucciones().pop(inicio1)
-                                            i += -1#POR QUE VA A VER UN ESPACIO MENOS
-                                inicio1+=1
+                                                bloque.getInstrucciones().pop(inicio1)
+                                                i += -1#POR QUE VA A VER UN ESPACIO MENOS
+                                    inicio1+=1
                             
                             if cumple1:
                                 bloque.getInstrucciones()[i].setOperador1(cambio)
@@ -619,18 +622,19 @@ class Optimizar():
                             cumple1 = False
                             cambio = 0
                             temporal1 = bloque.getInstrucciones()[i].getOperador1()
-                            while inicio1 < tope1:
-                                if bloque.getInstrucciones()[inicio1].getTipo() == TipoInstruccion.ASIGNACIONSIMPLE:
-                                    #DEBO VER SI ES UN TEMPORAL
-                                    if bloque.getInstrucciones()[inicio1].getTemporal() == temporal1:
-                                        #VER QUE NO SEA UN NUMERO.
-                                        if self.IsNumber(bloque.getInstrucciones()[inicio1].getOperador1()):
-                                            cambio = bloque.getInstrucciones()[inicio1].getOperador1()
-                                            cumple1 = True
-                                            #DE UNA QUITAMOS ESE TEMPORAL(HAY QUE VER TAMBIEN SI NO SE USA EN OTRO)
-                                            bloque.getInstrucciones().pop(inicio1)
-                                            i += -1#POR QUE VA A VER UN ESPACIO MENOS
-                                inicio1+=1
+                            if temporal1 != bloque.getInstrucciones()[i].getTemporal():
+                                while inicio1 < tope1:
+                                    if bloque.getInstrucciones()[inicio1].getTipo() == TipoInstruccion.ASIGNACIONSIMPLE:
+                                        #DEBO VER SI ES UN TEMPORAL
+                                        if bloque.getInstrucciones()[inicio1].getTemporal() == temporal1:
+                                            #VER QUE NO SEA UN NUMERO.
+                                            if self.IsNumber(bloque.getInstrucciones()[inicio1].getOperador1()):
+                                                cambio = bloque.getInstrucciones()[inicio1].getOperador1()
+                                                cumple1 = True
+                                                #DE UNA QUITAMOS ESE TEMPORAL(HAY QUE VER TAMBIEN SI NO SE USA EN OTRO)
+                                                bloque.getInstrucciones().pop(inicio1)
+                                                i += -1#POR QUE VA A VER UN ESPACIO MENOS
+                                    inicio1+=1
                             
                             if cumple1:
                                 bloque.getInstrucciones()[i].setOperador1(cambio)

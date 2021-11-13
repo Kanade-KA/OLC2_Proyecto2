@@ -37,7 +37,10 @@ class AsignacionOperacion:
         return self.columna
 
     def getC3D(self):
-        return self.temporal + " = "+str(self.opi)+self.operador+str(self.opd)+";"
+        if self.operador == "":
+            return self.temporal + " = "+str(self.opi)+self.operador+str(self.opd)+";"
+        else:
+           return self.temporal + " = "+str(self.opi)+" "+self.operador+" "+str(self.opd)+";" 
 
     def getTipo(self):
         return self.tipo
