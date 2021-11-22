@@ -12,6 +12,10 @@ class Return(NodoAST):
         retorna = self.expresion.interpretar(arbol, entorno)
         return retorna
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         retorno = self.expresion.traducir(traductor, entorno)
         #VER SI ES ID...

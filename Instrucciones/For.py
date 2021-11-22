@@ -112,6 +112,10 @@ class For(NodoAST):
 
         return None
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//**************************FOR**************************\n")
         etiquetainicio="L"+str(traductor.getGotos())

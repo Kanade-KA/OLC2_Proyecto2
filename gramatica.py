@@ -17,6 +17,7 @@ from Instrucciones.LlamaMatriz2D import LlamaMatriz2D
 from Instrucciones.AsignaMatriz import AsignaMatriz
 from Instrucciones.LlamaMatriz import LlamaMatriz
 from Expresiones.Arreglo import Arreglo
+from TablaSimbolo.AST import AST
 from TablaSimbolo.Arbol import Arbol
 from Instrucciones.Retonar import Retornar
 from Instrucciones.Return import Return
@@ -684,53 +685,41 @@ def p_logica_not(t):
 #-----------------------------------------------------FIN GRAMATICA--------------------------------------------------------------
 import ply.yacc as yacc
 parser = yacc.yacc()
-import gramgraf as grafica
 
-def parse(imput) :
-    global errores
+def parse(imput, tipo):
     global lexer
     global parser
-    global salida
-    global raiz
-    errores = []
     lexer = lex.lex(reflags= re.IGNORECASE)
     parser = yacc.yacc()
-    entorno = Entorno("global")
-    arbol = Arbol()
-    global input
-    input = imput
 
     instrucciones=parser.parse(imput)
-    for instruccion in instrucciones:
-        instruccion.interpretar(arbol, entorno)
-    if len(arbol.getExcepciones())> 0:
-        f = ""
-        for err in arbol.getExcepciones():
-            f += err.toString()
-        return [f, "<h1>Existen Errores, no se puede mostrar la Tabla de Simbolos</h1>", arbol.generateErrors()]
-    return [arbol.getConsola(), arbol.generateTable(), "No hay Errores :D"]
+    if tipo == 1:
+        entorno = Entorno("global")
+        arbol = Arbol()
+        for instruccion in instrucciones:
+            instruccion.interpretar(arbol, entorno)
+        if len(arbol.getExcepciones())> 0:
+            f = ""
+            for err in arbol.getExcepciones():
+                f += err.toString()
+            return [f, "<h1>Existen Errores, no se puede mostrar la Tabla de Simbolos</h1>", arbol.generateErrors()]
+        return [arbol.getConsola(), arbol.generateTable(), "No hay Errores :D"]     
+    elif tipo == 2:
+        entorno = Entorno("global")
+        arbol = Traductor()
+        for instruccion in instrucciones:
+            instruccion.traducir(arbol, entorno)
+        error = "No hay Errores :D"
+        ts = arbol.generateTable()
+        codigo =arbol.getImport() + arbol.getEncabezado() + arbol.temporales() + arbol.getMain() + arbol.getCodigo() +"}\n" + arbol.getFuncion() 
+        if len(arbol.excepciones) >0:
+            error = arbol.generateErrors()
+            ts = "Hay Errores No se puede mostrar la tabla de simbolos D:"
+        return [codigo, ts, error]
+    else:
+        grafica = AST()
+        ast = ""
+        for instruccion in instrucciones:
+            ast = instruccion.graficar(grafica)
 
-def parsetrad(imput):
-    global errores2
-    global lexer2
-    global parser2
-    global salida2
-    global raiz2
-    errores2 = []
-    lexer2 = lex.lex(reflags= re.IGNORECASE)
-    parser2 = yacc.yacc()
-    entorno = Entorno("global")
-    arbol = Traductor()
-    global input
-    input = imput
-    instrucciones=parser.parse(imput)
-    for instruccion in instrucciones:
-        instruccion.traducir(arbol, entorno)
-    error = "No hay Errores :D"
-    ts = arbol.generateTable()
-    codigo =arbol.getImport() + arbol.getEncabezado() + arbol.temporales() + arbol.getMain() + arbol.getCodigo() +"}\n" + arbol.getFuncion() 
-    if len(arbol.excepciones) >0:
-        error = arbol.generateErrors()
-        ts = "Hay Errores No se puede mostrar la tabla de simbolos D:"
-        #codigo = ""
-    return [codigo, ts, error]
+        return ast

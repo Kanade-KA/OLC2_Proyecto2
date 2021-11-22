@@ -32,6 +32,10 @@ class Logica(NodoAST):
                 return False       
         return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)
         if self.operador == OperadorLogico.AND:

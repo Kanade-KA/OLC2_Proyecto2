@@ -40,5 +40,9 @@ class AsignaMatriz2D(NodoAST):
             arbol.addExcepcion(Error("Semántico", "Error variable no es de tipo Matriz", self.fila, self.columna))
         return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         return "Asignacion Matriz 2D"

@@ -53,6 +53,10 @@ class LlamadaFuncion(NodoAST):
                 arbol.addExcepcion(Error("Semantico", "No es una función", self.fila, self.columna)) 
         return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//----------------LLAMANDO FUNCION---------------------\n")
         simbolo = entorno.retornarSimbolo(self.nombre.lower())

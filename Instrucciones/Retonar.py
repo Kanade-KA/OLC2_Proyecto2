@@ -56,6 +56,10 @@ class Retornar(NodoAST):
                 arbol.addExcepcion(Error("Semantico", "Faltan propiedades en el struct", self.fila, self.columna))
             return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//----------------LLAMANDA FUNCION---------------------\n")
         cadena = ""

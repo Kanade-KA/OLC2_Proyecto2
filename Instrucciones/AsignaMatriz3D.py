@@ -44,5 +44,9 @@ class AsignaMatriz3D(NodoAST):
         
         return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         return "Asignacion Matriz 3D"

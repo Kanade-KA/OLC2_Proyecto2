@@ -8,5 +8,9 @@ class Break(NodoAST):
     def interpretar(self, arbol, entorno):
         return self
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         return "isbreak"

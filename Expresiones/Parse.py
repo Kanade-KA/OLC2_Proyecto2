@@ -27,6 +27,10 @@ class Parse(NodoAST):
         if isinstance(op, bool):
             return "Booleano"
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def traducir(self, traductor, entorno):
         resultado = self.operando.traducir(traductor, entorno)
         if resultado[1] != TipoObjeto.CADENA:

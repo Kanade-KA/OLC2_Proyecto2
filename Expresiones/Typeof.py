@@ -25,5 +25,9 @@ class Typeof(NodoAST):
         if isinstance(op, bool):
             return "Booleano"
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def traducir(self, traductor, entorno):
         return "typeof"

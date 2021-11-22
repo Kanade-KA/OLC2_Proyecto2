@@ -46,6 +46,10 @@ class Nativas(NodoAST):
             return str(op)
         return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def traducir(self, traductor, entorno):
         op = self.operando.traducir(traductor, entorno)
         #VIENDO SI NO ES UN IDENTIFICADOR

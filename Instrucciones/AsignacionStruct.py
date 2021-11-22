@@ -14,6 +14,10 @@ class AsignacionStruct(NodoAST):
         arbol.addSimbolo(simbolo)
         entorno.addSimbolo(simbolo)
         return
+
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
     
     def traducir(self, traductor, entorno):
         return "Asignacion Struct"

@@ -25,6 +25,10 @@ class Funcion(NodoAST):
                 arbol.addExcepcion(Error("Semántico", "No se puede usar el Continue en una funcion", self.fila, self.columna))
         return y
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def getParametros(self):
         return self.parametros
 

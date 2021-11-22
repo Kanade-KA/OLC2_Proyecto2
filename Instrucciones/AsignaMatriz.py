@@ -43,6 +43,10 @@ class AsignaMatriz(NodoAST):
         
         return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//----LLAMANDO ELEMENTO DE MATRIZ-------\n")
         indice = self.indice.traducir(traductor, entorno)

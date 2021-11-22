@@ -17,6 +17,10 @@ class AsignacionFuncion(NodoAST):
         entorno.addSimbolo(simbolo)
         return
     
+    def graficar(self, graf, nodo):
+        graf += "Asingacion funcion\n"
+        return
+
     def traducir(self, traductor, entorno):#Debo cambiar entorno
         funcion = self.expresion
         tam = 0

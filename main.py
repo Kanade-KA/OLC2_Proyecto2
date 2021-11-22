@@ -1,59 +1,47 @@
 import re
 from gramatica import parse as gram
-from flask import Flask, redirect, url_for, render_template, request
-#from gramgraf import parse as grafica
-from gramatica import parsetrad as traductor
+from flask import Flask, render_template, request
 from gramaticaC3D import parseopt as optimizacion
 app = Flask(__name__)
-tmp_val=''
-
 @app.route("/", methods=["POST","GET"])# de esta forma le indicamos la ruta para acceder a esta pagina.
 def home():
     if request.method == "POST":
         if request.form['submit_button'] == 'interprete':
             inpt = request.form["entrada"]
-            global tmp_val
-            tmp_val=inpt
-            result=gram(tmp_val)
-            return render_template('index.html', resultado=result[0], entry=tmp_val, graf = "", tabla=result[1], error=result[2])
+            entrada=inpt
+            result=gram(entrada, 1)
+            return render_template('index.html', resultado=result[0], entry=entrada, graf = "", tabla=result[1], error=result[2])
         if request.form['submit_button'] == 'ast':
             inpt = request.form["entrada"]
-            global tmp
-            tmp=inpt
+            entrada=inpt
             #dot = grafica(tmp)
-            return render_template('index.html', resultado="", entry=tmp, graf = "dot")
+            return render_template('index.html', resultado="", entry=entrada, graf = "dot")
         if request.form['submit_button']=='traductor':
             inpt = request.form["entrada"]
-            global tmp_val3
-            tmp_val3=inpt
-            result=traductor(tmp_val3)
-            return render_template('index.html', resultado=result[0], entry=tmp_val3, graf = "", tabla=result[1], error=result[2])
+            entrada=inpt
+            result=gram(entrada, 2)
+            return render_template('index.html', resultado=result[0], entry=entrada, graf = "", tabla=result[1], error=result[2])
         if request.form['submit_button']=='mirilla':
             inpt = request.form["entrada"]
-            tmp_val=inpt
-
+            entrada=inpt
             inptres = request.form["salida"]
-            global tmp_val4
-            tmp_val4=inptres
-            result=optimizacion(tmp_val4, 1)
-            return render_template('index.html', resultado=tmp_val4, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
+            salida=inptres
+            result=optimizacion(salida, 1)
+            return render_template('index.html', resultado=salida, entry=entrada, graf = result[0], tabla=result[1], error=result[2])
         if request.form['submit_button']=='mirillas3':
             inpt = request.form["entrada"]
             tmp_val=inpt
-
             inptres = request.form["salida"]
-            global tmp_val5
-            tmp_val5=inptres
-            result=optimizacion(tmp_val5, 2)
-            return render_template('index.html', resultado=tmp_val5, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
+            salida=inptres
+            result=optimizacion(salida, 2)
+            return render_template('index.html', resultado=salida, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
         if request.form['submit_button']=='bloque1':
             inpt = request.form["entrada"]
             tmp_val=inpt
-
             inptres = request.form["salida"]
-            tmp_val6=inptres
-            result=optimizacion(tmp_val6, 3)
-            return render_template('index.html', resultado=tmp_val6, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
+            salida=inptres
+            result=optimizacion(salida, 3)
+            return render_template('index.html', resultado=salida, entry=tmp_val, graf = result[0], tabla=result[1], error=result[2])
         else:
             return render_template('index.html', entry ="", graf="")
     else:

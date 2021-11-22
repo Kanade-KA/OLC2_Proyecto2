@@ -29,6 +29,10 @@ class LlamaMatriz(NodoAST):
             arbol.addExcepcion(Error("Semantico", "La variable no es de tipo arreglo", self.fila, self.columna))
         return
     
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//----LLAMANDO ELEMENTO DE MATRIZ-------\n")
         indice = self.expresion.traducir(traductor, entorno)

@@ -49,6 +49,10 @@ class Imprimir(NodoAST):
             arbol.AgregaraConsola("\n")
         return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//**************************IMPRIMIR**************************\n")
         for ins in self.expresion:  

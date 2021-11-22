@@ -13,7 +13,6 @@ class Aritmetica(NodoAST):
         self.fila = fila
         self.columna = columna
 
-
     def interpretar(self, arbol, entorno):
         opi = self.OperacionIzq.interpretar(arbol, entorno)
         opd = self.OperacionDer.interpretar(arbol, entorno)
@@ -57,6 +56,9 @@ class Aritmetica(NodoAST):
             return arbol.addExcepcion(Error("Semantico", "Los tipos no coinciden", self.fila, self.columna))
         return arbol.addExcepcion(Error("Semantico", "Operador Nulo", self.fila, self.columna))
         
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
 
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)

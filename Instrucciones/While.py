@@ -31,6 +31,10 @@ class While(NodoAST):
                 break
         return None
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//******************WHILE************************\n")
         inicio="L"+str(traductor.getGotos())

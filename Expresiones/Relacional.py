@@ -51,6 +51,10 @@ class Relacional(NodoAST):
                 return False
         return "Error de tipos"
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         sonRelacionales=False;
         valortmp = ""

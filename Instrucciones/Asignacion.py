@@ -1,8 +1,6 @@
 from Abstract.Objeto import TipoObjeto
 from Expresiones.Aritmetica import Aritmetica
 from Abstract.NodoAST import NodoAST
-from Expresiones.Identificador import Identificador
-from Instrucciones.Funciones import Funcion
 from Instrucciones.Retonar import Retornar
 from TablaSimbolo.Simbolo import Simbolo
 from TablaSimbolo.Error import Error
@@ -43,6 +41,9 @@ class Asignacion(NodoAST):
         entorno.addSimbolo(simbolo)
         return
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
 
     def traducir(self, traductor, entorno):
         value = None
@@ -90,7 +91,7 @@ class Asignacion(NodoAST):
             traductor.IncrementarStack()
             traductor.IncrementarContador()
             traductor.IncrementarGotos(1)
-            simbolo = Simbolo(entorno.getNombre(), self.identificador, None, TipoObjeto.BOOLEANO, "Variable", "t"+str(traductor.getContador()-1), self.fila, self.columna)
+            simbolo = Simbolo(entorno.getNombre(), self.identificador, None, TipoObjeto.BOOLEANO, "Variable", str(traductor.getStack()-1), self.fila, self.columna)
             entorno.addSimbolo(simbolo)
             traductor.addSimbolo(simbolo)
             return

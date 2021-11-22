@@ -19,6 +19,10 @@ class AsignacionArreglo(NodoAST):
         entorno.addSimbolo(simbolo)
         return
 
+    def graficar(self, graf, nodo):
+        graf += "AsingacionArreglos\n"
+        return
+
     def traducir(self, traductor, entorno):
         arreglo = self.expresion
         if isinstance(arreglo, Arreglo):

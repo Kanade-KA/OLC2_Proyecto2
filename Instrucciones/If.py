@@ -45,6 +45,10 @@ class If(NodoAST):
                 return self.elseIf.interpretar(arbol, entorno)
         return None
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+    
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//**************************IF**************************\n")
         condicional = self.condicion.traducir(traductor, entorno)

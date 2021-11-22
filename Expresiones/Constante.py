@@ -35,6 +35,10 @@ class Constante(NodoAST):
 
         return "F"
 
+    def graficar(self, graf, nodo):
+        graf += "Asingacion\n"
+        return
+        
     def getTipo(self):
         return type(self.valor)
 

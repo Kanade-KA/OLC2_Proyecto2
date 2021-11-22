@@ -13,3 +13,7 @@ class NodoAST(ABC):
     @abstractmethod
     def traducir(self, traductor, entorno):
         pass
+
+    @abstractmethod
+    def graficar(self, graf, nodo):
+        pass
