@@ -2,8 +2,6 @@ from Abstract.Objeto import TipoObjeto
 from TablaSimbolo.Error import Error
 from Abstract.NodoAST import NodoAST
 from TablaSimbolo.Tipo import OperadorAritmetico
-from Expresiones.Identificador import Identificador
-from Instrucciones.Retonar import Retornar
 
 class Aritmetica(NodoAST):
     def __init__(self, operador, OperacionIzq, OperacionDer, fila, columna):
