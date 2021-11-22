@@ -718,8 +718,6 @@ def parse(imput, tipo):
         return [codigo, ts, error]
     else:
         grafica = AST()
-        ast = ""
         for instruccion in instrucciones:
-            ast = instruccion.graficar(grafica)
-
-        return ast
+            instruccion.graficar(grafica)
+        return grafica.generarDot()

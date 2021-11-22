@@ -19,8 +19,8 @@ class Pop(NodoAST):
             arbol.addExcepcion(Error("SEMANTICO", "Error, no es de tipo matriz", self.fila, self.columna)) 
         return
 
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
+    def graficar(self, nodo):
+        nodo += "Asingacion\n"
         return
     
     def traducir(self, traductor, entorno):

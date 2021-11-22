@@ -19,8 +19,8 @@ class AsignacionArreglo(NodoAST):
         entorno.addSimbolo(simbolo)
         return
 
-    def graficar(self, graf, nodo):
-        graf += "AsingacionArreglos\n"
+    def graficar(self, nodo):
+        nodo += "AsingacionArreglos\n"
         return
 
     def traducir(self, traductor, entorno):

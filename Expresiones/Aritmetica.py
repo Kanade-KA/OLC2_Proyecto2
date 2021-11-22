@@ -56,9 +56,32 @@ class Aritmetica(NodoAST):
             return arbol.addExcepcion(Error("Semantico", "Los tipos no coinciden", self.fila, self.columna))
         return arbol.addExcepcion(Error("Semantico", "Operador Nulo", self.fila, self.columna))
         
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
-        return
+    def graficar(self, nodo):
+        operacion = nodo.getContador()
+        nodo.newLabel(self.getOperador(self.operador))
+        nodo.IncrementarContador()
+
+        hijoizq = self.OperacionIzq.graficar(nodo)
+        hijoder = self.OperacionDer.graficar(nodo)
+      
+        nodo.newEdge(operacion, hijoizq)
+        nodo.newEdge(operacion, hijoder)
+
+        return operacion
+
+    def getOperador(self, operador):
+        if operador == OperadorAritmetico.MAS:
+            return "+"
+        if operador == OperadorAritmetico.MENOS:
+            return "-"
+        if operador == OperadorAritmetico.POR:
+            return "*"
+        if operador == OperadorAritmetico.DIV:
+            return "/"
+        if operador == OperadorAritmetico.MOD:
+            return "%"
+        if operador == OperadorAritmetico.POW:
+            return "^"
 
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)

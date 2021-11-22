@@ -27,8 +27,8 @@ class Parse(NodoAST):
         if isinstance(op, bool):
             return "Booleano"
 
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
+    def graficar(self, nodo):
+        nodo += "Asingacion\n"
         return
 
     def traducir(self, traductor, entorno):

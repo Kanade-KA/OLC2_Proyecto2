@@ -15,5 +15,5 @@ class NodoAST(ABC):
         pass
 
     @abstractmethod
-    def graficar(self, graf, nodo):
+    def graficar(self, nodo):
         pass

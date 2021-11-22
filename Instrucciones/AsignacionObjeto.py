@@ -24,8 +24,8 @@ class AsignaObjeto(NodoAST):
             arbol.addExcepcion(Error("Semantico", "No es de tipo struct", self.fila, self.columna))
         return
     
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
+    def graficar(self, nodo):
+        nodo += "Asingacion\n"
         return
 
     def traducir(self, traductor, entorno):

@@ -14,8 +14,8 @@ def home():
         if request.form['submit_button'] == 'ast':
             inpt = request.form["entrada"]
             entrada=inpt
-            #dot = grafica(tmp)
-            return render_template('index.html', resultado="", entry=entrada, graf = "dot")
+            dot = gram(entrada, 3)
+            return render_template('index.html', resultado="", entry=entrada, graf = dot)
         if request.form['submit_button']=='traductor':
             inpt = request.form["entrada"]
             entrada=inpt

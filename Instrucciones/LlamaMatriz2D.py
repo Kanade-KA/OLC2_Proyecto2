@@ -34,12 +34,12 @@ class LlamaMatriz2D(NodoAST):
             arbol.addExcepcion(Error("Semantico", "La variable no es de tipo arreglo", self.fila, self.columna))
         return
 
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
+    def graficar(self, nodo):
+        nodo += "Asingacion\n"
         return
     
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
+    def graficar(self, nodo):
+        nodo += "Asingacion\n"
         return
     
     def traducir(self, traductor, entorno):

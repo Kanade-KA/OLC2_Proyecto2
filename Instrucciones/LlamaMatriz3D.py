@@ -30,8 +30,8 @@ class LlamaMatriz3D(NodoAST):
             arbol.addExcepcion(Error("Semántico", "No es de tipo multidimensional"), t.lineno(1), t.lexpos(1))
             return
 
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
+    def graficar(self, nodo):
+        nodo += "Asingacion\n"
         return
     
     def traducir(self, traductor, entorno):

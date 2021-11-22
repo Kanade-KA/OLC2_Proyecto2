@@ -43,8 +43,8 @@ class AsignaMatriz(NodoAST):
         
         return
 
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
+    def graficar(self, nodo):
+        nodo += "Asingacion\n"
         return
     
     def traducir(self, traductor, entorno):

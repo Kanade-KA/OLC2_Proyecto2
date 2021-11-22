@@ -49,8 +49,15 @@ class Imprimir(NodoAST):
             arbol.AgregaraConsola("\n")
         return
 
-    def graficar(self, graf, nodo):
-        graf += "Asingacion\n"
+    def graficar(self, nodo):
+        padre = nodo.getContador()
+        nodo.newLabel("IMPRIMIR")
+        nodo.IncrementarContador()
+
+        for exp in self.expresion:
+            hijo = exp.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+            
         return
 
     def traducir(self, traductor, entorno):
