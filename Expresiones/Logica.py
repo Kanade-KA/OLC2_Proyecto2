@@ -1,7 +1,6 @@
 from Abstract.NodoAST import NodoAST
 from Abstract.Objeto import TipoObjeto
-from TablaSimbolo.Tipo import OperadorLogico, TipoFor
-from Expresiones.Constante import Constante
+from TablaSimbolo.Tipo import OperadorLogico
 
 class Logica(NodoAST):
     def __init__(self, operador, OperacionIzq, OperacionDer, fila, columna):
@@ -33,8 +32,24 @@ class Logica(NodoAST):
         return
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        operacion = nodo.getContador()
+        nodo.newLabel(self.getOperador(self.operador))
+        nodo.IncrementarContador()
+
+        hijoizq = self.OperacionIzq.graficar(nodo)
+        nodo.newEdge(operacion, hijoizq)
+        if self.OperacionDer != None:
+            hijoder = self.OperacionDer.graficar(nodo)
+            nodo.newEdge(operacion, hijoder)
+        return operacion
+
+    def getOperador(self, operador):
+        if operador == OperadorLogico.AND:
+            return "&&"
+        if operador == OperadorLogico.OR:
+            return "||"
+        if operador == OperadorLogico.NOT:
+            return "!"
 
     def traducir(self, traductor, entorno):
         opi = self.OperacionIzq.traducir(traductor, entorno)

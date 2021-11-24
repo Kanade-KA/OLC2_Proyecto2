@@ -1,14 +1,6 @@
 from Abstract.Objeto import TipoObjeto
-from Instrucciones.LlamaMatriz2D import LlamaMatriz2D
-from Expresiones.Arreglo2D import Arreglo2D
 from TablaSimbolo.Error import Error
-from Expresiones.Arreglo import Arreglo
 from Abstract.NodoAST import NodoAST
-from TablaSimbolo.Tipo import OperadorNativo
-from Expresiones.Constante import Constante
-from Instrucciones.LlamaMatriz import LlamaMatriz
-import math
-
 class Parse(NodoAST):
     def __init__(self, tipo, expresion, fila, columna):
         self.operador = tipo
@@ -18,18 +10,27 @@ class Parse(NodoAST):
 
     def interpretar(self, arbol, table):
         op = self.operando.interpretar(arbol, table)
-        if isinstance(op, int):
-            return "Int64"
-        if isinstance(op, float):
-            return "Float64"
-        if isinstance(op, str):
-            return "String"
-        if isinstance(op, bool):
-            return "Booleano"
+        if self.operador.lower() == "int64":
+            if isinstance(op, str):
+                return int(op)
+        elif self.operador.lower()=="float64":
+            if isinstance(op, str):
+                return float(op)
+        return arbol.addExcepcion(Error("Semantico", "No se puede utilizar el parse con otro tipo que no sea cadena", self.fila, self.columna))
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("PARSE")
+        nodo.IncrementarContador()
+
+        hijo = nodo.getContador()
+        nodo.newLabel(self.operador)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = self.operando.graficar(nodo)
+        nodo.newEdge(padre, hijo)
+        return padre
 
     def traducir(self, traductor, entorno):
         resultado = self.operando.traducir(traductor, entorno)

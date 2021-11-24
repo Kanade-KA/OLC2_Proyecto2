@@ -52,8 +52,31 @@ class Relacional(NodoAST):
         return "Error de tipos"
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        operacion = nodo.getContador()
+        nodo.newLabel(self.getOperador(self.operador))
+        nodo.IncrementarContador()
+
+        hijoizq = self.OperacionIzq.graficar(nodo)
+        nodo.newEdge(operacion, hijoizq)
+        
+        hijoder = self.OperacionDer.graficar(nodo)
+        nodo.newEdge(operacion, hijoder)
+
+        return operacion
+
+    def getOperador(self, operador):
+        if operador == OperadorRelacional.MAYORIGUAL:
+            return ">="
+        if operador == OperadorRelacional.MAYORQUE:
+            return ">"
+        if operador == OperadorRelacional.MENORIGUAL:
+            return "<="
+        if operador == OperadorRelacional.MAYORQUE:
+            return "<"
+        if operador == OperadorRelacional.IGUALIGUAL:
+            return "=="
+        if operador == OperadorRelacional.DIFERENTE:
+            return "!="
     
     def traducir(self, traductor, entorno):
         sonRelacionales=False;

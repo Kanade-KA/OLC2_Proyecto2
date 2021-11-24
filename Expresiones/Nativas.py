@@ -47,8 +47,35 @@ class Nativas(NodoAST):
         return
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel(self.getNativa())
+        nodo.IncrementarContador()
+
+        hijo = self.operando.graficar(nodo)
+        nodo.newEdge(padre, hijo)
+        return padre
+
+    def getNativa(self):
+        if self.operador == OperadorNativo.LOGARITMO:
+            return "LOGARITMO"
+        if self.operador == OperadorNativo.LOWERCASE:
+            return "LOWERCASE"
+        if self.operador == OperadorNativo.UPPERCASE:
+            return "UPPERCASE"
+        if self.operador == OperadorNativo.SENO:
+            return "SENO"
+        if self.operador == OperadorNativo.COSENO:
+            return "COSENO"
+        if self.operador == OperadorNativo.TANGENTE:
+            return "TANGENTE"
+        if self.operador == OperadorNativo.CUADRADA:
+            return "SQRT"
+        if self.operador == OperadorNativo.TRUNC:
+            return "TRUNC"
+        if self.operador == OperadorNativo.FLOAT:
+            return "FLOAT"
+        if self.operador == OperadorNativo.STRING:
+            return "STRING"
 
     def traducir(self, traductor, entorno):
         op = self.operando.traducir(traductor, entorno)

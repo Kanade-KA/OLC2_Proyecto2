@@ -1,12 +1,4 @@
-from Instrucciones.LlamaMatriz2D import LlamaMatriz2D
-from Expresiones.Arreglo2D import Arreglo2D
-from TablaSimbolo.Error import Error
-from Expresiones.Arreglo import Arreglo
 from Abstract.NodoAST import NodoAST
-from TablaSimbolo.Tipo import OperadorNativo
-from Expresiones.Constante import Constante
-from Instrucciones.LlamaMatriz import LlamaMatriz
-import math
 
 class Typeof(NodoAST):
     def __init__(self, operando, fila, columna):
@@ -26,8 +18,13 @@ class Typeof(NodoAST):
             return "Booleano"
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("TYPE OF")
+        nodo.IncrementarContador()
+
+        hijo = self.operando.graficar(nodo)
+        nodo.newEdge(padre, hijo)
+        return padre
 
     def traducir(self, traductor, entorno):
         return "typeof"

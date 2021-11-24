@@ -19,8 +19,10 @@ class Identificador(NodoAST):
         return self.identificador
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel(self.identificador)
+        nodo.IncrementarContador()
+        return padre
 #-------------------------------------------------------------------------------------------------------------------
     def traducir(self, traductor, entorno):
         simbolo = entorno.retornarSimbolo(self.identificador.lower())

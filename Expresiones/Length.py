@@ -41,8 +41,14 @@ class Length(NodoAST):
                 return "nothing"
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("LENGTH")
+        nodo.IncrementarContador()
+
+        hijo = self.operando.graficar(nodo)
+        nodo.newEdge(padre, hijo)
+        
+        return padre
 
     def traducir(self, traductor, entorno):
         iden = self.operando.getIdentificador()
