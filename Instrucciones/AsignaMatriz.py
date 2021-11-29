@@ -44,8 +44,37 @@ class AsignaMatriz(NodoAST):
         return
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("ASIGNACION")
+        nodo.IncrementarContador()
+
+        hijo = nodo.getContador()
+        nodo.newLabel(self.identificador)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("[")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = self.indice.graficar(nodo)
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("]")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("=")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = self.expresion.graficar()
+        nodo.newEdge(padre, hijo)
+
+        return padre
     
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//----LLAMANDO ELEMENTO DE MATRIZ-------\n")

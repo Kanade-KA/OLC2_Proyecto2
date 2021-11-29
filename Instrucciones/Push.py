@@ -26,8 +26,19 @@ class Push(NodoAST):
         return
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("PUSH")
+        nodo.IncrementarContador()
+
+        atributo = nodo.getContador()
+        nodo.newLabel(self.identificador)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, atributo)
+
+        atributo = self.dato.graficar(nodo)
+        nodo.newEdge(padre, atributo)
+
+        return padre
     
     def traducir(self, traductor, entorno):
         return "Push"

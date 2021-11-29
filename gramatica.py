@@ -718,6 +718,11 @@ def parse(imput, tipo):
         return [codigo, ts, error]
     else:
         grafica = AST()
+        padre = grafica.getContador()
+        grafica.newLabel("INSTRUCCIONES")
+        grafica.IncrementarContador()
+        
         for instruccion in instrucciones:
-            instruccion.graficar(grafica)
+            hijo = instruccion.graficar(grafica)
+            grafica.newEdge(padre, hijo)
         return grafica.generarDot()

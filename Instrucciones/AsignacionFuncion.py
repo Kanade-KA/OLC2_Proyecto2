@@ -18,8 +18,8 @@ class AsignacionFuncion(NodoAST):
         return
     
     def graficar(self, nodo):
-        nodo += "Asingacion funcion\n"
-        return
+        padre  = self.expresion.graficar(nodo)
+        return padre
 
     def traducir(self, traductor, entorno):#Debo cambiar entorno
         funcion = self.expresion

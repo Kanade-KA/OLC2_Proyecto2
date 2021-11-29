@@ -57,8 +57,11 @@ class Retornar(NodoAST):
             return
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel(self.nombre)
+        nodo.IncrementarContador()
+
+        return padre
     
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//----------------LLAMANDA FUNCION---------------------\n")

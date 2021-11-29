@@ -113,8 +113,28 @@ class For(NodoAST):
         return None
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("FOR")
+        nodo.IncrementarContador()
+
+        if self.indice != None:
+            hijo = self.indice.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+
+        if self.inicio != None:
+            hijo = self.inicio.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+
+        if self.fin != None:
+            hijo = self.fin.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+
+        for ins in self.instrucciones:
+            hijo = ins.graficar(nodo)
+            if hijo != None:
+                nodo.newEdge(padre, hijo)
+
+        return padre
 
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//**************************FOR**************************\n")

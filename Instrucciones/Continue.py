@@ -9,8 +9,10 @@ class Continue(NodoAST):
         return self
     
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("CONTINUE")
+        nodo.IncrementarContador()
+        return padre
     
     def traducir(self, traductor, entorno):
         return "iscontinue"

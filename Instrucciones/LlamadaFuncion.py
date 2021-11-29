@@ -54,8 +54,30 @@ class LlamadaFuncion(NodoAST):
         return
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("LLAMADA FUNCION")
+        nodo.IncrementarContador()
+
+        hijo = nodo.getContador()
+        nodo.newLabel(self.nombre)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("(")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        for ins in self.parametros:
+            hijo = ins.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel(")")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        return padre
 
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//----------------LLAMANDO FUNCION---------------------\n")

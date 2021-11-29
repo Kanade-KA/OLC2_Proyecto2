@@ -26,8 +26,29 @@ class Funcion(NodoAST):
         return y
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel(self.nombre)
+        nodo.IncrementarContador()
+
+        if self.parametros != None:
+            parametro = nodo.getContador()
+            nodo.newLabel("(")
+            nodo.IncrementarContador()
+            nodo.newEdge(padre, parametro)
+
+            for ins in self.parametros:
+                hijo = ins.graficar(nodo)
+                nodo.newEdge(padre, hijo)
+
+            parametro = nodo.getContador()
+            nodo.newLabel(")")
+            nodo.IncrementarContador()
+            nodo.newEdge(padre, parametro)
+
+        for ins in self.instrucciones:
+            hijo = ins.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+        return padre
 
     def getParametros(self):
         return self.parametros

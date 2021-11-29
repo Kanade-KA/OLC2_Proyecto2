@@ -25,8 +25,29 @@ class AsignaObjeto(NodoAST):
         return
     
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("ASIGNACION STRUCT")
+        nodo.IncrementarContador()
+
+        atributo = nodo.getContador()
+        nodo.newLabel(self.identificador)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, atributo)
+
+        atributo = nodo.getContador()
+        nodo.newLabel(".")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, atributo)
+
+        atributo = nodo.getContador()
+        nodo.newLabel(self.atributo)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, atributo)
+
+        atributo = self.expresion.graficar(nodo)
+        nodo.newEdge(padre, atributo)
+
+        return padre
 
     def traducir(self, traductor, entorno):
         return "Asignacion Objeto"

@@ -13,8 +13,11 @@ class Return(NodoAST):
         return retorna
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("RETURN")
+        nodo.IncrementarContador()
+
+        return padre
     
     def traducir(self, traductor, entorno):
         retorno = self.expresion.traducir(traductor, entorno)

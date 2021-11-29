@@ -14,7 +14,6 @@ from Abstract.NodoAST import NodoAST
 from Expresiones.Aritmetica import Aritmetica
 from Instrucciones.LlamaMatriz import LlamaMatriz
 from Instrucciones.Retonar import Retornar
-from TablaSimbolo.Traductor import Traductor
 
 class Imprimir(NodoAST):
     def __init__(self, expresion, esln, fila, columna):
@@ -57,8 +56,7 @@ class Imprimir(NodoAST):
         for exp in self.expresion:
             hijo = exp.graficar(nodo)
             nodo.newEdge(padre, hijo)
-            
-        return
+        return padre
 
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//**************************IMPRIMIR**************************\n")

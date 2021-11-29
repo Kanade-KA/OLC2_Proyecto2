@@ -46,8 +46,32 @@ class If(NodoAST):
         return None
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("IF")
+        nodo.IncrementarContador()
+
+        if self.condicion != None:
+            hijo = self.condicion.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+
+        if self.instruccionesIf != None:
+            for ins in self.instruccionesIf:
+                hijo = ins.graficar(nodo)
+                nodo.newEdge(padre, hijo)
+
+        if self.instruccionesElse != None:
+            nelse = nodo.getContador()
+            nodo.newLabel("ELSE")
+            nodo.IncrementarContador()
+            nodo.newEdge(padre, nelse)
+            for ins in self.instruccionesElse:
+                hijo = ins.graficar(nodo)
+                nodo.newEdge(nelse, hijo)
+
+        if self.elseIf:
+            hijo = self.elseIf.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+        return padre
     
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//**************************IF**************************\n")

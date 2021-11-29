@@ -30,8 +30,29 @@ class LlamaMatriz(NodoAST):
         return
     
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("LLAMADA MATRIZ")
+        nodo.IncrementarContador()
+
+        hijo = nodo.getContador()
+        nodo.newLabel(self.identificador)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("[")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = self.expresion.graficar(nodo)
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("]")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        return padre
 
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//----LLAMANDO ELEMENTO DE MATRIZ-------\n")

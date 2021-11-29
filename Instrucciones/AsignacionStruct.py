@@ -16,8 +16,32 @@ class AsignacionStruct(NodoAST):
         return
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("ASIGNACION STRUCT")
+        nodo.IncrementarContador()
+
+        atributo = nodo.getContador()
+        nodo.newLabel(self.identificador)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, atributo)
+
+        structt = self.expresion
+        atributo = nodo.getContador()
+        nodo.newLabel(str(structt.getMutable()))
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, atributo)
+        
+        for ins in structt.getDatos():
+            if type(ins) is str:
+                atributo = nodo.getContador()
+                nodo.newLabel(ins)
+                nodo.IncrementarContador()
+                nodo.newEdge(padre, atributo)
+            else:
+                atributo = ins.graficar(nodo)
+                nodo.newEdge(padre, atributo)
+
+        return padre
     
     def traducir(self, traductor, entorno):
         return "Asignacion Struct"

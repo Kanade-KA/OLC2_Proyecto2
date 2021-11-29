@@ -9,8 +9,10 @@ class Break(NodoAST):
         return self
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("BREAK")
+        nodo.IncrementarContador()
+        return padre
     
     def traducir(self, traductor, entorno):
         return "isbreak"

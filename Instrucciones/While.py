@@ -32,8 +32,18 @@ class While(NodoAST):
         return None
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("WHILE")
+        nodo.IncrementarContador()
+
+        if self.condicion != None:
+            hijo = self.condicion.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+
+        for ins in self.instrucciones:
+            hijo = ins.graficar(nodo)
+            nodo.newEdge(padre, hijo)
+        return padre
     
     def traducir(self, traductor, entorno):
         traductor.addCodigo("//******************WHILE************************\n")

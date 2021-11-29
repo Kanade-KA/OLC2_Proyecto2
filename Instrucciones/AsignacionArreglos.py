@@ -20,8 +20,61 @@ class AsignacionArreglo(NodoAST):
         return
 
     def graficar(self, nodo):
-        nodo += "AsingacionArreglos\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("ASIGNACION")
+        nodo.IncrementarContador()
+
+        hijo = nodo.getContador()
+        nodo.newLabel(self.identificador)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("=")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+        
+        hijo = nodo.getContador()
+        nodo.newLabel("[")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+        
+        for exp in self.expresion.getDatos():
+            if type(exp) is list:
+                hijo = nodo.getContador()
+                nodo.newLabel("[")
+                nodo.IncrementarContador()
+                nodo.newEdge(padre, hijo)
+                for exp2 in exp:
+                    if type(exp2) is list:
+                        hijo = nodo.getContador()
+                        nodo.newLabel("[")
+                        nodo.IncrementarContador()
+                        nodo.newEdge(padre, hijo)
+                        for exp3 in exp2:
+                            hijo = exp3.graficar(nodo)
+                            nodo.newEdge(padre, hijo)
+                        hijo = nodo.getContador()
+                        nodo.newLabel("\]")
+                        nodo.IncrementarContador()
+                        nodo.newEdge(padre, hijo)
+                    else:
+                        hijo = exp2.graficar(nodo)
+                        nodo.newEdge(padre, hijo)
+                hijo = nodo.getContador()
+                nodo.newLabel("\]")
+                nodo.IncrementarContador()
+                nodo.newEdge(padre, hijo)
+            else:
+                hijo = exp.graficar(nodo)
+                nodo.newEdge(padre, hijo)
+        
+        hijo = nodo.getContador()
+        nodo.newLabel("\]")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        return padre
 
     def traducir(self, traductor, entorno):
         arreglo = self.expresion

@@ -35,12 +35,42 @@ class LlamaMatriz2D(NodoAST):
         return
 
     def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
-    
-    def graficar(self, nodo):
-        nodo += "Asingacion\n"
-        return
+        padre = nodo.getContador()
+        nodo.newLabel("LLAMADA MATRIZ")
+        nodo.IncrementarContador()
+
+        hijo = nodo.getContador()
+        nodo.newLabel(self.identificador)
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("[")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = self.expresion.graficar(nodo)
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("]")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("[")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        hijo = self.subindice.graficar(nodo)
+        nodo.newEdge(padre, hijo)
+
+        hijo = nodo.getContador()
+        nodo.newLabel("]")
+        nodo.IncrementarContador()
+        nodo.newEdge(padre, hijo)
+
+        return padre
     
     def traducir(self, traductor, entorno):
         return "Llamada a matriz 2D"
